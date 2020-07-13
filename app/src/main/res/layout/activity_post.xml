@@ -27,7 +27,7 @@
         android:id="@+id/et_post_content"/>
 
     <Button
-        android:layout_width="70dp"
+        android:layout_width="100dp"
         android:layout_height="50dp"
         android:id="@+id/btn_confirm"
         android:layout_marginTop="8dp"

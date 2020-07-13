@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:hint="搜 索"
         android:gravity="center"
+        android:drawableLeft="@drawable/search_icon"
         android:textColor="@color/cardview_light_background"
         />
 

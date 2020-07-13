@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -26,6 +28,16 @@ public class MainActivity extends AppCompatActivity {
     private Button notice;
     private Button myself;
     private NewsAdapter adapter1;
+    private long exitTime = 0;
+    private Handler mHandler = new Handler();
+    private Runnable mFinish = new Runnable() {
+        @Override
+        public void run() {
+            finish();
+        }
+    };
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,5 +160,16 @@ public class MainActivity extends AppCompatActivity {
     public void refresh(NewsAdapter adapter)
     {
         adapter.notifyDataSetChanged();
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if((System.currentTimeMillis()-exitTime) > 2000){
+            exitTime = System.currentTimeMillis();
+            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+        } else {
+            mHandler.postDelayed(mFinish, 0);
+        }
+        //return super.onKeyDown(keyCode, event);
+        return false;
     }
 }

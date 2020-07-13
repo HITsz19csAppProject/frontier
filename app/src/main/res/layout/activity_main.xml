@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:hint="搜 索"
         android:gravity="center"
+        android:drawableLeft="@drawable/search_icon"
          />
-
 
     <LinearLayout
         android:layout_width="match_parent"

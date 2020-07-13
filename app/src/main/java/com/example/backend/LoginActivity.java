@@ -1,4 +1,4 @@
-package com.example.backend;
+package com.example.BackEnd;
 
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
