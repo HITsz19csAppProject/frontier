@@ -8,16 +8,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -28,21 +35,20 @@ public class MainActivity extends AppCompatActivity {
     private Button notice;
     private Button myself;
     private NewsAdapter adapter1;
-    private long exitTime = 0;
-    private Handler mHandler = new Handler();
-    private Runnable mFinish = new Runnable() {
-        @Override
-        public void run() {
-            finish();
-        }
-    };
-
-
+    private Button btn_login;
+    private TextView et_username;
+    private TextView et_password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Bmob.initialize(this,"0c073307ca22bf3e1268f1f70bef2941");
+
+        addControl();
+        addLogin();
+
         add = findViewById(R.id.add);
         notice=findViewById(R.id.notice);
         myself=findViewById(R.id.myself);
@@ -162,14 +168,44 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if((System.currentTimeMillis()-exitTime) > 2000){
-            exitTime = System.currentTimeMillis();
-            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-        } else {
-            mHandler.postDelayed(mFinish, 0);
-        }
-        //return super.onKeyDown(keyCode, event);
-        return false;
+    //bmob登录方法
+    private void addLogin() {
+        btn_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String lgU = et_username.getText().toString().trim();
+                String lgp = et_password.getText().toString().trim();
+                final BmobUser bu2 = new BmobUser();
+                bu2.setUsername(lgU);
+                bu2.setPassword(lgp);
+                bu2.login(new SaveListener<BmobUser>() {
+                    @Override
+                    public void done(BmobUser bmobUser, BmobException e) {
+                        if (e == null) {
+                            //登陆成功就跳转到主页面
+                            Intent in_success = new Intent(MainActivity.this, FifthActivity.class);
+                            startActivity(in_success);
+
+                        } else {
+                            Toast.makeText(MainActivity.this, "账户名或密码不正确", Toast.LENGTH_SHORT).show();
+                            //loge(e);
+                        }
+
+                    }
+                });
+
+
+            }
+
+
+        });
     }
+
+    private void addControl() {
+
+        et_username = (TextView) findViewById(R.id.et_username);
+        et_password = (TextView) findViewById(R.id.et_password);
+        btn_login = (Button) findViewById(R.id.btn_login);
+    }
+
 }

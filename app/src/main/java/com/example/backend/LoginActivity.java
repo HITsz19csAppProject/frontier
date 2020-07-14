@@ -8,6 +8,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -70,7 +71,7 @@ public class LoginActivity {
         params.add(new BasicNameValuePair("username", username));
         params.add(new BasicNameValuePair("password", password));
 
-        post.setEntity(new UrlEncodedFormEntity(params, Consts.UTF_8));
+        post.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
         HttpResponse response = httpClient.execute(post);
         if (response.getStatusLine().getStatusCode() != 200) {
             System.out.println(response.getStatusLine().getStatusCode());
