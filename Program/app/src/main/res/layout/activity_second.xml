@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".secondActivity">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/News_headline"
+            android:textSize="25dp"
+            android:gravity="center_horizontal"
+            android:text="标题"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/News_writer"
+            android:textSize="20dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="50dp"
+            android:gravity="center_horizontal"
+            android:text="发布者"
+            />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/News_context"
+        android:textSize="20dp"
+        android:text="内容"
+        />
+
+</LinearLayout>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="5dp"
+        android:layout_height="40dp"
+        android:id="@+id/im_back"
+        android:src="@drawable/back"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:hint="请输入标题"
+        android:id="@+id/et_post_title"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:hint="输入通知正文"
+        android:gravity="top"
+        android:id="@+id/et_post_content"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_label"
+        android:text="#添加标签"
+        android:textSize="12sp"
+        android:layout_marginRight="8dp"
+        android:layout_gravity="right"
+        android:background="@drawable/bg_btn1"/>
+
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:id="@+id/btn_confirm"
+            android:background="@drawable/bg_btn1"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center_horizontal"
+            android:text="发表"
+            android:textSize="20sp"/>
+
+
+</LinearLayout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LabelLayoutView">
+        <!--定义选中的背景色，文字的颜色，文字默认的颜色，背景默认的颜色-->
+        <attr name="tVViewDefuBackColor" format="reference"/>
+        <attr name="tVViewDefuTextColor" format="reference"/>
+        <attr name="tVViewClickBackColor" format="reference"/>
+        <attr name="tVViewClickTextColor" format="reference"/>
+
+        <!--定义TextView padding 文字左右距离-->
+        <attr name="tViewPaddingLeft" format="dimension"/>
+        <attr name="tVViewPaddingRight" format="dimension"/>
+
+        <!--定义文字的大小-->
+        <attr name="tVViewTextSize" format="dimension"></attr>
+
+        <!--定义TextView之间水平方向的距离-->
+        <attr name="tVHorizontalSpace" format="dimension"></attr>
+        <!--定义TextView之间竖直平方向的距离-->
+        <attr name="tVVerticalSpace" format="dimension"></attr>
+        <!--TextView的高度-->
+        <attr name="tVViewTextHeight" format="dimension"></attr>
+
+        <!--可输入的宽度-->
+        <attr name="edTextWidth" format="dimension"></attr>
+        <!--可输入的最大长度-->
+        <attr name="edTextMaxInputLength" format="integer"></attr>
+        <!--是否由添加按钮-->
+        <attr name="isNewAdd" format="boolean"></attr>
+        <!--添加按的宽度-->
+        <attr name="tvAddTextWidth" format="dimension"></attr>
+    </declare-styleable>
+</resources>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_chatting"
+    tools:ignore="UnusedNavigation">
+
+    <fragment
+        android:id="@+id/navigation_notification"
+        android:name="com.example.chatting.ui.main.NotificationFragment"
+        android:label="@string/title_notification"
+        tools:layout="@layout/notification_fragment" />
+
+    <fragment
+        android:id="@+id/navigation_chatting"
+        android:name="com.example.chatting.ChattingFragment"
+        android:label="@string/title_chatting"
+        tools:layout="@layout/chatting_fragment" />
+
+    <fragment
+        android:id="@+id/navigation_center"
+        android:name="com.example.chatting.CenterFragment"
+        android:label="@string/title_center"
+        tools:layout="@layout/center_fragment" />
+</navigation>
