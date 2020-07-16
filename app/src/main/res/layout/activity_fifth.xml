@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".FifthActivity">
+
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content">
+
+
+
+        <ImageView
+
+            android:id="@+id/h_back"
+
+            android:layout_width="match_parent"
+
+            android:layout_height="200dp"
+            android:src="@drawable/back2"/>
+
+
+
+        <ImageView
+
+            android:id="@+id/h_head"
+
+            android:layout_width="80dp"
+
+            android:layout_height="80dp"
+
+            android:layout_centerInParent="true"
+            android:src="@drawable/touxiang"/>
+
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+
+            android:layout_alignBottom="@id/h_back"
+
+            android:orientation="horizontal"
+
+            android:layout_marginBottom="20dp">
+
+
+
+            <ImageView
+
+                android:id="@+id/user_line"
+
+                android:layout_width="1dp"
+
+                android:layout_height="25dp"
+
+                android:layout_marginLeft="15dp"
+
+                android:layout_centerHorizontal="true"
+
+                android:background="@color/colorWhite"/>
+
+
+
+            <TextView
+
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:textColor="@color/colorBlack"
+                android:text="用户"
+                android:layout_toRightOf="@id/user_val"
+                android:layout_marginLeft="100dp"
+               />
+
+
+            <TextView
+
+                android:id="@+id/user_val"
+
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+
+                android:text="190110***"
+
+                android:textColor="@color/colorBlack"
+
+                android:textSize="17sp"
+
+                android:layout_marginLeft="20dp"
+                />
+
+        </RelativeLayout>
+
+
+
+    </RelativeLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/treasure"
+        android:drawableLeft="@drawable/treasure"
+        android:background="@drawable/bg_btn1"
+        android:text="我的收藏"
+        android:textSize="25dp"
+
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/announced"
+        android:text="我的发表"
+        android:drawableLeft="@drawable/announced"
+        android:background="@drawable/bg_btn1"
+        android:textSize="25dp"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/download"
+        android:text="离线缓存"
+        android:textSize="25dp"
+        android:background="@drawable/bg_btn1"
+        android:drawableLeft="@drawable/download"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/refresh"
+        android:text="版本更新"
+        android:textSize="25dp"
+        android:background="@drawable/bg_btn1"
+        android:drawableLeft="@drawable/refresh"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/setting"
+        android:text="设置"
+        android:textSize="25dp"
+        android:background="@drawable/bg_btn1"
+        android:drawableLeft="@drawable/setting"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:id="@+id/cancel"
+        android:text="退出登录"
+        android:background="@color/colorRed"
+        android:textSize="25dp"
+        />
+
+
+
+</LinearLayout>

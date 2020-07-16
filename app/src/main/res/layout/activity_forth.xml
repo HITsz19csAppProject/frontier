@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+<<<<<<< HEAD
     <com.example.chatting.ui.main.ClearTextEditText
         android:id="@+id/tv_search"
         android:layout_width="match_parent"
@@ -19,6 +20,17 @@
         android:background="@drawable/bg_search"
         android:inputType="text"
         android:gravity="center" />
+=======
+    <EditText
+        android:id="@+id/tv_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="搜 索"
+        android:gravity="center"
+        android:drawableLeft="@drawable/search_icon"
+        android:textColor="@color/cardview_light_background"
+        />
+>>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
 
     <Button
         android:layout_width="match_parent"
@@ -30,14 +42,23 @@
         android:layout_marginLeft="10dp"
         android:text="我的日程"
         android:textSize="25sp"
+<<<<<<< HEAD
         android:gravity="center" />
+=======
+        android:gravity="center"
+        />
+>>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:id="@+id/tv_related"
         android:layout_marginTop="20dp"
+<<<<<<< HEAD
         android:background="@drawable/bg_corner"
+=======
+        android:background="@drawable/bg_btn1"
+>>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:text="与我有关"
@@ -49,12 +70,21 @@
         android:layout_height="70dp"
         android:id="@+id/tv_explore"
         android:layout_marginTop="20dp"
+<<<<<<< HEAD
         android:background="@drawable/bg_corner"
+=======
+        android:background="@drawable/bg_btn1"
+>>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:text="探索"
         android:textSize="25sp"
+<<<<<<< HEAD
         android:gravity="center" />
+=======
+        android:gravity="center"
+        />
+>>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
 
     <Button
         android:layout_width="50dp"

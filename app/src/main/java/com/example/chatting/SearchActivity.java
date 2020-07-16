@@ -22,6 +22,11 @@ public class SearchActivity extends AppCompatActivity {
         DrawableUtil drawableUtil = new DrawableUtil(mEditText, new DrawableUtil.OnDrawableListener() {
             @Override
             public void onLeft(View v, Drawable left) {
+<<<<<<< HEAD
+=======
+//                Intent intent = new Intent(SearchActivity.this, HomeFragment.class);
+//                startActivity(intent);
+>>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
                 onBackPressed();
             }
 

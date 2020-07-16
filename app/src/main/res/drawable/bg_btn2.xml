@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+<<<<<<< HEAD
     <item android:state_pressed="true">
         <shape>
             <solid
@@ -19,3 +20,24 @@
     </item>
 
 </selector>
+=======
+<item android:state_pressed="true">
+    <shape>
+        <solid
+            android:color="#339966"/>
+        <corners
+            android:radius="15dp"/>
+    </shape>
+</item>
+
+<item android:state_pressed="false">
+    <shape>
+        <solid
+            android:color="#3399FF"/>
+        <corners
+            android:radius="15dp"/>
+    </shape>
+</item>
+
+</selector>
+>>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6

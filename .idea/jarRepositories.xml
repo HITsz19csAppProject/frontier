@@ -21,5 +21,13 @@
       <option name="name" value="Google" />
       <option name="url" value="https://dl.google.com/dl/android/maven2/" />
     </remote-repository>
+<<<<<<< HEAD
+=======
+    <remote-repository>
+      <option name="id" value="maven" />
+      <option name="name" value="maven" />
+      <option name="url" value="https://dl.bintray.com/chaozhouzhang/maven" />
+    </remote-repository>
+>>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
   </component>
 </project>

@@ -34,7 +34,11 @@
                 android:text="探索"
                 android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
 
+<<<<<<< HEAD
             <TextView
+=======
+            <EditText
+>>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:id="@+id/tv_search"
