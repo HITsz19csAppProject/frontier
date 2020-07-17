@@ -27,7 +27,7 @@
         android:id="@+id/et_post_content"/>
 
     <Button
-<<<<<<< HEAD
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btn_label"
@@ -47,14 +47,5 @@
             android:text="发表"
             android:textSize="20sp"/>
 
-=======
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:id="@+id/btn_confirm"
-        android:layout_marginTop="8dp"
-        android:layout_gravity="center_horizontal"
-        android:text="发表"
-        android:textSize="20sp"/>
->>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
 
 </LinearLayout>

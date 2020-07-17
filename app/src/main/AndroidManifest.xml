@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.chatting">
 
-<<<<<<< HEAD
-=======
     <!--允许联网 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!--获取GSM（2g）、WCDMA（联通3g）等网络状态的信息  -->
@@ -17,7 +15,6 @@
     <!--允许读取手机状态 用于创建BmobInstallation-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
->>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -25,46 +22,42 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-<<<<<<< HEAD
+
         <activity android:name=".LabelActivity"></activity>
         <activity android:name=".LoginActivity">
-=======
-        <activity android:name=".ui.main.LoginActivity">
->>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<<<<<<< HEAD
-=======
+
         <activity android:name=".FifthActivity" />
         <activity android:name=".ForthActivity" />
->>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
+
         <activity android:name=".PostActivity" />
         <activity
             android:name=".ExploreActivity"
             android:label="@string/title_activity_explore"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".SearchActivity" />
-<<<<<<< HEAD
+
         <activity android:name=".AnnounceActivity" />
         <activity android:name=".NewsActivity" />
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan" />
-=======
+
         <activity android:name=".ThirdActivity" />
         <activity android:name=".secondActivity" />
-        <activity android:name=".MainActivity">
+<!--        <activity android:name=".MainActivity">-->
 
-        </activity>
+<!--        </activity>-->
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
             android:authorities="com.example.BmobContentProvider">
         </provider>
->>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
+
     </application>
 
 </manifest>
