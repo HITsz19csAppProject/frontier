@@ -53,11 +53,8 @@ public class ClearTextEditText extends AppCompatEditText implements View.OnFocus
         }else {
             //没有焦点，隐藏删除图标
             setDrawableRightVisible(false);
-<<<<<<< HEAD
            // clearFocus();
-=======
-            clearFocus();
->>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
+
         }
     }
 
@@ -79,11 +76,7 @@ public class ClearTextEditText extends AppCompatEditText implements View.OnFocus
 
     private void setDrawableRightVisible(boolean visible){
         Drawable drawableRight = visible ? mClearDrawable : null;
-<<<<<<< HEAD
         //getCompoundDrawables()可以获得一个{DrawableLeft, DrawableTop, DrawableRight, DrawableBottom}的数组。
-=======
-        //getCompoundDrawables()可以获得一个{DrawableLeft, DrawableTop, DrawableRiht, DrawableBottom}的数组。
->>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
         //getCompoundDrawables()[2]表示获取EditText的DrawableRight
         setCompoundDrawables(getCompoundDrawables()[0],getCompoundDrawables()[1], drawableRight, getCompoundDrawables()[3]);
     }

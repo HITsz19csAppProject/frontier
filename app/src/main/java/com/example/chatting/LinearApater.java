@@ -9,17 +9,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-<<<<<<< HEAD
-import java.util.List;
-
-public class LinearApater extends RecyclerView.Adapter<LinearApater.ViewHolder> {
-=======
 import com.example.chatting.R;
 
 import java.util.List;
 
 class LinearAdapter extends RecyclerView.Adapter<LinearAdapter.ViewHolder> {
->>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
 
     private Context mContext;
     private List<String> titleList;
@@ -29,11 +23,8 @@ class LinearAdapter extends RecyclerView.Adapter<LinearAdapter.ViewHolder> {
     private List<String> bodyList;
     private OnRecyclerViewItemClickListener myClickItemListener;// 声明自定义的接口
 
-<<<<<<< HEAD
-    public LinearApater(Context mContext, List<String> titleList, List<Boolean> booleanList, List<String> authorList, List<String> bodyList) {
-=======
+
     public LinearAdapter(Context mContext, List<String> titleList, List<Boolean> booleanList,List<String> authorList,List<String> bodyList) {
->>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
         this.mContext = mContext;
         this.titleList = titleList;
         this.booleanList = booleanList;

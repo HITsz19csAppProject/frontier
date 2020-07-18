@@ -10,13 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
-<<<<<<< HEAD
+
 import com.example.chatting.ui.main.SectionsPagerAdapter;
-=======
-import com.example.chatting.R;
-import com.example.chatting.ui.main.SectionsPagerAdapter;
-import com.example.chatting.SearchActivity;
->>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
+
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -30,11 +26,8 @@ public class ExploreActivity extends AppCompatActivity {
     private ArrayList<Boolean> booleanList = new ArrayList<>();
     private ArrayList<String> authorList = new ArrayList<>();
     private ArrayList<String> bodyList = new ArrayList<>();
-<<<<<<< HEAD
-    private LinearApater linearAdapter;
-=======
     private LinearAdapter linearAdapter;
->>>>>>> 57a7597d622aeacff8e3aff3b8bf31bc4cc297a6
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

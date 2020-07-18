@@ -18,7 +18,7 @@ public class ForthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forth);
+        setContentView(R.layout.notification_fragment);
         tv_search=findViewById(R.id.tv_search);
         tv_schedule=findViewById(R.id.tv_schedule);
         tv_related=findViewById(R.id.tv_related);

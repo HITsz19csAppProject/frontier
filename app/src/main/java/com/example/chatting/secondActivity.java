@@ -45,7 +45,7 @@ public class secondActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_second);
+        setContentView(R.layout.activity_news);
         News_headline=findViewById(R.id.News_headline);
         News_writer=findViewById(R.id.News_writer);
         News_context=findViewById(R.id.News_context);

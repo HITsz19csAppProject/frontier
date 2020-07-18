@@ -27,11 +27,5 @@ public class FifthActivity extends AppCompatActivity {
                 startActivityForResult(intent, 1);
             }
         });
-
-
-
-
-
-
     }
 }

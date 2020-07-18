@@ -20,7 +20,7 @@ public class ThirdActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_third);
+        setContentView(R.layout.activity_announce);
         publish=findViewById(R.id.publish);
         my_headline=findViewById(R.id.my_headline);
         my_context=findViewById(R.id.my_context);
