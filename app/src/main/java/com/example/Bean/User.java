@@ -1,6 +1,8 @@
 package com.example.Bean;
 
-public class User {
+import cn.bmob.v3.BmobUser;
+
+public class User extends BmobUser {
     /**
      * 用户基本信息类
      */

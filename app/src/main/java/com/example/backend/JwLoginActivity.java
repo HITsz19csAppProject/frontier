@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LoginActivity {
+public class JwLoginActivity {
     private String username;
     private String password;
     private String cookie;
