@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 
+import com.example.chatting.LinearAdapter;
 import com.example.chatting.ui.main.SectionsPagerAdapter;
 
 import com.google.android.material.tabs.TabLayout;

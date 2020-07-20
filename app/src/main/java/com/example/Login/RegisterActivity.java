@@ -26,7 +26,7 @@ public class RegisterActivity extends Activity{
     private TextView register_user;
     private TextView register_password;
     private Button register_ok;
-    private User  user;
+    private User user;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
