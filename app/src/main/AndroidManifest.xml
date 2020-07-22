@@ -50,12 +50,13 @@
 
         <activity android:name=".ThirdActivity" />
         <activity android:name=".secondActivity" />
+        <activity android:name="com.example.Login.RegisterActivity"/>
 <!--        <activity android:name=".MainActivity">-->
 
 <!--        </activity>-->
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
-            android:authorities="com.example.BmobContentProvider">
+            android:authorities="com.example.chatting.BmobContentProvider">
         </provider>
 
     </application>
