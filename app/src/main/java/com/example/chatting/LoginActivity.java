@@ -27,7 +27,9 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.Login.temp;
 import com.example.Bean.User;
+import com.example.Login.JwloginActivity;
 import com.example.Login.RegisterActivity;
 import com.example.chatting.MainActivity;
 import com.example.chatting.R;
@@ -86,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void addLogin() {
-//Bmob登陆方法
+        //Bmob登陆方法
         final BmobUser user = new BmobUser();
                 String lgU = register_user.getText().toString().trim();
                 String lgp = register_password.getText().toString().trim();
@@ -111,15 +113,24 @@ public class LoginActivity extends AppCompatActivity {
                                         Intent intent_LoginWRONG = new Intent(LoginActivity.this, LoginActivity.class);
                                         startActivity(intent_LoginWRONG);
                                     } else {//尝试进行注册
-                                        boolean ans = false;
+                                        final boolean[] ans = {false};
                                         //插入方法
-                                        try {
-//                                            ans = new JwLoginActivity().LoginMain(register_password.getText().toString(),user.getUsername());
-                                            ans = new JwLoginActivity().LoginMain("123456","190110715");
-                                        } catch (IOException _e) {
-                                            _e.printStackTrace();
-                                        }
-                                        if(ans) {
+                                        Thread thread = new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                User tempUser = new User();
+                                                tempUser.setName(lgU);
+                                                tempUser.setPassword(lgp);
+                                                try {
+                                                    //使用了上一届学长的代码，完成了校园网认证的功能。（摊手
+                                                    ans[0] = new temp().Login(tempUser);
+                                                } catch (IOException ex) {
+                                                    ex.printStackTrace();
+                                                }
+                                            }
+                                        });
+                                        thread.start();
+                                        if(ans[0]) {
                                             user.signUp(new SaveListener<BmobUser>() {
                                                 @Override
                                                 public void done(BmobUser bmobUser, BmobException e) {
@@ -164,5 +175,6 @@ public class LoginActivity extends AppCompatActivity {
          register_ok = (Button) findViewById(R.id.btn_login);
          mCbShow = (CheckBox)findViewById(R.id.checkBox1);
      }
+
 }
 

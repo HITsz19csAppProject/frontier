@@ -56,7 +56,7 @@ public class Internet {
 //        System.out.println(doc);
         Elements element = doc.select("#fm1");
         setLt(element.select("input[name=lt]").first().attr("value"));
-        set_eventid(element.select("input=[name=_eventId]").first().attr("value"));
-        setExecution(element.select("input=[name=execution]").first().attr("value"));
+        set_eventid(element.select("input[name=_eventId]").first().attr("value"));
+        setExecution(element.select("input[name=execution]").first().attr("value"));
     }
 }
