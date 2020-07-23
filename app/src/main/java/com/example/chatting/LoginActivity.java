@@ -79,14 +79,14 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else {//如果登陆不成功，查询该账号是否注册
                     BmobQuery<User> categoryBmobQuery = new BmobQuery<User>();
-                    categoryBmobQuery.addWhereEqualTo("Username", user.getUsername());
+                    categoryBmobQuery.addWhereEqualTo("username", user.getUsername());
                     categoryBmobQuery.findObjects(new FindListener<User>() {
                     @Override
                     public void done(List<User> object, BmobException e) {
-                        if (e == null) {
-                            Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
-                        }
-                        else {//尝试进行注册
+//                        if (e == null) {
+//                          Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
+//                        }
+//                        else {//尝试进行注册
                             final boolean[] ans = {false};
                             //插入方法
                             Thread thread = new Thread(new Runnable() {
@@ -126,7 +126,10 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 });
                             }
-                        }
+                            else{
+                                Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
+                            }
+//                        }
                     }
                     });
                 }
