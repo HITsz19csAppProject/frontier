@@ -42,9 +42,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         Bmob.initialize(this, "0c073307ca22bf3e1268f1f70bef2941");
         addControl();//加载控件
-        register_user = (TextView) findViewById(R.id.et_username);
-        register_password = (TextView) findViewById(R.id.et_password);
-        mCbShow = (CheckBox)findViewById(R.id.checkBox1);
         mCbShow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -81,15 +78,13 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(in_success);
                 }
                 else {//如果登陆不成功，查询该账号是否注册
-                    BmobQuery<Category> categoryBmobQuery = new BmobQuery<>();
-                    categoryBmobQuery.addWhereEqualTo("username", user.getUsername());
-                    categoryBmobQuery.findObjects(new FindListener<Category>() {
+                    BmobQuery<User> categoryBmobQuery = new BmobQuery<User>();
+                    categoryBmobQuery.addWhereEqualTo("Username", user.getUsername());
+                    categoryBmobQuery.findObjects(new FindListener<User>() {
                     @Override
-                    public void done(List<Category> object, BmobException e) {
+                    public void done(List<User> object, BmobException e) {
                         if (e == null) {
                             Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
-                            Intent intent_LoginWRONG = new Intent(LoginActivity.this, LoginActivity.class);
-                            startActivity(intent_LoginWRONG);
                         }
                         else {//尝试进行注册
                             final boolean[] ans = {false};
@@ -134,8 +129,6 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                     });
-                        /**Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                         startActivity(intent);*/
                 }
             }
         });
