@@ -56,9 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                 }else{
                     //否则隐藏密码
                     register_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
-
                 }
-
             }
         });
         onClick onClick = new onClick();
@@ -81,7 +79,6 @@ public class LoginActivity extends AppCompatActivity {
                     //登陆成功就跳转到主页面
                     Intent in_success = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(in_success);
-
                 }
                 else {//如果登陆不成功，查询该账号是否注册
                     BmobQuery<Category> categoryBmobQuery = new BmobQuery<>();

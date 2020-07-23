@@ -50,7 +50,6 @@
 
         <activity android:name=".ThirdActivity" />
         <activity android:name=".secondActivity" />
-        <activity android:name="com.example.Login.RegisterActivity"/>
 <!--        <activity android:name=".MainActivity">-->
 
 <!--        </activity>-->
