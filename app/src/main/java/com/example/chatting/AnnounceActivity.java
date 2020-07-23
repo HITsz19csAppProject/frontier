@@ -28,8 +28,7 @@ public class AnnounceActivity extends AppCompatActivity {
                 Intent intent=new Intent();
                 String myheadline=my_headline.getText().toString();
                 String mycontext=my_context.getText().toString();
-                if(!myheadline.isEmpty()&&!mycontext.isEmpty())
-                {
+                if(!myheadline.isEmpty()&&!mycontext.isEmpty()) {
                     intent.putExtra("headline_return",myheadline);
                     intent.putExtra("context_return",mycontext);
                     setResult(RESULT_OK,intent);
