@@ -17,11 +17,13 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.chatting.R;
+import com.example.chatting.ui.main.UserInfoActivity;
 
 public class CenterFragment extends Fragment {
 
     private CenterViewModel centerViewModel;
     private Button cancel;
+    private Button user_info;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 
@@ -31,6 +33,14 @@ public class CenterFragment extends Fragment {
                 ViewModelProviders.of(this).get(CenterViewModel.class);
         View root = inflater.inflate(R.layout.center_fragment, container, false);
         cancel = root.findViewById(R.id.cancel);
+        user_info=root.findViewById(R.id.user_info);
+        user_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                startActivityForResult(intent, 1);
+            }
+        });
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -3,9 +3,7 @@
     <string name="title_activity_explore">ExploreActivity</string>
     <string name="tab_text_1">全部</string>
     <string name="tab_text_2">院级</string>
-
     <string name="title_notification">通知</string>
     <string name="title_chatting">交互</string>
     <string name="title_center">个人中心</string>
-
 </resources>

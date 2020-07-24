@@ -15,31 +15,39 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.chatting.DrawableUtil;
 import com.example.chatting.ExploreActivity;
 import com.example.chatting.PostActivity;
 import com.example.chatting.R;
+import com.example.chatting.RecieveActivity;
+import com.example.chatting.ScheduleActivity;
 
 public class NotificationFragment extends Fragment {
 
     private NotificationViewModel notificationViewModel;
-    private EditText tv_search;
-    private Button tv_schedule;
-    private Button tv_related;
-    private Button tv_explore;
+    private EditText mEtSearch;
+    private Button mBtnSchedule;
+    private Button mBtnRelated;
+    private Button mBtnExplore;
     private Button btn_post;
+    private Button btn_related;
+    private Button my_receieve;
+    private Button my_publish;
+    ViewPager vp;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         notificationViewModel =
                 ViewModelProviders.of(this).get(NotificationViewModel.class);
         View root = inflater.inflate(R.layout.notification_fragment, container, false);
-        tv_search = root.findViewById(R.id.tv_search);
-        tv_schedule = root.findViewById(R.id.tv_schedule);
-        tv_related = root.findViewById(R.id.tv_related);
-        tv_explore = root.findViewById(R.id.tv_explore);
+        mEtSearch = root.findViewById(R.id.et_search);
+        mBtnSchedule = root.findViewById(R.id.btn_schedule);
+        mBtnExplore = root.findViewById(R.id.btn_explore);
         btn_post = root.findViewById(R.id.btn_post);
+        my_receieve=root.findViewById(R.id.my_receive);
+        my_publish=root.findViewById(R.id.my_publish);
         btn_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,15 +55,37 @@ public class NotificationFragment extends Fragment {
                 startActivityForResult(intent, 1);
             }
         });
-        tv_explore.setOnClickListener(new View.OnClickListener() {
+        mBtnExplore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), ExploreActivity.class);
                 startActivityForResult(intent, 1);
             }
         });
+        mBtnSchedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ScheduleActivity.class);
+                startActivity(intent);
+            }
+        });
+        my_receieve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), RecieveActivity.class);
+                startActivity(intent);
+            }
+        });
+        my_publish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(),PublishActivity.class);
+                startActivity(intent);
+            }
+        });
+        
 
-        DrawableUtil drawableUtil = new DrawableUtil(tv_search, new DrawableUtil.OnDrawableListener() {
+        DrawableUtil drawableUtil = new DrawableUtil(mEtSearch, new DrawableUtil.OnDrawableListener() {
             @Override
             public void onLeft(View v, Drawable left) {
 
@@ -63,11 +93,13 @@ public class NotificationFragment extends Fragment {
 
             @Override
             public void onRight(View v, Drawable right) {
-                if (tv_search.length() > 1){
-                    tv_search.setText("");
+                if (mEtSearch.length() > 1){
+                    mEtSearch.setText("");
                 }
             }
         });
+
         return root;
     }
+
 }

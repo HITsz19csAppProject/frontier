@@ -106,6 +106,17 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:id="@+id/user_info"
+        android:drawableLeft="@drawable/user_info"
+        android:background="@drawable/bg_btn1"
+        android:text="个人资料"
+        android:textSize="25dp"
+
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:id="@+id/treasure"
         android:drawableLeft="@drawable/treasure"
         android:background="@drawable/bg_btn1"

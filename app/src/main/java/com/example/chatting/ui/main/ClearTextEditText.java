@@ -54,7 +54,6 @@ public class ClearTextEditText extends AppCompatEditText implements View.OnFocus
             //没有焦点，隐藏删除图标
             setDrawableRightVisible(false);
            // clearFocus();
-
         }
     }
 

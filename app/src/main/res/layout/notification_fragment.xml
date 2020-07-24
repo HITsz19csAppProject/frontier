@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <com.example.chatting.ui.main.ClearTextEditText
-        android:id="@+id/tv_search"
+        android:id="@+id/et_search"
         android:layout_width="match_parent"
         android:padding="8dp"
         android:layout_height="50dp"
@@ -20,10 +20,11 @@
         android:gravity="center" />
 
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="70dp"
-        android:id="@+id/tv_schedule"
-        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:id="@+id/btn_schedule"
+        android:layout_marginTop="30dp"
         android:background="@drawable/bg_btn1"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
@@ -32,22 +33,35 @@
         android:gravity="center" />
 
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="70dp"
-        android:id="@+id/tv_related"
-        android:layout_marginTop="20dp"
+        android:text="我已发出"
+        android:id="@+id/my_publish"
+        android:backgroundTint="@color/colorPink"
         android:background="@drawable/bg_btn1"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:text="与我有关"
-        android:textSize="25sp"
-        android:gravity="center" />
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:textSize="25dp"
+        />
 
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="70dp"
-        android:id="@+id/tv_explore"
-        android:layout_marginTop="20dp"
+        android:text="我已收到"
+        android:id="@+id/my_receive"
+        android:background="@drawable/bg_btn1"
+        android:backgroundTint="@color/colorBlue"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:textSize="25dp"
+        />
+
+    <Button
+        android:layout_width="250dp"
+        android:layout_gravity="center"
+        android:layout_height="70dp"
+        android:id="@+id/btn_explore"
+        android:layout_marginTop="30dp"
         android:background="@drawable/bg_btn1"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
@@ -60,7 +74,7 @@
         android:layout_height="50dp"
         android:id="@+id/btn_post"
         android:layout_gravity="right"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="50dp"
         android:text="+"
         android:textSize="30sp"
         android:layout_marginRight="20dp"

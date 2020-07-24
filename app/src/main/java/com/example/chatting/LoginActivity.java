@@ -13,8 +13,8 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.Login.TempLoginActivity;
-import com.example.Bean.User;
+import Login.TempLoginActivity;
+import Bean.User;
 
 import org.apache.log4j.Category;
 
@@ -81,8 +81,8 @@ public class LoginActivity extends AppCompatActivity {
                     BmobQuery<User> categoryBmobQuery = new BmobQuery<User>();
                     categoryBmobQuery.addWhereEqualTo("username", user.getUsername());
                     categoryBmobQuery.findObjects(new FindListener<User>() {
-                    @Override
-                    public void done(List<User> object, BmobException e) {
+                        @Override
+                        public void done(List<User> object, BmobException e) {
 //                        if (e == null) {
 //                          Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
 //                        }
@@ -92,23 +92,23 @@ public class LoginActivity extends AppCompatActivity {
                             Thread thread = new Thread(new Runnable() {
                                 @Override
                                 public void run() {
-                                        User tempUser = new User();
-                                        tempUser.setName(lgU);
-                                        tempUser.setPassword(lgp);
-                                        try {
-                                            //使用了上一届学长的代码，完成了校园网认证的功能。（摊手
-                                            ans[0] = new TempLoginActivity().Login(tempUser);
-                                        } catch (IOException ex) {
-                                            ex.printStackTrace();
-                                        }
+                                    User tempUser = new User();
+                                    tempUser.setName(lgU);
+                                    tempUser.setPassword(lgp);
+                                    try {
+                                        //使用了上一届学长的代码，完成了校园网认证的功能。（摊手
+                                        ans[0] = new TempLoginActivity().Login(tempUser);
+                                    } catch (IOException ex) {
+                                        ex.printStackTrace();
                                     }
+                                }
                             });
                             thread.start();
                             try {
-                                    thread.join();
-                                } catch (InterruptedException ex) {
-                                    ex.printStackTrace();
-                                }
+                                thread.join();
+                            } catch (InterruptedException ex) {
+                                ex.printStackTrace();
+                            }
                             if(ans[0]) {
                                 user.signUp(new SaveListener<BmobUser>() {
                                     @Override
@@ -130,13 +130,13 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
                             }
 //                        }
-                    }
+                        }
                     });
                 }
             }
         });
     }
-     private class onClick implements View.OnClickListener{
+    private class onClick implements View.OnClickListener{
 
         @Override
         public void onClick(View v) {
@@ -146,12 +146,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
-     private void addControl() {
-         register_user = (TextView) findViewById(R.id.et_username);
-         register_password = (TextView) findViewById(R.id.et_password);
-         register_ok = (Button) findViewById(R.id.btn_login);
-         mCbShow = (CheckBox)findViewById(R.id.checkBox1);
-     }
+    private void addControl() {
+        register_user = (TextView) findViewById(R.id.et_username);
+        register_password = (TextView) findViewById(R.id.et_password);
+        register_ok = (Button) findViewById(R.id.btn_login);
+        mCbShow = (CheckBox)findViewById(R.id.checkBox1);
+    }
 
 }
 

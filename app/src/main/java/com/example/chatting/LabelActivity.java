@@ -1,5 +1,6 @@
 package com.example.chatting;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +18,25 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
     private EditText editText;
     String context;
     Button sure;
+    private ImageView mIvBack;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        MyApplication.getInstance().addActivity(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_label);
+        ActionBar actionBar=getSupportActionBar();
+        if(actionBar!=null){
+            actionBar.hide();
+        }
+        mIvBack = (ImageView)findViewById(R.id.im_back);
+        mIvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
         editText=findViewById(R.id.editText);
         sure=findViewById(R.id.sure);
         final LabelLayoutView labelLayoutView = findViewById(R.id.lablayout);

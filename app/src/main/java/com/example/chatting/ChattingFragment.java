@@ -2,6 +2,7 @@ package com.example.chatting;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -32,6 +34,9 @@ public class ChattingFragment extends Fragment {
     private Button add;
     private EditText mTvSearch;
     private NewsAdapter adapter1;
+    private Button sum;
+    public DrawerLayout drawerLayout;
+    private Button sure;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -39,6 +44,15 @@ public class ChattingFragment extends Fragment {
                 ViewModelProviders.of(this).get(ChattingViewModel.class);
         View root = inflater.inflate(R.layout.chatting_fragment, container, false);
         add = root.findViewById(R.id.add);
+        sum=root.findViewById(R.id.sum);
+        sure=root.findViewById(R.id.sure);
+        sure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerLayout.closeDrawer(Gravity.LEFT);
+            }
+        });
+        drawerLayout=(DrawerLayout) root.findViewById(R.id.drawer_layout_home);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -46,8 +60,49 @@ public class ChattingFragment extends Fragment {
                 startActivityForResult(intent, 1);
             }
         });
-
+        sum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
         mTvSearch = root.findViewById(R.id.tv_search);
+
+        final LabelLayoutView labelLayoutView =root. findViewById(R.id.range_layout);
+        final List<LabelModel> labelModelArrayList = new ArrayList<>();
+        LabelModel tag1 = new LabelModel();
+        tag1.setTextValue("时间");
+        labelModelArrayList.add(tag1);
+
+        LabelModel tag2= new LabelModel();
+        tag2.setTextValue("学习");
+        labelModelArrayList.add(tag2);
+
+        LabelModel tag3= new LabelModel();
+        tag3.setTextValue("闲聊");
+        labelModelArrayList.add(tag3);
+
+        LabelModel tag4= new LabelModel();
+        tag4.setTextValue("运动");
+        labelModelArrayList.add(tag4);
+
+        LabelModel tag5= new LabelModel();
+        tag5.setTextValue("游戏");
+        labelModelArrayList.add(tag5);
+
+        LabelModel tag6= new LabelModel();
+        tag6.setTextValue("唱歌");
+        labelModelArrayList.add(tag6);
+
+        LabelModel tag7= new LabelModel();
+        tag7.setTextValue("诗歌");
+        labelModelArrayList.add(tag7);
+
+        LabelModel tag8= new LabelModel();
+        tag8.setTextValue("生活");
+        labelModelArrayList.add(tag8);
+
+        labelLayoutView.setStringList(labelModelArrayList);
 
         initRange();
         RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recycle_view);

@@ -10,10 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
-
-import com.example.chatting.LinearAdapter;
 import com.example.chatting.ui.main.SectionsPagerAdapter;
-
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -27,11 +24,11 @@ public class ExploreActivity extends AppCompatActivity {
     private ArrayList<Boolean> booleanList = new ArrayList<>();
     private ArrayList<String> authorList = new ArrayList<>();
     private ArrayList<String> bodyList = new ArrayList<>();
-    private LinearAdapter linearAdapter;
-
+    private LinearApater linearAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        MyApplication.getInstance().addActivity(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_explore);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
@@ -59,10 +56,7 @@ public class ExploreActivity extends AppCompatActivity {
                 case R.id.im_back:
                     onBackPressed();
                     break;
-                case R.id.tv_search:
-                    intent = new Intent(ExploreActivity.this, SearchActivity.class);
-                    startActivity(intent);
-                    break;
+
             }
         }
     }

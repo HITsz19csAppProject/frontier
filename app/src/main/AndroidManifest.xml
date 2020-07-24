@@ -15,6 +15,7 @@
     <!--允许读取手机状态 用于创建BmobInstallation-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,8 +23,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".LabelActivity"></activity>
+        <activity android:name=".ui.main.PublishActivity"></activity>
+        <activity android:name=".RecieveActivity" />
+        <activity android:name=".ui.main.UserInfoActivity" />
+        <activity android:name=".EditScheduleActivity" />
+        <activity android:name=".ScheduleActivity" />
+        <activity android:name=".LabelActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,33 +36,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".FifthActivity" />
-        <activity android:name=".ForthActivity" />
-
         <activity android:name=".PostActivity" />
         <activity
             android:name=".ExploreActivity"
             android:label="@string/title_activity_explore"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".SearchActivity" />
-
         <activity android:name=".AnnounceActivity" />
         <activity android:name=".NewsActivity" />
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan" />
 
-        <activity android:name=".ThirdActivity" />
-        <activity android:name=".secondActivity" />
-<!--        <activity android:name=".MainActivity">-->
 
-<!--        </activity>-->
-        <provider
-            android:name="cn.bmob.v3.util.BmobContentProvider"
-            android:authorities="com.example.chatting.BmobContentProvider">
-        </provider>
+    <provider
+        android:name="cn.bmob.v3.util.BmobContentProvider"
+        android:authorities="com.example.chatting.BmobContentProvider">
+    </provider>
 
-    </application>
+</application>
 
 </manifest>
