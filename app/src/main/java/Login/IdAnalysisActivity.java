@@ -7,7 +7,7 @@ public class IdAnalysisActivity {
     private HashMap<String, Integer> m = new HashMap<>();
 
     private void init(HashMap m) {
-        int tempCode = 1;
+        int tempCode = 0;
         m.put("011", tempCode++);    /** 计算机 */
         m.put("021", tempCode++);    /** 电信 */
         m.put("031", tempCode++);    /** 机械 */
@@ -25,30 +25,30 @@ public class IdAnalysisActivity {
     private boolean Grade(String ID) {
         if (ID.length() != 2) return false;
         int code = Integer.valueOf(ID);
-        newCode += 'a'+code-16;
+        newCode += (char)('a'+code-16);
         return true;
     }
 
     private boolean Major(String ID) {
         if (!m.containsKey(ID)) return false;
-        newCode += 'a'+m.get(ID);
+        newCode += (char)('a'+m.get(ID));
         return true;
     }
 
     private boolean Class(String ID) {
         if (ID.length()!=2) return false;
         int code = Integer.valueOf(ID);
-        newCode += 'a'+code;
+        newCode += (char)('a'+code);
         return true;
     }
 
     private boolean Number(String ID) {
         if (ID.length()!=2) return false;
         int code = Integer.valueOf(ID);
-        newCode += 'a'+code;
+        newCode += (char)('a'+code);
         return true;
     }
-    public String Analysis(String ID){
+    public String IdAnalysis(String ID){
         init(m);
         String sub1 = ID.substring(0, 2);
         String sub2 = ID.substring(2, 5);
