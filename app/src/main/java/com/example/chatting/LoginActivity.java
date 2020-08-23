@@ -16,9 +16,6 @@ import android.widget.Toast;
 import Login.TempLoginActivity;
 import Bean.User;
 
-import org.apache.log4j.Category;
-
-import java.io.IOException;
 import java.util.List;
 
 import cn.bmob.v3.Bmob;
@@ -98,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                                     try {
                                         //使用了上一届学长的代码，完成了校园网认证的功能。（摊手
                                         ans[0] = new TempLoginActivity().Login(tempUser);
-                                    } catch (IOException ex) {
+                                    } catch (Exception ex) {
                                         ex.printStackTrace();
                                     }
                                 }
