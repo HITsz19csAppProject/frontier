@@ -21,9 +21,13 @@ import java.util.List;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FetchUserInfoListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+
+import static com.example.chatting.MyApplication.CurrentUser;
 
 public class LoginActivity extends AppCompatActivity {
     private TextView register_user;
@@ -36,20 +40,15 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Bmob.initialize(this, "0c073307ca22bf3e1268f1f70bef2941");
         addControl();//加载控件
-        mCbShow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // TODO Auto-generated method stub
-                if(isChecked){
-                    //如果选中，显示密码
-                    register_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                }else{
-                    //否则隐藏密码
-                    register_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                }
+        mCbShow.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // TODO Auto-generated method stub
+            if(isChecked){
+                //如果选中，显示密码
+                register_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            }else{
+                //否则隐藏密码
+                register_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
             }
         });
         onClick onClick = new onClick();
@@ -60,21 +59,32 @@ public class LoginActivity extends AppCompatActivity {
 
     private void Login() {
         //Bmob登陆方法
-        User user = new User();
         String usr = register_user.getText().toString().trim();
         String pwd = register_password.getText().toString().trim();
-        user.setAll(usr, pwd);
-        user.login(new SaveListener<User>() {
+        CurrentUser.setAll(usr, pwd);
+        CurrentUser.login(new SaveListener<User>() {
             @Override
+            // TODO: 2020/8/24  
             public void done(User User, BmobException e) {
                 if (e == null) {
                     //登陆成功就跳转到主页面
                     Intent in_success = new Intent(LoginActivity.this, MainActivity.class);
+                    CurrentUser.fetchUserJsonInfo(new FetchUserInfoListener<String>() {
+                        @Override
+                        public void done(String json, BmobException e) {
+                            if (e == null) {
+
+                            }
+                            else {
+                                Log.e("error",e.getMessage());
+                            }
+                        }
+                    });
                     startActivity(in_success);
                 }
                 else {//如果登陆不成功，查询该账号是否注册
                     BmobQuery<User> categoryBmobQuery = new BmobQuery<User>();
-                    categoryBmobQuery.addWhereEqualTo("Username", user.getUsername());
+                    categoryBmobQuery.addWhereEqualTo("Username", CurrentUser.getUsername());
                     categoryBmobQuery.findObjects(new FindListener<User>() {
                         @Override
                         public void done(List<User> object, BmobException e) {
@@ -99,14 +109,14 @@ public class LoginActivity extends AppCompatActivity {
                                 ex.printStackTrace();
                             }
                             if(ans[0]) {
-                                user.signUp(new SaveListener<User>() {
+                                CurrentUser.signUp(new SaveListener<User>() {
                                     @Override
                                     public void done(User User, BmobException e) {
                                         if (e == null) {
                                             //判断是否注册成功成功则跳转到登陆的页面
                                             Intent intent_register = new Intent(LoginActivity.this, MainActivity.class);
                                             startActivity(intent_register);
-                                            Toast.makeText(LoginActivity.this, "添加数据成功，返回objectId为：" + user.getObjectId(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(LoginActivity.this, "添加数据成功，返回objectId为：" + CurrentUser.getObjectId(), Toast.LENGTH_SHORT).show();
                                             //这里我们需要了解一下什么objectid就像是一个登陆校验一样只要有这个就代表着你往表里面写入的数据是成功的了。
                                         }
                                         else {

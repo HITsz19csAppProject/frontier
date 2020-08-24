@@ -19,6 +19,8 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.chatting.R;
 import com.example.chatting.ui.main.UserInfoActivity;
 
+import static com.example.chatting.MyApplication.CurrentUser;
+
 public class CenterFragment extends Fragment {
 
     private CenterViewModel centerViewModel;
@@ -44,6 +46,7 @@ public class CenterFragment extends Fragment {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                CurrentUser.logOut();
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivityForResult(intent, 1);
             }
