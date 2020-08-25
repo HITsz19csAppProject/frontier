@@ -23,7 +23,7 @@ public class TempLoginActivity {
         defaultRequestHeader.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36");
     }
 
-    public boolean Login(User user) throws IOException {
+    public boolean Login(String usr, String pwd) throws IOException {
         Connection hc = Jsoup.connect(Url)
                 .headers(defaultRequestHeader);
         cookies.clear();
@@ -40,8 +40,8 @@ public class TempLoginActivity {
                 .headers(defaultRequestHeader)
                 .ignoreContentType(true);
         Document page = c2.cookies(cookies)
-                .data("username", user.getName())
-                .data("password", user.getPassword())
+                .data("username", usr)
+                .data("password", pwd)
                 .data("lt", lt)
                 .data("rememberMe", "on")
                 .data("execution", execution)

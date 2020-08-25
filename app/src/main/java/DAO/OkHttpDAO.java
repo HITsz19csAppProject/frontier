@@ -1,5 +1,7 @@
 package DAO;
 
+import java.io.IOException;
+
 import Bean.User;
 
 /**
@@ -24,8 +26,9 @@ public interface OkHttpDAO {
      * 登录
      *
      * @param user 用户信息
+     * @return
      */
-    public void login(User user);
+    public String login(User user) throws IOException;
 
     /**
      * 设置教务网地址
