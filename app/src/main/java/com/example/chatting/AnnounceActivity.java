@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import Bean.MessageItem;
+import Tools.ServerTools;
+
 public class AnnounceActivity extends AppCompatActivity {
 
     private Button publish,addLabel;
@@ -41,17 +44,25 @@ public class AnnounceActivity extends AppCompatActivity {
         publish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println("已经点击");
                 Intent intent=new Intent();
                 String myheadline=my_headline.getText().toString();
                 String mycontext=my_context.getText().toString();
                 if(!myheadline.isEmpty()&&!mycontext.isEmpty())
                 {
+                    System.out.println("获取成功");
+                    MessageItem newMessage = new MessageItem();
+                    newMessage.setTitle(myheadline);
+                    newMessage.setContent(mycontext);
+                    new ServerTools().SaveMessage(AnnounceActivity.this, newMessage);
+
                     intent.putExtra("headline_return",myheadline);
                     intent.putExtra("context_return",mycontext);
                     setResult(RESULT_OK,intent);
                     finish();
                 }
                 else{
+                    System.out.println("获取失败");
                     my_headline.setText("error");
                 }
             }

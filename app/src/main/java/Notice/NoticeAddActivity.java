@@ -1,6 +1,6 @@
 package Notice;
 
-import Bean.NoticeItem;
+import Bean.MessageItem;
 import Bean.User;
 
 import cn.bmob.v3.BmobUser;
@@ -12,7 +12,7 @@ public class NoticeAddActivity {
     private String NoticeTitle;
 
     public void NoticePublish(){
-        NoticeItem bean = new NoticeItem();
+        MessageItem bean = new MessageItem();
         User user = BmobUser.getCurrentUser(User.class);
         bean.setAuthor(user)
                 .setContent(NoticeContent)

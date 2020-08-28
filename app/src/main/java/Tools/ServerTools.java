@@ -10,6 +10,7 @@ import com.example.chatting.MainActivity;
 import java.io.IOException;
 import java.util.List;
 
+import Bean.MessageItem;
 import Bean.User;
 import Login.LoginAsync;
 import cn.bmob.v3.BmobQuery;
@@ -115,5 +116,27 @@ public class ServerTools {
                 }
             }
         });
+    }
+
+    public void SaveMessage(Context context, MessageItem newMessage) {
+        System.out.println("开始上传");
+        if (BmobUser.isLogin()) {
+            System.out.println("正在上传");
+            newMessage.setAuthor(BmobUser.getCurrentUser(User.class));
+            newMessage.save(new SaveListener<String>() {
+                @Override
+                public void done(String s, BmobException e) {
+                    if (e == null)
+                        Toast.makeText(context, "发布成功", Toast.LENGTH_SHORT).show();
+                    else {
+                        Log.e("BMOB", e.toString());
+                        Toast.makeText(context, "发布失败", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+        else {
+            Toast.makeText(context, "尚未登录", Toast.LENGTH_SHORT).show();
+        }
     }
 }

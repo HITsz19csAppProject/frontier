@@ -21,6 +21,14 @@ import com.example.chatting.news;
 import java.util.ArrayList;
 import java.util.List;
 
+import Bean.MessageItem;
+import Bean.User;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import static com.example.chatting.MyApplication.CurrentUser;
+
 public class PublishActivity extends AppCompatActivity {
 
     private NewsAdapter adapter1;
@@ -73,17 +81,37 @@ public class PublishActivity extends AppCompatActivity {
     }
 
     private void initNews() {
-        news N1=new news("年纪大会","致全年级同学","本年级大会将在7月21号举行");
-        news N2=new news("体能测试","致全年级同学","体能测试全年级参加");
-        news N3=new news("文理通识选课","致全年级同学","文理通识选课，同学们自发在网上选择");
-        news N4=new news("辅修双学位","致全年级同学","意向辅修双学位的同学请在线上报名");
-        news N5=new news("体育选课","致全年级同学","体育选课将在7月21日下午一点正式开始");
+//        news N1=new news("年纪大会","致全年级同学","本年级大会将在7月21号举行");
+//        news N2=new news("体能测试","致全年级同学","体能测试全年级参加");
+//        news N3=new news("文理通识选课","致全年级同学","文理通识选课，同学们自发在网上选择");
+//        news N4=new news("辅修双学位","致全年级同学","意向辅修双学位的同学请在线上报名");
+//        news N5=new news("体育选课","致全年级同学","体育选课将在7月21日下午一点正式开始");
+//
+//        newsList.add(N1);
+//        newsList.add(N2);
+//        newsList.add(N3);
+//        newsList.add(N4);
+//        newsList.add(N5);
+        if (BmobUser.isLogin()) {
+            BmobQuery<MessageItem> q = new BmobQuery<>();
+            q.addWhereEqualTo("author", BmobUser.getCurrentUser(User.class));
+            q.order("-updatedAt");
 
-        newsList.add(N1);
-        newsList.add(N2);
-        newsList.add(N3);
-        newsList.add(N4);
-        newsList.add(N5);
+            q.include("author");
+            q.findObjects(new FindListener<MessageItem>() {
+                //todo
+                @Override
+                public void done(List<MessageItem> list, BmobException e) {
+                    if (e == null) {
+                        for (int i = 0; i<list.size(); i++) {
+                            MessageItem newMessage = list.get(i);
+                            System.out.println(newMessage.getContent());
+                            newsList.add(new news(newMessage.getTitle(), CurrentUser.getUsername(), newMessage.getContent()));
+                        }
+                    }
+                }
+            });
+        }
     }
 
 }
