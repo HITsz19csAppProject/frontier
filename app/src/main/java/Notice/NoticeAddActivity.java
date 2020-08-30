@@ -1,5 +1,6 @@
 package Notice;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -28,12 +29,13 @@ public class NoticeAddActivity extends Activity {
     EditText content,title;
     User user = BmobUser.getCurrentUser(User.class);
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.);
         // Bmob.initialize(this,);
-        content=(EditText) findViewById(R.id.content);
+        content=(EditText)findViewById(R.id.content);
         title=(EditText)findViewById(R.id.title);
 
     }
@@ -55,7 +57,6 @@ public class NoticeAddActivity extends Activity {
                                 Toast.makeText(NoticeAddActivity.this,"添加数据成功",Toast.LENGTH_SHORT).show();
                             }else
                                 Toast.makeText(NoticeAddActivity.this,"创建数据失败",Toast.LENGTH_SHORT).show();
-
                         }
                     });
         }
