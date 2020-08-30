@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <com.example.chatting.ui.main.ClearTextEditText
+    <com.example.chatting.ClearTextEditText
         android:id="@+id/tv_search"
         android:layout_width="match_parent"
         android:padding="8dp"

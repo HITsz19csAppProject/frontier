@@ -12,7 +12,7 @@
         android:orientation="horizontal"
         >
 
-        <com.example.chatting.ui.main.ClearTextEditText
+        <com.example.chatting.ClearTextEditText
             android:layout_width="0dp"
             android:drawableLeft="@drawable/search_icon"
             android:layout_height="wrap_content"
@@ -23,14 +23,27 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/sure"
-            android:text="sure"
+            android:text="搜索"
             android:layout_weight="1"
             />
     </LinearLayout>
 
 
-    <com.example.chatting.LabelLayoutView
-        android:id="@+id/lablayout"
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:id="@+id/list"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/ok"
+        android:text="完成"
+        android:gravity="center_horizontal"
+        android:textSize="30dp"
+        />
+
+</LinearLayout>

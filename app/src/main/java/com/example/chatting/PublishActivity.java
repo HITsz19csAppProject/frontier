@@ -1,5 +1,6 @@
-package com.example.chatting.ui.main;
+package com.example.chatting;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,12 +12,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.example.chatting.AnnounceActivity;
-import com.example.chatting.NewsActivity;
-import com.example.chatting.NewsAdapter;
-import com.example.chatting.R;
-import com.example.chatting.RecieveActivity;
-import com.example.chatting.news;
+import Adapter.NewsAdapter;
+import AdaptObject.news;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +47,7 @@ public class PublishActivity extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PublishActivity.this, AnnounceActivity.class);
+                Intent intent = new Intent(PublishActivity.this, PostActivity.class);
                 startActivityForResult(intent, 1);
             }
         });
@@ -112,6 +109,29 @@ public class PublishActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    String myheadline = data.getStringExtra("headline_return");
+                    String mycontext = data.getStringExtra("context_return");
+                    news M = new news(myheadline, "致全年级同学", mycontext);
+                    newsList.add(M);
+                    refresh(adapter1);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void refresh(NewsAdapter adapter)
+    {
+        adapter.notifyDataSetChanged();
     }
 
 }

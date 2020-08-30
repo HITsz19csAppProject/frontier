@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/navigation_notification"
-        android:name="com.example.chatting.ui.main.NotificationFragment"
+        android:name="com.example.chatting.NotificationFragment"
         android:label="@string/title_notification"
         tools:layout="@layout/notification_fragment" />
 

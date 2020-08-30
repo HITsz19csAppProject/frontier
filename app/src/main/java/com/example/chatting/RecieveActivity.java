@@ -6,16 +6,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import Adapter.NewsAdapter;
+import AdaptObject.news;
 
 public class RecieveActivity extends AppCompatActivity {
     private NewsAdapter adapter1;

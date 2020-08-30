@@ -18,8 +18,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.chatting.ui.main.NotificationFragment;
-
 import java.util.Calendar;
 
 public class ScheduleActivity extends AppCompatActivity implements View.OnClickListener{
