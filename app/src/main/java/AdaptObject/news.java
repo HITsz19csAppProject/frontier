@@ -1,4 +1,4 @@
-package com.example.chatting;
+package AdaptObject;
 
 public class news {
     private String headline;

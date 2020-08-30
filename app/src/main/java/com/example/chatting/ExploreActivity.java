@@ -10,10 +10,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.chatting.ui.main.SectionsPagerAdapter;
+import Adapter.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+
+import Adapter.LinearApater;
 
 public class ExploreActivity extends AppCompatActivity {
 

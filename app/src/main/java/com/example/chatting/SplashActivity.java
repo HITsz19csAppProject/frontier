@@ -1,10 +1,8 @@
-package com.example.chatting.ui.main;
+package com.example.chatting;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.example.chatting.LoginActivity;
 
 public class SplashActivity extends Activity {
     @Override

@@ -1,4 +1,4 @@
-package com.example.chatting;
+package AdaptObject;
 
 public class LabelModel {
     private String textValue;

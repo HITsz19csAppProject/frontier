@@ -1,4 +1,4 @@
-package com.example.chatting.ui.main;
+package com.example.chatting;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -8,21 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
-
-import com.example.chatting.DrawableUtil;
-import com.example.chatting.ExploreActivity;
-import com.example.chatting.PostActivity;
-import com.example.chatting.R;
-import com.example.chatting.RecieveActivity;
-import com.example.chatting.ScheduleActivity;
 
 public class NotificationFragment extends Fragment {
 
@@ -79,7 +69,7 @@ public class NotificationFragment extends Fragment {
         my_publish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),PublishActivity.class);
+                Intent intent = new Intent(getActivity(), PublishActivity.class);
                 startActivity(intent);
             }
         });

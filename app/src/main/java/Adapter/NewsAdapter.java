@@ -1,15 +1,15 @@
-package com.example.chatting;
+package Adapter;
 
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
+import com.example.chatting.R;
+import AdaptObject.news;
 
 import java.util.List;
 import java.util.concurrent.FutureTask;

@@ -1,4 +1,4 @@
-package com.example.chatting.ui.main;
+package com.example.chatting;
 
 import android.app.Notification;
 

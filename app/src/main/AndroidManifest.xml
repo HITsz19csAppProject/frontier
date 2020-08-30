@@ -24,9 +24,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.main.PublishActivity"></activity>
+        <activity android:name=".PublishActivity"></activity>
         <activity android:name=".RecieveActivity" />
-        <activity android:name=".ui.main.UserInfoActivity" />
+        <activity android:name=".UserInfoActivity" />
         <activity android:name=".EditScheduleActivity" />
         <activity android:name=".ScheduleActivity" />
         <activity android:name=".LabelActivity" />
@@ -42,7 +42,7 @@
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".ui.main.SplashActivity">
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

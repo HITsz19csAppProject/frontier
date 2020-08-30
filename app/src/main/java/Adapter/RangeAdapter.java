@@ -1,13 +1,15 @@
-package com.example.chatting;
+package Adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.chatting.R;
+import AdaptObject.range;
 
 import java.util.List;
 

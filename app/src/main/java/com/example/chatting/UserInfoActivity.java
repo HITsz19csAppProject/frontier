@@ -1,4 +1,4 @@
-package com.example.chatting.ui.main;
+package com.example.chatting;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
