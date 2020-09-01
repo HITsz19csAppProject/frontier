@@ -32,10 +32,11 @@ public class AnnounceActivity extends AppCompatActivity {
         mIvBack = (ImageView)findViewById(R.id.im_back);
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 onBackPressed();
             }
-        });
+        });  //返回
 
         publish=findViewById(R.id.publish);
         addLabel = findViewById(R.id.btn_addlabel);
@@ -45,7 +46,7 @@ public class AnnounceActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 System.out.println("已经点击");
-                Intent intent=new Intent();
+                Intent intent1=new Intent();
                 String myheadline=my_headline.getText().toString();
                 String mycontext=my_context.getText().toString();
                 if(!myheadline.isEmpty()&&!mycontext.isEmpty())
@@ -56,9 +57,9 @@ public class AnnounceActivity extends AppCompatActivity {
                     newMessage.setContent(mycontext);
                     new ServerTools().SaveMessage(AnnounceActivity.this, newMessage);
 
-                    intent.putExtra("headline_return",myheadline);
-                    intent.putExtra("context_return",mycontext);
-                    setResult(RESULT_OK,intent);
+                    intent1.putExtra("headline_return",myheadline);
+                    intent1.putExtra("context_return",mycontext);
+                    setResult(RESULT_OK,intent1);
                     finish();
                 }
                 else{
@@ -67,7 +68,8 @@ public class AnnounceActivity extends AppCompatActivity {
                 }
             }
         });
-        addLabel.setOnClickListener(new View.OnClickListener() {
+        //标签的添加
+        addLabel.setOnClickListener(new  View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(AnnounceActivity.this,LabelActivity.class);

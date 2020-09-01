@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.chatting.NoticeAdapter;
 import com.example.chatting.R;
 
 import java.util.List;
@@ -33,10 +32,10 @@ public class NoticeAddActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.);
-        // Bmob.initialize(this,);
-        content=(EditText)findViewById(R.id.content);
-        title=(EditText)findViewById(R.id.title);
+        setContentView(R.layout.activity_announce);
+        /* Bmob.initialize(this,); */
+        content=(EditText)findViewById(R.id.my_context);
+        title=(EditText)findViewById(R.id.my_headline);
 
     }
 
@@ -44,7 +43,7 @@ public class NoticeAddActivity extends Activity {
         String mtitile=title.getText().toString();
         String mcontent=content.getText().toString();
         if(mtitile == null){
-            // Toast.makeText().show();
+            Toast.makeText(NoticeAddActivity.this,"请填写完整信息",Toast.LENGTH_SHORT).show();
         }else{
             MessageItem notice=new MessageItem();
             notice.setAuthor(user)
