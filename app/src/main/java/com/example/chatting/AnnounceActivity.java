@@ -10,8 +10,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import Bean.MessageItem;
 import Tools.ServerTools;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 public class AnnounceActivity extends AppCompatActivity {
 
@@ -74,6 +80,33 @@ public class AnnounceActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(AnnounceActivity.this,LabelActivity.class);
                 startActivity(intent);
+                get();
+            }
+        });
+
+    }
+
+    public void get(){
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                BmobQuery<MessageItem> query=new BmobQuery<MessageItem>();
+                query.findObjects(new FindListener<MessageItem>() {
+                    @Override
+                    public void done(List<MessageItem> list, BmobException e) {
+                        List<MessageItem> list1 =new ArrayList<>();
+                        if(list1!=null){
+                            final String[] title =new String[list1.size()];
+                            final String[] content=new String[list1.size()];
+                            for(int i=0;i<list1.size();i++){
+                                title[i]=list1.get(i).getTitle();
+                                content[i]=list1.get(i).getContent();
+                            }
+
+                           // class NoticeAdapter extends
+                        }
+                    }
+                });
             }
         });
 
