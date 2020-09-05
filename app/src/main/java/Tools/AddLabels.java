@@ -33,8 +33,8 @@ public class AddLabels extends Application {
         BmobQuery<User> userClass = new BmobQuery<User>();
         userGrade.addWhereContainedIn("ClassID",Class);
 
-//        BmobQuery<User> useracademy = new BmobQuery<User>();
-//        useracademy.addWhereContainedIn("",academy);
+        BmobQuery<User> useracademy = new BmobQuery<User>();
+        useracademy.addWhereContainedIn("",academy);
 
         BmobQuery<User> userSpeciality = new BmobQuery<User>();
         userGrade.addWhereContainedIn("Major",speciality);
@@ -42,7 +42,7 @@ public class AddLabels extends Application {
         List<BmobQuery<User>> andQuerys = new ArrayList<BmobQuery<User>>();
         andQuerys.add(userGrade);
         andQuerys.add(userClass);
-        //andQuerys.add(useracademy);
+        andQuerys.add(useracademy);
         andQuerys.add(userSpeciality);
 
         BmobQuery<User> query = new BmobQuery<User>();
@@ -54,7 +54,7 @@ public class AddLabels extends Application {
                     /**
                      在此处对已选中的人进行下一步操作
                      */
-                    System.out.println("成功");
+                    System.out.println(query.toString()+"cehnggong");
                 }else{
                     Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());//发生错误，返回错误代码
                 }

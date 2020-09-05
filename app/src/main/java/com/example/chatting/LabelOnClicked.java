@@ -12,9 +12,6 @@ public class LabelOnClicked{
 
     public void LabelOnClicked()
     {
-        _grade.add("2019");
-        _class.add("7班");
-        _speciality.add("计算机");
         AddLabels addLabels = new AddLabels();
         addLabels.grade = _grade;
         addLabels.Class = _class;

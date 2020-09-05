@@ -17,6 +17,7 @@ import java.util.List;
 import AdaptObject.LabelModel;
 import AdaptObject.Labelrange;
 import Adapter.LabelrangeAdapter;
+import Tools.AddLabels;
 
 public class LabelActivity extends AppCompatActivity implements LabelLayoutView.OnInputValueListener {
     private String TAG = MainActivity.class.getSimpleName();
@@ -32,6 +33,7 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
     final List<LabelModel> benyanList=new ArrayList<>();
     final List<LabelModel> banjiList=new ArrayList<>();
     final List<LabelModel> labelSearchArrayList = new ArrayList<>();
+    LabelOnClicked labelOnClicked = new LabelOnClicked();//加入标签的对象
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,6 +199,8 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
                 LabelrangeList.add(xinjian);
                 //labelLayoutView.setStringList(labelSearchArrayList);
                 //labelLayoutView.setOnInputValueListener(LabelActivity.this);
+
+                traverseLabels();
             }
         });
     }
@@ -217,6 +221,24 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
 
     }
 
+    //对所有的标签进行检索如果已经被点击，则将其加入ArrayList
+    public void traverseLabels(){
+        for(LabelModel lamo:labelModelArrayList){
+            if(lamo.isClick())labelOnClicked._academy.add(lamo.getTextValue());
+        }
+
+        for(LabelModel lamo:zhuanyeList){
+            if(lamo.isClick())labelOnClicked._speciality.add(lamo.getTextValue());
+        }
+
+        for(LabelModel lamo:nianjiList){
+            if(lamo.isClick())labelOnClicked._grade.add(lamo.getTextValue());
+        }
+
+        for(LabelModel lamo:banjiList){
+            if(lamo.isClick())labelOnClicked._class.add(lamo.getTextValue());
+        }
+    }
 
     @Override
     public void onInoutItem(String value) {
