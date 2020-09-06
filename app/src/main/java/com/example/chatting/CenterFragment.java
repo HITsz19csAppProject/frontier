@@ -34,7 +34,7 @@ public class CenterFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-                startActivityForResult(intent, 1);
+                startActivity(intent);
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {

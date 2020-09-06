@@ -19,18 +19,19 @@ import AdaptObject.news;
 
 public class RecieveActivity extends AppCompatActivity {
     private NewsAdapter adapter1;
-    private List<news> newsList=new ArrayList<>();
+    private List<news> newsList = new ArrayList<>();
     private ImageView mIvBack;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recieve);
-        ActionBar actionBar=getSupportActionBar();
-        if(actionBar!=null){
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
             actionBar.hide();
         }
-        mIvBack = (ImageView)findViewById(R.id.im_back);
+        mIvBack = (ImageView) findViewById(R.id.im_back);
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,11 +60,11 @@ public class RecieveActivity extends AppCompatActivity {
 
 
     private void initNews() {
-        news N1=new news("年纪大会","辛欣","本年级大会将在7月21号举行");
-        news N2=new news("体能测试","刘老师","体能测试全年级参加");
-        news N3=new news("文理通识选课","吴老师","文理通识选课，同学们自发在网上选择");
-        news N4=new news("辅修双学位","教学秘书","意向辅修双学位的同学请在线上报名");
-        news N5=new news("体育选课","辛欣","体育选课将在7月21日下午一点正式开始");
+        news N1 = new news("年纪大会", "辛欣", "本年级大会将在7月21号举行");
+        news N2 = new news("体能测试", "刘老师", "体能测试全年级参加");
+        news N3 = new news("文理通识选课", "吴老师", "文理通识选课，同学们自发在网上选择");
+        news N4 = new news("辅修双学位", "教学秘书", "意向辅修双学位的同学请在线上报名");
+        news N5 = new news("体育选课", "辛欣", "体育选课将在7月21日下午一点正式开始");
 
         newsList.add(N1);
         newsList.add(N2);
@@ -72,27 +73,4 @@ public class RecieveActivity extends AppCompatActivity {
         newsList.add(N5);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 1:
-                if (resultCode == RESULT_OK) {
-                    String myheadline = data.getStringExtra("headline_return");
-                    String mycontext = data.getStringExtra("context_return");
-                    news M = new news(myheadline, "me", mycontext);
-                    newsList.add(M);
-                    refresh(adapter1);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void refresh(NewsAdapter adapter)
-    {
-        adapter.notifyDataSetChanged();
-    }
-    }
-
+}
