@@ -27,6 +27,7 @@ import Adapter.RangeAdapter;
 import AdaptObject.LabelModel;
 import AdaptObject.news;
 import AdaptObject.range;
+import Tools.ServerTools;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -116,7 +117,7 @@ public class ChattingFragment extends Fragment {
         RangeAdapter adapter = new RangeAdapter(rangeList);
         recyclerView.setAdapter(adapter);
 
-        initNews();
+//        initNews();
         adapter1 = new NewsAdapter(getActivity(), R.layout.news, newsList);
         ListView listView = (ListView) root.findViewById(R.id.list_view);
         listView.setAdapter(adapter1);

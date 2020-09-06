@@ -16,6 +16,7 @@ import java.util.List;
 
 import Adapter.NewsAdapter;
 import AdaptObject.news;
+import Tools.ServerTools;
 
 public class RecieveActivity extends AppCompatActivity {
     private NewsAdapter adapter1;
@@ -37,10 +38,11 @@ public class RecieveActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        initNews();
+//        initNews();
         adapter1 = new NewsAdapter(RecieveActivity.this, R.layout.news, newsList);
         ListView listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(adapter1);
+        new ServerTools().MessageShow(newsList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -52,6 +54,7 @@ public class RecieveActivity extends AppCompatActivity {
                 intent.putExtra("extra_headline", news_headline);
                 intent.putExtra("extra_writer", news_writer);
                 intent.putExtra("extra_context", news_context);
+                new ServerTools().MessageShow(newsList);
                 startActivity(intent);
             }
         });
@@ -72,27 +75,27 @@ public class RecieveActivity extends AppCompatActivity {
         newsList.add(N5);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 1:
-                if (resultCode == RESULT_OK) {
-                    String myheadline = data.getStringExtra("headline_return");
-                    String mycontext = data.getStringExtra("context_return");
-                    news M = new news(myheadline, "me", mycontext);
-                    newsList.add(M);
-                    refresh(adapter1);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void refresh(NewsAdapter adapter)
-    {
-        adapter.notifyDataSetChanged();
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+//        super.onActivityResult(requestCode, resultCode, data);
+//        switch (requestCode) {
+//            case 1:
+//                if (resultCode == RESULT_OK) {
+//                    String myheadline = data.getStringExtra("headline_return");
+//                    String mycontext = data.getStringExtra("context_return");
+//                    news M = new news(myheadline, "me", mycontext);
+//                    newsList.add(M);
+//                    refresh(adapter1);
+//                }
+//                break;
+//            default:
+//                break;
+//        }
+//    }
+//
+//    public void refresh(NewsAdapter adapter)
+//    {
+//        adapter.notifyDataSetChanged();
+//    }
     }
 

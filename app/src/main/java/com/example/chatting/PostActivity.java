@@ -11,6 +11,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import Bean.MessageItem;
+import Notice.NoticeAddActivity;
 import Tools.ServerTools;
 
 public class PostActivity extends AppCompatActivity {
@@ -19,12 +20,12 @@ public class PostActivity extends AppCompatActivity {
     private Button mBtnAddLabel;
     private ImageView mIvBack;
     private Button publish;
+    private Button renew;
     private EditText my_headline;
     private EditText my_context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println("进入PostActivity活动");
         MyApplication.getInstance().addActivity(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
@@ -50,26 +51,28 @@ public class PostActivity extends AppCompatActivity {
         publish=findViewById(R.id.publish);
         my_headline=findViewById(R.id.my_headline);
         my_context=findViewById(R.id.my_context);
-        publish.setOnClickListener(view -> {
-            Intent intent=new Intent();
-            String myheadline=my_headline.getText().toString();
-            String mycontext=my_context.getText().toString();
-            if(!myheadline.isEmpty()&&!mycontext.isEmpty())
-            {
-                System.out.println("获取成功");
-                MessageItem newMessage = new MessageItem();
-                newMessage.setTitle(myheadline);
-                newMessage.setContent(mycontext);
-                new ServerTools().SaveMessage(PostActivity.this, newMessage);
-
-                intent.putExtra("headline_return", myheadline);
-                intent.putExtra("context_return", mycontext);
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-            else{
-                System.out.println("获取失败");
-                my_headline.setText("error");
+        publish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent();
+                String myheadline=my_headline.getText().toString();
+                String mycontext=my_context.getText().toString();
+                if(!myheadline.isEmpty()&&!mycontext.isEmpty())
+                {
+                    System.out.println("获取成功");
+                    MessageItem Notice =new MessageItem();
+                    Notice.setContent(mycontext);
+                    Notice.setTitle(myheadline);
+                    new ServerTools().SaveMessage(PostActivity.this,Notice);
+                    intent.putExtra("headline_return",myheadline);
+                    intent.putExtra("context_return",mycontext);
+                    setResult(RESULT_OK,intent);
+                    finish();
+                }
+                else{
+                    System.out.println("获取失败");
+                    my_headline.setText("error");
+                }
             }
         });
         mBtnAddLabel = (Button)findViewById(R.id.btn_addlabel);

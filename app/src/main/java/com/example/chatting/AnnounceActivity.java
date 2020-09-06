@@ -6,13 +6,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import AdaptObject.news;
+import Adapter.NewsAdapter;
 import Bean.MessageItem;
 import Tools.ServerTools;
 import cn.bmob.v3.BmobQuery;
@@ -25,6 +29,7 @@ public class AnnounceActivity extends AppCompatActivity {
     private EditText my_headline;
     private EditText my_context;
     private ImageView mIvBack;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +67,6 @@ public class AnnounceActivity extends AppCompatActivity {
                     newMessage.setTitle(myheadline);
                     newMessage.setContent(mycontext);
                     new ServerTools().SaveMessage(AnnounceActivity.this, newMessage);
-
                     intent1.putExtra("headline_return",myheadline);
                     intent1.putExtra("context_return",mycontext);
                     setResult(RESULT_OK,intent1);
@@ -96,6 +100,7 @@ public class AnnounceActivity extends AppCompatActivity {
                     public void done(List<MessageItem> list, BmobException e) {
                         List<MessageItem> list1 =new ArrayList<>();
                         if(list1!=null){
+                            System.out.println("成功"+list.get(0).getTitle()+list.get(0).getContent());
                             final String[] title =new String[list1.size()];
                             final String[] content=new String[list1.size()];
                             for(int i=0;i<list1.size();i++){

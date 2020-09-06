@@ -3,6 +3,7 @@ package Tools;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Adapter;
 import android.widget.Toast;
 
 import com.example.chatting.MainActivity;
@@ -10,6 +11,7 @@ import com.example.chatting.MainActivity;
 import java.io.IOException;
 import java.util.List;
 
+import AdaptObject.news;
 import Bean.MessageItem;
 import Bean.User;
 import Login.LoginAsync;
@@ -138,6 +140,29 @@ public class ServerTools {
         }
         else {
             Toast.makeText(context, "尚未登录", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void MessageShow(List<news> newsList){
+        if (BmobUser.isLogin()) {
+            BmobQuery<MessageItem> q = new BmobQuery<>();
+            q.addWhereEqualTo("author", BmobUser.getCurrentUser(User.class));
+            q.order("-updatedAt");
+            q.include("author");
+            q.findObjects(new FindListener<MessageItem>() {
+                //todo
+                @Override
+                public void done(List<MessageItem> list, BmobException e) {
+                    if (e == null) {
+                        for (int i = 0; i<list.size(); i++) {
+                            MessageItem newMessage = list.get(i);
+                            System.out.println(newMessage.getContent());
+                            newsList.add(new news(newMessage.getTitle(), CurrentUser.getUsername(), newMessage.getContent()));
+                        }
+                        q.order("-updatedAt");
+                    }
+                }
+            });
         }
     }
 }
