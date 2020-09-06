@@ -25,6 +25,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".Self_correction"></activity>
         <activity android:name=".PublishActivity"></activity>
         <activity android:name=".RecieveActivity" />
         <activity android:name=".UserInfoActivity" />

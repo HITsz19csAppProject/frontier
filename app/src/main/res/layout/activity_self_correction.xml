@@ -6,10 +6,12 @@
 
     <include layout="@layout/layout_title_bar_back" />
 
-    <EditText
+    <com.example.chatting.ClearTextEditText
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:drawableRight="@drawable/delete"
         android:id="@+id/context"
+        android:clickable="true"
         />
 
     <Button

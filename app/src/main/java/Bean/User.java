@@ -9,11 +9,41 @@ public class User extends BmobUser {
     /**
      * 用户基本信息类(Bmob后端云中的User表)
      */
+    private String name;
+    private String gender;
+    private String phoneNum;
     private String StuID;
     private String Grade;
     private String Major;
     private String ClassID;
     private String ID;
+
+    public User setName(String name) {
+        this.name = name;
+        return this;
+    }
+    public String getName() {
+        return this.name;
+    }
+
+    public User setGender(String gender) {
+        if (gender.contains("男")) this.gender = "male";
+        else if (gender.contains("女")) this.gender = "female";
+        else this.gender = "？？？";
+        return this;
+    }
+    public String getGender(){
+        return this.gender;
+    }
+
+    public User setPhoneNum(String num) {
+        this.phoneNum = num;
+        return this;
+    }
+
+    public String getPhoneNum() {
+        return this.phoneNum;
+    }
 
     public User setStuID() {
         this.StuID = new IdAnalysisActivity().IdAnalysis(this.getUsername());
@@ -55,9 +85,11 @@ public class User extends BmobUser {
         this.ID = Integer.toString(code);
         return this;
     }
+
     public String getID(){
         return ID;
     }
+
     public User setAll(String usr, String pwd) {
         HashMap<Integer, String> m = new HashMap<>();
         int tempCode = 0;
@@ -83,6 +115,36 @@ public class User extends BmobUser {
                 .setMajor(m)
                 .setClassID()
                 .setID();
+        return this;
+    }
+
+    public User modifyMajor(String major) {
+        if (major.contains("计")) this.Major = "计算机";
+        else if (major.contains("电")){
+            if (major.contains("信")) this.Major = "电信";
+            else if (major.contains("气")) this.Major = "电气";
+        }
+        else if (major.contains("建")) this.Major = "建筑";
+        else if (major.contains("数")) this.Major = "数学";
+        else if (major.contains("环")) this.Major = "环境";
+        else if (major.contains("自")) this.Major = "自动化";
+        else if (major.contains("机")) this.Major = "机械";
+        else if (major.contains("土")) this.Major = "土木";
+        else if (major.contains("工")) this.Major = "工商管理";
+        else if (major.contains("材")) this.Major = "材料";
+        else if (major.contains("经")) this.Major = "经济";
+        else this.Major = null;
+
+        return this;
+    }
+
+    public User modifyClass(int num) {
+        this.ClassID = Integer.toString(num);
+        return this;
+    }
+
+    public User modifyTime(int n) {
+        this.ID = Integer.toString(n);
         return this;
     }
 }

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.graphics.drawable.Drawable;
 
 public class Self_correction extends AppCompatActivity {
     private ImageView mIvBack;
@@ -39,6 +40,21 @@ public class Self_correction extends AppCompatActivity {
                 }
             }
         });
+        DrawableUtil drawableUtil = new DrawableUtil(context, new DrawableUtil.OnDrawableListener() {
+
+            @Override
+            public void onLeft(View v, Drawable left) {
+
+            }
+
+            @Override
+            public void onRight(View v, Drawable right) {
+                if (context.length() > 1){
+                    context.setText("");
+                }
+            }
+        });
+
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

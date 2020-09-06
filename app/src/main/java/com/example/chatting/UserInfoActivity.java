@@ -14,9 +14,11 @@ import com.example.chatting.R;
 
 import AdaptObject.news;
 import Bean.User;
+import Tools.ServerTools;
 import cn.bmob.v3.BmobUser;
 
 import static com.example.chatting.MyApplication.CurrentUser;
+import static com.example.chatting.MyApplication.UserInfo;
 
 public class UserInfoActivity extends AppCompatActivity {
 
@@ -48,6 +50,9 @@ public class UserInfoActivity extends AppCompatActivity {
         tv_user_info_created=findViewById(R.id.tv_user_info_created);
         CurrentUser = BmobUser.getCurrentUser(User.class);
 
+        if (CurrentUser.getName() != null) tv_user_info_name.setText(CurrentUser.getName());
+        if (CurrentUser.getGender() != null) tv_user_info_sex.setText(CurrentUser.getGender());
+        if (CurrentUser.getPhoneNum() != null) tv_user_info_tel.setText(CurrentUser.getPhoneNum());
         tv_user_info_stuno.setText(CurrentUser.getUsername());
         tv_user_info_yuan.setText(CurrentUser.getMajor());
         tv_user_info_class.setText(CurrentUser.getMajor());
@@ -113,47 +118,55 @@ public class UserInfoActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                      mycontext = data.getStringExtra("context_return");
                      tv_user_info_name.setText(mycontext);
+                     CurrentUser.setName(mycontext);
                 }
                 break;
             case 2:
                 if (resultCode == RESULT_OK) {
                     mycontext = data.getStringExtra("context_return");
                     tv_user_info_sex.setText(mycontext);
+                    CurrentUser.setGender(mycontext);
                 }
                 break;
             case 3:
                 if (resultCode == RESULT_OK) {
                     mycontext = data.getStringExtra("context_return");
                     tv_user_info_stuno.setText(mycontext);
+                    CurrentUser.setUsername(mycontext);
                 }
                 break;
             case 4:
                 if (resultCode == RESULT_OK) {
                     mycontext = data.getStringExtra("context_return");
                     tv_user_info_tel.setText(mycontext);
+                    CurrentUser.setPhoneNum(mycontext);
                 }
                 break;
             case 5:
                 if (resultCode == RESULT_OK) {
                     mycontext = data.getStringExtra("context_return");
                     tv_user_info_yuan.setText(mycontext);
+                    CurrentUser.modifyMajor(mycontext);
                 }
                 break;
             case 6:
                 if (resultCode == RESULT_OK) {
                     mycontext = data.getStringExtra("context_return");
                     tv_user_info_class.setText(mycontext);
+                    CurrentUser.modifyClass(Integer.getInteger(mycontext));
                 }
                 break;
             case 7:
                 if (resultCode == RESULT_OK) {
                     mycontext = data.getStringExtra("context_return");
                     tv_user_info_created.setText(mycontext);
+                    CurrentUser.modifyTime(Integer.getInteger(mycontext));
                 }
                 break;
             default:
                 break;
         }
+        new ServerTools().UserInfoModify(UserInfoActivity.this);
     }
 }
 

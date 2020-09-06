@@ -3,7 +3,6 @@ package Tools;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Adapter;
 import android.widget.Toast;
 
 import com.example.chatting.MainActivity;
