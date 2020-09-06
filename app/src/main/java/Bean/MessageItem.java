@@ -6,7 +6,7 @@ import cn.bmob.v3.datatype.BmobFile;
 /**
  * 通知对象的基础类
  */
-public class NoticeItem extends BmobObject {
+public class MessageItem extends BmobObject {
     /**
      * 私有成员。
      * title:通知标题
@@ -32,7 +32,7 @@ public class NoticeItem extends BmobObject {
      * @param title 用户输入的通知标题
      * @return  该对象，也就是this
      */
-    public NoticeItem setTitle(String title){
+    public MessageItem setTitle(String title){
         this.title = title;
         return this;
     }
@@ -50,7 +50,7 @@ public class NoticeItem extends BmobObject {
      * @param content 用户输入的通知内容
      * @return  该对象，也就是this
      */
-    public NoticeItem setContent(String content){
+    public MessageItem setContent(String content){
         this.content = content;
         return this;
     }
@@ -68,7 +68,7 @@ public class NoticeItem extends BmobObject {
      * @param author 先前初始化好的User对象
      * @return 该对象，也就是this
      */
-    public NoticeItem setAuthor(User author){
+    public MessageItem setAuthor(User author){
         this.author = author;
         return this;
     }
@@ -86,7 +86,7 @@ public class NoticeItem extends BmobObject {
      * @param image 一个 BmobFile实例，在此处为对象
      * @return  该对象，也就是this
      */
-    public NoticeItem setImage(BmobFile image){
+    public MessageItem setImage(BmobFile image){
         this.image = image;
         return this;
     }

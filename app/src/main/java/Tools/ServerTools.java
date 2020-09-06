@@ -3,6 +3,7 @@ package Tools;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Adapter;
 import android.widget.Toast;
 
 import com.example.chatting.MainActivity;
@@ -10,6 +11,8 @@ import com.example.chatting.MainActivity;
 import java.io.IOException;
 import java.util.List;
 
+import AdaptObject.news;
+import Bean.MessageItem;
 import Bean.User;
 import Login.LoginAsync;
 import cn.bmob.v3.BmobQuery;
@@ -21,6 +24,7 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 import static com.example.chatting.MyApplication.CurrentUser;
+import static com.example.chatting.MyApplication.Threads;
 
 public class ServerTools {
     /**
@@ -51,14 +55,14 @@ public class ServerTools {
         q.findObjects(new FindListener<User>() {
             @Override
             public void done(List<User> list, BmobException e) {
-                new LoginAsync().getContext(context).execute();
+                new LoginAsync().getContext(context).executeOnExecutor(Threads);
             }
         });
     }
 
     public void UserSignUp(Context context, boolean ans) throws IOException {
         if (!ans) {
-            Toast.makeText(context, "用户名或密码错误", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "用户名或密码错误，也有可能是网络情况？请重试", Toast.LENGTH_SHORT).show();
             return ;
         }
         CurrentUser.signUp(new SaveListener<User>() {
@@ -115,5 +119,50 @@ public class ServerTools {
                 }
             }
         });
+    }
+
+    public void SaveMessage(Context context, MessageItem newMessage) {
+        System.out.println("开始上传");
+        if (BmobUser.isLogin()) {
+            System.out.println("正在上传");
+            newMessage.setAuthor(BmobUser.getCurrentUser(User.class));
+            newMessage.save(new SaveListener<String>() {
+                @Override
+                public void done(String s, BmobException e) {
+                    if (e == null)
+                        Toast.makeText(context, "发布成功", Toast.LENGTH_SHORT).show();
+                    else {
+                        Log.e("BMOB", e.toString());
+                        Toast.makeText(context, "发布失败", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+        else {
+            Toast.makeText(context, "尚未登录", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void MessageShow(List<news> newsList){
+        if (BmobUser.isLogin()) {
+            BmobQuery<MessageItem> q = new BmobQuery<>();
+            q.addWhereEqualTo("author", BmobUser.getCurrentUser(User.class));
+            q.order("-updatedAt");
+            q.include("author");
+            q.findObjects(new FindListener<MessageItem>() {
+                //todo
+                @Override
+                public void done(List<MessageItem> list, BmobException e) {
+                    if (e == null) {
+                        for (int i = 0; i<list.size(); i++) {
+                            MessageItem newMessage = list.get(i);
+                            System.out.println(newMessage.getContent());
+                            newsList.add(new news(newMessage.getTitle(), CurrentUser.getUsername(), newMessage.getContent()));
+                        }
+                        q.order("-updatedAt");
+                    }
+                }
+            });
+        }
     }
 }

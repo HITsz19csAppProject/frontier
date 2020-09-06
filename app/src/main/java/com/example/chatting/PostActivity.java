@@ -10,12 +10,17 @@ import android.widget.ImageView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import Bean.MessageItem;
+import Notice.NoticeAddActivity;
+import Tools.ServerTools;
+
 public class PostActivity extends AppCompatActivity {
 
     private ImageView imageView;
     private Button mBtnAddLabel;
     private ImageView mIvBack;
     private Button publish;
+    private Button renew;
     private EditText my_headline;
     private EditText my_context;
 
@@ -54,12 +59,18 @@ public class PostActivity extends AppCompatActivity {
                 String mycontext=my_context.getText().toString();
                 if(!myheadline.isEmpty()&&!mycontext.isEmpty())
                 {
+                    System.out.println("获取成功");
+                    MessageItem Notice =new MessageItem();
+                    Notice.setContent(mycontext);
+                    Notice.setTitle(myheadline);
+                    new ServerTools().SaveMessage(PostActivity.this,Notice);
                     intent.putExtra("headline_return",myheadline);
                     intent.putExtra("context_return",mycontext);
                     setResult(RESULT_OK,intent);
                     finish();
                 }
                 else{
+                    System.out.println("获取失败");
                     my_headline.setText("error");
                 }
             }

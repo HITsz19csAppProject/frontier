@@ -2,10 +2,8 @@
 
 buildscript {
     repositories {
-        maven{ url 'https://maven.aliyun.com/repository/public/'}
         google()
         jcenter()
-        
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.1'
@@ -17,7 +15,7 @@ buildscript {
 
 allprojects {
     repositories {
-        maven{ url 'https://maven.aliyun.com/repository/public/'}
+        maven{url "https://jitpack.io"}
         maven {url 'https://dl.bintray.com/chaozhouzhang/maven' }
         jcenter()
         google()

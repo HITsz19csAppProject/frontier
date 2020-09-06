@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 import Tools.ServerTools;
 
