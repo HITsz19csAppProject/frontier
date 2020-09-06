@@ -34,7 +34,7 @@ public class ChattingFragment extends Fragment {
 
     private ChattingViewModel chattingViewModel;
     private List<range> rangeList = new ArrayList<>();
-    private List<news> newsList=new ArrayList<>();
+    private List<news> newsList = new ArrayList<>();
     private Button add;
     private EditText mTvSearch;
     private NewsAdapter adapter1;

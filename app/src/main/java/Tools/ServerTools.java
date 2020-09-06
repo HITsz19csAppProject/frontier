@@ -22,6 +22,7 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 import static com.example.chatting.MyApplication.CurrentUser;
+import static com.example.chatting.MyApplication.Threads;
 
 public class ServerTools {
     /**
@@ -52,14 +53,14 @@ public class ServerTools {
         q.findObjects(new FindListener<User>() {
             @Override
             public void done(List<User> list, BmobException e) {
-                new LoginAsync().getContext(context).execute();
+                new LoginAsync().getContext(context).executeOnExecutor(Threads);
             }
         });
     }
 
     public void UserSignUp(Context context, boolean ans) throws IOException {
         if (!ans) {
-            Toast.makeText(context, "用户名或密码错误", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "用户名或密码错误，也有可能是网络情况？请重试", Toast.LENGTH_SHORT).show();
             return ;
         }
         CurrentUser.signUp(new SaveListener<User>() {
