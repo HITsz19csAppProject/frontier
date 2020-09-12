@@ -81,51 +81,12 @@ public class PublishActivity extends AppCompatActivity {
         });
         initNews();
 
-//        adapter1 = new NewsAdapter(PublishActivity.this, R.layout.news, newsList);
-//        ListView listView = (ListView) findViewById(R.id.list_view);
-//        listView.setAdapter(adapter1);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-//                news news = newsList.get(position);
-//                Intent intent = new Intent(PublishActivity.this, NewsActivity.class);
-//                String news_headline = news.getHeadline();
-//                String news_receiver = news.getWriter();
-//                String news_context = news.getContext();
-//                intent.putExtra("extra_headline", news_headline);
-//                intent.putExtra("extra_writer", news_receiver);
-//                intent.putExtra("extra_context", news_context);
-//                startActivity(intent);
-//            }
-//        });
     }
 
     public void initNews() {
         new ServerTools().MessageShow(newsList);
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
-//        super.onActivityResult(requestCode, resultCode, data);
-//        switch (requestCode) {
-//            case 1:
-//                if (resultCode == RESULT_OK) {
-//                    String myheadline = data.getStringExtra("headline_return");
-//                    String mycontext = data.getStringExtra("context_return");
-//                    news M = new news(myheadline, "致全年级同学", mycontext);
-//                    newsList.add(M);
-//                    refresh(adapter1);
-//                }
-//                break;
-//            default:
-//                break;
-//        }
-//    }
-//
-//    public void refresh(NewsAdapter adapter)
-//    {
-//        adapter.notifyDataSetChanged();
-//    }
 
     public void get(){
         Thread thread = new Thread(new Runnable() {
@@ -133,6 +94,10 @@ public class PublishActivity extends AppCompatActivity {
             @Override
             public void run() {
                 BmobQuery<MessageItem> query = new BmobQuery<MessageItem>();
+                query.addWhereEqualTo("author", BmobUser.getCurrentUser(User.class));
+                query.order("-updatedAt");
+                //包含作者信息
+                query.include("author");
                 query.findObjects(new FindListener<MessageItem>(){
                     @Override
                     public void done(List<MessageItem> list, BmobException e) {
