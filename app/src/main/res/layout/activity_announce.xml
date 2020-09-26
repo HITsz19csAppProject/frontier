@@ -23,11 +23,11 @@
         android:id="@+id/my_context"
         android:background="@null"/>
 
-    <ImageView
+    <Button
         android:id="@+id/add_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/add"/>
+        android:background="@mipmap/add"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -40,15 +40,14 @@
         android:layout_marginTop="30dp"
         android:background="@drawable/bg_btn1"/>
 
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:id="@+id/publish"
-            android:background="@drawable/bg_btn1"
-            android:layout_marginTop="8dp"
-            android:layout_gravity="center_horizontal"
-            android:text="发 表"
-            android:textSize="20sp"/>
-
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:id="@+id/publish"
+        android:background="@drawable/bg_btn1"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center_horizontal"
+        android:text="发 表"
+        android:textSize="20sp"/>
 
 </LinearLayout>

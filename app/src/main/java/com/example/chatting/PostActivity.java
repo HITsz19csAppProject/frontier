@@ -1,6 +1,8 @@
 package com.example.chatting;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,31 +11,55 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import com.donkingliang.imageselector.utils.ImageSelector;
+
+import java.util.ArrayList;
+
+import Adapter.ImageAdapter;
 import Bean.MessageItem;
-import Notice.NoticeAddActivity;
 import Tools.ServerTools;
 
+/**
+ * 信息通知界面的消息发布（上传）
+ */
 public class PostActivity extends AppCompatActivity {
+
+    private static final int REQUEST_CODE = 0x00000011;
+    private static final int PERMISSION_WRITE_EXTERNAL_REQUEST_CODE = 0x00000012;
 
     private ImageView imageView;
     private Button mBtnAddLabel;
-    private ImageView mIvBack;
-    private Button publish;
-    private Button renew;
+    private Button mPublish;
+    private Button mAdd_photo;
     private EditText my_headline;
     private EditText my_context;
+    private ImageAdapter mAdapter;
+    private ImageView mIvBack;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         MyApplication.getInstance().addActivity(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
-        ActionBar actionBar=getSupportActionBar();
+        InitImage();
+        ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.hide();
         }
-        mIvBack = (ImageView)findViewById(R.id.im_back);
+
+        mIvBack = findViewById(R.id.im_back);
+        imageView = findViewById(R.id.im_back);
+        mPublish = findViewById(R.id.publish);
+        my_headline = findViewById(R.id.my_headline);
+        my_context = findViewById(R.id.my_context);
+        mBtnAddLabel = findViewById(R.id.btn_addlabel);
+        mAdd_photo = findViewById(R.id.add_photo);
+        mAdapter = new ImageAdapter(this);
+
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -41,41 +67,36 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        imageView = (ImageView)findViewById(R.id.im_back);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-        publish=findViewById(R.id.publish);
-        my_headline=findViewById(R.id.my_headline);
-        my_context=findViewById(R.id.my_context);
-        publish.setOnClickListener(new View.OnClickListener() {
+
+        mPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent();
-                String myheadline=my_headline.getText().toString();
-                String mycontext=my_context.getText().toString();
-                if(!myheadline.isEmpty()&&!mycontext.isEmpty())
+                Intent intent = new Intent();
+                String myHeadline = my_headline.getText().toString();
+                String myContext = my_context.getText().toString();
+                if(!myHeadline.isEmpty() && !myContext.isEmpty())
                 {
-                    System.out.println("获取成功");
                     MessageItem Notice =new MessageItem();
-                    Notice.setContent(mycontext);
-                    Notice.setTitle(myheadline);
+                    Notice.setContent(myContext);
+                    Notice.setTitle(myHeadline);
                     new ServerTools().SaveMessage(PostActivity.this,Notice);
-                    intent.putExtra("headline_return",myheadline);
-                    intent.putExtra("context_return",mycontext);
-                    setResult(RESULT_OK,intent);
+                    intent.putExtra("headline_return", myHeadline);
+                    intent.putExtra("context_return", myContext);
+                    setResult(RESULT_OK, intent);
                     finish();
                 }
                 else{
-                    System.out.println("获取失败");
                     my_headline.setText("error");
                 }
             }
         });
-        mBtnAddLabel = (Button)findViewById(R.id.btn_addlabel);
+
         mBtnAddLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,5 +104,60 @@ public class PostActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        mAdd_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ImageSelector.builder()
+                        .useCamera(true) // 设置是否使用拍照
+                        .setSingle(false)  //设置是否单选
+                        .canPreview(true) //是否点击放大图片查看,，默认为true
+                        .setMaxSelectCount(9) // 图片的最大选择数量，小于等于0时，不限数量。
+                        .start(PostActivity.this, REQUEST_CODE); // 打开相册
+            }
+        });
+    }
+
+    void InitImage() {
+        int hasWriteExternalPermission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (hasWriteExternalPermission == PackageManager.PERMISSION_GRANTED) {
+            //预加载手机图片。加载图片前，请确保app有读取储存卡权限
+            ImageSelector.preload(this);
+        } else {
+            //没有权限，申请权限。
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_WRITE_EXTERNAL_REQUEST_CODE);
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && data != null) {
+            ArrayList<String> images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT);
+            boolean isCameraImage = data.getBooleanExtra(ImageSelector.IS_CAMERA_IMAGE, false);
+//            Log.d("ImageSelector", "是否是拍照图片：" + isCameraImage);
+            mAdapter.refresh(images);
+        }
+    }
+
+    /**
+     * 处理权限申请的回调。
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSION_WRITE_EXTERNAL_REQUEST_CODE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //预加载手机图片
+                ImageSelector.preload(this);
+            } else {
+                //拒绝权限。
+            }
+        }
     }
 }

@@ -32,9 +32,12 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
+/**
+ * 信息交互界面的消息发布（上传）
+ */
 public class AnnounceActivity extends AppCompatActivity {
 
-    private Button publish,addLabel;
+    private Button publish, addLabel;
     private EditText my_headline;
     private EditText my_context;
     private ImageView mIvBack;
@@ -44,6 +47,7 @@ public class AnnounceActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("进入announceActivity");
         MyApplication.getInstance().addActivity(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);

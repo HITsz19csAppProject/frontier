@@ -54,6 +54,5 @@ public class NewsActivity extends AppCompatActivity {
         News_headline.setText(intent.getStringExtra("extra_headline"));
         News_writer.setText(intent.getStringExtra("extra_writer"));
         News_context.setText(intent.getStringExtra("extra_context"));
-
     }
 }

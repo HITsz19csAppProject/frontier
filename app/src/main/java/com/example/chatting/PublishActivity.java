@@ -46,6 +46,7 @@ public class PublishActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("进入publishActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish);
         ActionBar actionBar=getSupportActionBar();

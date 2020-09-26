@@ -33,7 +33,6 @@ public class NoticeAddActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
-        /* Bmob.initialize(this,); */
         content=(EditText)findViewById(R.id.my_context);
         title=(EditText)findViewById(R.id.my_headline);
 

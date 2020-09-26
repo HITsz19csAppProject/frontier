@@ -4,7 +4,7 @@ import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.datatype.BmobFile;
 
 /**
- * 通知对象的基础类
+ * 信息发布对象的基础类
  */
 public class MessageItem extends BmobObject {
     /**
@@ -13,11 +13,13 @@ public class MessageItem extends BmobObject {
      * content:通知内容
      * author:通知发布者
      * image:通知发布中可能附带的图片
+     * Labels:通知携带的标签信息
      */
     private String title;
     private String content;
     private User author;
     private BmobFile image;
+    private String[] Labels;
 
     /**
      * 获取通知标题
@@ -88,6 +90,22 @@ public class MessageItem extends BmobObject {
      */
     public MessageItem setImage(BmobFile image){
         this.image = image;
+        return this;
+    }
+
+    /**
+     * 获取通知携带的标签信息
+     * @return  标签
+     */
+    public String[] getLabels() {return this.Labels;}
+
+    /**
+     * 设置通知自带的标签信息
+     * @param labels 设置好的标签
+     * @return 该对象，也就是this
+     */
+    public MessageItem setLabels(String[] labels) {
+        this.Labels = labels;
         return this;
     }
 }

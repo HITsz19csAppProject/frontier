@@ -7,7 +7,7 @@ import cn.bmob.v3.BmobUser;
 
 public class User extends BmobUser {
     /**
-     * 用户基本信息类(Bmob后端云中的User表)
+     * 用户基本信息类(Bmob后端云中的_User表)
      */
     private String name;
     private String gender;
