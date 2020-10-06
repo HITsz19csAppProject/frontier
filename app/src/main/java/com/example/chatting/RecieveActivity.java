@@ -75,7 +75,7 @@ public class RecieveActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     BmobQuery<MessageItem> query = new BmobQuery<MessageItem>();
-                    query.addWhereEqualTo("author", BmobUser.getCurrentUser(User.class));
+                    query.addWhereNotEqualTo("author", BmobUser.getCurrentUser(User.class));
                     query.order("-updatedAt");
                     //包含作者信息
                     query.include("author");
