@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.example.chatting.MainActivity;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import AdaptObject.news;
@@ -17,11 +18,13 @@ import Bean.User;
 import Login.LoginAsync;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FetchUserInfoListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
+import cn.bmob.v3.listener.UploadBatchListener;
 
 import static com.example.chatting.MyApplication.CurrentUser;
 import static com.example.chatting.MyApplication.Threads;
@@ -122,25 +125,65 @@ public class ServerTools {
     }
 
     public void SaveMessage(Context context, MessageItem newMessage) {
-        System.out.println("开始上传");
-        if (BmobUser.isLogin()) {
-            System.out.println("正在上传");
-            newMessage.setAuthor(BmobUser.getCurrentUser(User.class));
-            newMessage.save(new SaveListener<String>() {
-                @Override
-                public void done(String s, BmobException e) {
-                    if (e == null)
-                        Toast.makeText(context, "发布成功", Toast.LENGTH_SHORT).show();
-                    else {
-                        Log.e("BMOB", e.toString());
-                        Toast.makeText(context, "发布失败", Toast.LENGTH_SHORT).show();
+        ArrayList<String> images = newMessage.getImages();
+        if (images==null) {
+            if (BmobUser.isLogin()) {
+                newMessage.setAuthor(BmobUser.getCurrentUser(User.class));
+                newMessage.setImages(new ArrayList<>());
+                newMessage.save(new SaveListener<String>() {
+                    @Override
+                    public void done(String s, BmobException e) {
+                        if (e == null)
+                            Toast.makeText(context, "发布成功", Toast.LENGTH_SHORT).show();
+                        else {
+                            Log.e("BMOB", e.toString());
+                            Toast.makeText(context, "发布失败", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
-            });
+                });
+            }
+            else {
+                Toast.makeText(context, "尚未登录", Toast.LENGTH_SHORT).show();
+            }
+            return;
         }
-        else {
-            Toast.makeText(context, "尚未登录", Toast.LENGTH_SHORT).show();
+
+        String[] paths = new String[images.size()];
+        int i=0;
+        for (String url : images) {
+            paths[i++] = url;
+            System.out.println(url);
         }
+        //todo:图片上传错误，原因未知
+        BmobFile.uploadBatch(paths, new UploadBatchListener() {
+            @Override
+            public void onSuccess(List<BmobFile> list, List<String> list1) {
+                newMessage.setAuthor(BmobUser.getCurrentUser(User.class));
+                newMessage.save(new SaveListener<String>() {
+                    @Override
+                    public void done(String s, BmobException e) {
+                        if (e == null)
+                            Toast.makeText(context, "发布成功", Toast.LENGTH_SHORT).show();
+                        else {
+                            Log.e("BMOB", e.toString());
+                            Toast.makeText(context, "发布失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onProgress(int i, int i1, int i2, int i3) {
+                Toast.makeText(context, "图片上传中", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                Toast.makeText(context, "图片上传失败", Toast.LENGTH_SHORT).show();
+                Log.e("错误码", String.valueOf(i));
+                Log.e("error!", s);
+            }
+        });
     }
 
     public void SaveCommunityMessage(Context context, CommunityItem newMessage) {

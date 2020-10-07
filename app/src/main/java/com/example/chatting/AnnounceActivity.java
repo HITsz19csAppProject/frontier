@@ -18,10 +18,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.donkingliang.imageselector.utils.ImageSelector;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import AdaptObject.news;
+import Adapter.ImageAdapter;
+import Adapter.MyAdapter;
 import Adapter.NewsAdapter;
 import Bean.CommunityItem;
 import Bean.MessageItem;
@@ -36,11 +40,15 @@ import cn.bmob.v3.listener.FindListener;
  * 信息交互界面的消息发布（上传）
  */
 public class AnnounceActivity extends AppCompatActivity {
+    private static final int REQUEST_CODE = 0x00000011;
+    private static final int PERMISSION_WRITE_EXTERNAL_REQUEST_CODE = 0x00000012;
 
     private Button publish, addLabel;
+    private Button mAdd_photo;
     private EditText my_headline;
     private EditText my_context;
     private ImageView mIvBack;
+    private ImageAdapter mAdapter;
     private ListView listView;
     private List<news> newsList = new ArrayList<>();
 
@@ -55,7 +63,16 @@ public class AnnounceActivity extends AppCompatActivity {
         if(actionBar!=null){
             actionBar.hide();
         }
+
         mIvBack = (ImageView)findViewById(R.id.im_back);
+        publish=findViewById(R.id.publish);
+        addLabel = findViewById(R.id.btn_addlabel);
+        my_headline=findViewById(R.id.my_headline);
+        my_context=findViewById(R.id.my_context);
+        listView = (ListView) findViewById(R.id.list_view);
+        mAdd_photo = findViewById(R.id.add_photo);
+        mAdapter = new ImageAdapter(this);
+
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -63,12 +80,6 @@ public class AnnounceActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });  //返回
-
-        publish=findViewById(R.id.publish);
-        addLabel = findViewById(R.id.btn_addlabel);
-        my_headline=findViewById(R.id.my_headline);
-        my_context=findViewById(R.id.my_context);
-        listView = (ListView) findViewById(R.id.list_view);
 
         publish.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +115,17 @@ public class AnnounceActivity extends AppCompatActivity {
             }
         });
 
+        mAdd_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ImageSelector.builder()
+                        .useCamera(true) // 设置是否使用拍照
+                        .setSingle(false)  //设置是否单选
+                        .canPreview(true) //是否点击放大图片查看,，默认为true
+                        .setMaxSelectCount(9) // 图片的最大选择数量，小于等于0时，不限数量。
+                        .start(AnnounceActivity.this, REQUEST_CODE); // 打开相册
+            }
+        });
 
     }
 
@@ -130,54 +152,7 @@ public class AnnounceActivity extends AppCompatActivity {
                                 title[i] = list.get(i).getTitle();
                                 content[i] = list.get(i).getContent();
                             }
-                            class MyAdapter extends BaseAdapter {
-                                private Context context;
-
-                                public MyAdapter(Context context) {
-                                    this.context = context;
-                                }
-
-                                @Override
-                                public int getCount() {
-                                    return title.length;
-                                }
-
-                                @Override
-                                public Object getItem(int position) {
-                                    return title[position];
-                                }
-
-                                @Override
-                                public long getItemId(int position) {
-                                    return position;
-                                }
-
-                                @Override
-                                public View getView(int position, View convertView, ViewGroup parent) {
-                                    ViewHolder viewHolder;
-                                    if (convertView == null) {
-                                        LayoutInflater inflater = LayoutInflater.from(context);
-                                        convertView = inflater.inflate(R.layout.activity_news, null);//实例化一个布局文件
-                                        viewHolder = new ViewHolder();
-                                        viewHolder.tv_title = (TextView) convertView.findViewById(R.id.News_headline);
-                                        viewHolder.tv_content = (TextView) convertView.findViewById(R.id.News_context);
-                                        convertView.setTag(viewHolder);
-
-                                    } else {
-                                        viewHolder = (ViewHolder) convertView.getTag();
-                                    }
-
-                                    viewHolder.tv_title.setText(title[position]);
-                                    viewHolder.tv_content.setText(content[position]);
-                                    return convertView;
-                                }
-
-                                class ViewHolder {
-                                    TextView tv_title;
-                                    TextView tv_content;
-                                }
-                            }
-                            listView.setAdapter(new MyAdapter(getApplication()));
+                            listView.setAdapter(new MyAdapter(getApplication(), title, content));
                         }
                     }
                 });

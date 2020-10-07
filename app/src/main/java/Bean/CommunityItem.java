@@ -1,5 +1,7 @@
 package Bean;
 
+import java.util.ArrayList;
+
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.datatype.BmobFile;
 
@@ -17,7 +19,8 @@ public class CommunityItem extends BmobObject {
     private String title;
     private String content;
     private User author;
-    private BmobFile image;
+    private ArrayList<String> images;
+    private String[] Labels;
 
     /**
      * 获取通知标题
@@ -77,17 +80,33 @@ public class CommunityItem extends BmobObject {
      * 获取通知附带的图片信息
      * @return  一个BmobFile实例，在此处为图片
      */
-    public BmobFile getImage(){
-        return image;
+    public ArrayList<String> getImages(){
+        return images;
     }
 
     /**
      * 设置通知附带的图片信息
-     * @param image 一个 BmobFile实例，在此处为对象
+     * @param images 一个 BmobFile实例，在此处为对象
      * @return  该对象，也就是this
      */
-    public CommunityItem setImage(BmobFile image){
-        this.image = image;
+    public CommunityItem setImages(ArrayList<String> images){
+        this.images = images;
+        return this;
+    }
+
+    /**
+     * 获取通知携带的标签信息
+     * @return  标签
+     */
+    public String[] getLabels() {return this.Labels;}
+
+    /**
+     * 设置通知自带的标签信息
+     * @param labels 设置好的标签
+     * @return 该对象，也就是this
+     */
+    public CommunityItem setLabels(String[] labels) {
+        this.Labels = labels;
         return this;
     }
 }

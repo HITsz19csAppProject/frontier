@@ -29,7 +29,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Threads = new ThreadPoolExecutor(0,Integer.MAX_VALUE,60L, TimeUnit.SECONDS,new SynchronousQueue<Runnable>());
+        Threads = new ThreadPoolExecutor(0, Integer.MAX_VALUE,60L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
         Bmob.initialize(this, "0c073307ca22bf3e1268f1f70bef2941");
         CurrentUser = new User();
         UserInfo = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);

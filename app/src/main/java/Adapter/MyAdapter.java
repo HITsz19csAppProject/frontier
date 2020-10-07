@@ -1,0 +1,65 @@
+/**
+ * 信息发布、信息交互界面呈现信息的Adapter.
+ * 使用方法可见ReceiveActivity类中的getMessage函数。
+ */
+package Adapter;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
+
+import com.example.chatting.R;
+
+public class MyAdapter extends BaseAdapter {
+    private Context context;
+    private String[] title;
+    private String[] content;
+    private class ViewHolder {
+        TextView tv_title;
+        TextView tv_content;
+    }
+
+    public MyAdapter(Context context, String[] title, String[] content) {
+        this.context = context;
+        this.title = title;
+        this.content = content;
+    }
+
+    @Override
+    public int getCount() {
+        return title.length;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return title[position];
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder viewHolder;
+        if (convertView == null) {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            convertView = inflater.inflate(R.layout.activity_news, null);//实例化一个布局文件
+            viewHolder = new ViewHolder();
+            viewHolder.tv_title = (TextView) convertView.findViewById(R.id.News_headline);
+            viewHolder.tv_content = (TextView) convertView.findViewById(R.id.News_context);
+            convertView.setTag(viewHolder);
+
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+        viewHolder.tv_title.setText(title[position]);
+        viewHolder.tv_content.setText(content[position]);
+        return convertView;
+    }
+}

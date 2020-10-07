@@ -39,6 +39,10 @@ public class PostActivity extends AppCompatActivity {
     private ImageAdapter mAdapter;
     private ImageView mIvBack;
 
+    private String myHeadline;
+    private String myContext;
+    private ArrayList<String> myImages;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,16 +82,21 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
-                String myHeadline = my_headline.getText().toString();
-                String myContext = my_context.getText().toString();
+                myHeadline = my_headline.getText().toString();
+                myContext = my_context.getText().toString();
                 if(!myHeadline.isEmpty() && !myContext.isEmpty())
                 {
-                    MessageItem Notice =new MessageItem();
-                    Notice.setContent(myContext);
-                    Notice.setTitle(myHeadline);
-                    new ServerTools().SaveMessage(PostActivity.this,Notice);
+                    MessageItem newMessage =new MessageItem();
+                    newMessage.setContent(myContext);
+                    newMessage.setTitle(myHeadline);
+                    newMessage.setImages(myImages);
+
+                    new ServerTools().SaveMessage(PostActivity.this, newMessage);
+
                     intent.putExtra("headline_return", myHeadline);
                     intent.putExtra("context_return", myContext);
+                    //todo: images_return
+
                     setResult(RESULT_OK, intent);
                     finish();
                 }
@@ -137,6 +146,7 @@ public class PostActivity extends AppCompatActivity {
             ArrayList<String> images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT);
             boolean isCameraImage = data.getBooleanExtra(ImageSelector.IS_CAMERA_IMAGE, false);
 //            Log.d("ImageSelector", "是否是拍照图片：" + isCameraImage);
+            myImages = images;
             mAdapter.refresh(images);
         }
     }

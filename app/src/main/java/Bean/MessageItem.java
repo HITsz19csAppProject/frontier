@@ -1,5 +1,8 @@
 package Bean;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.datatype.BmobFile;
 
@@ -18,7 +21,7 @@ public class MessageItem extends BmobObject {
     private String title;
     private String content;
     private User author;
-    private BmobFile image;
+    private ArrayList<String> images;
     private String[] Labels;
 
     /**
@@ -79,17 +82,17 @@ public class MessageItem extends BmobObject {
      * 获取通知附带的图片信息
      * @return  一个BmobFile实例，在此处为图片
      */
-    public BmobFile getImage(){
-        return image;
+    public ArrayList<String> getImages(){
+        return images;
     }
 
     /**
      * 设置通知附带的图片信息
-     * @param image 一个 BmobFile实例，在此处为对象
+     * @param images 照片在本地的本地Url
      * @return  该对象，也就是this
      */
-    public MessageItem setImage(BmobFile image){
-        this.image = image;
+    public MessageItem setImages(ArrayList<String> images){
+        this.images = images;
         return this;
     }
 
