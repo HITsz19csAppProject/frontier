@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import Adapter.MyAdapter;
 import Adapter.NewsAdapter;
 import AdaptObject.news;
 
@@ -112,59 +113,10 @@ public class PublishActivity extends AppCompatActivity {
                             for(int i = 0;i<list.size();i++){
                                 title[i] = list.get(i).getTitle();
                                 content[i] = list.get(i).getContent();
-                                //author[i] = list.get(i).getAuthor().getStuID();
+                                author[i] = list.get(i).getAuthor().getName();
                             }
 
-                            class MyAdapter extends BaseAdapter {
-                                private Context context ;
-                                public MyAdapter(Context context){
-                                    this.context = context;
-                                }
-
-                                @Override
-                                public int getCount() {
-                                    return title.length;
-                                }
-
-                                @Override
-                                public Object getItem(int position) {
-                                    return title[position];
-                                }
-
-                                @Override
-                                public long getItemId(int position) {
-                                    return position;
-                                }
-
-                                @Override
-                                public View getView(int position, View convertView, ViewGroup parent) {
-                                    ViewHolder viewHolder;
-                                    if (convertView == null){
-                                        LayoutInflater inflater = LayoutInflater.from(context);
-                                        convertView = inflater.inflate(R.layout.activity_news, null);//实例化一个布局文件
-                                        viewHolder = new ViewHolder();
-                                        viewHolder.tv_title = (TextView)convertView.findViewById(R.id.News_headline);
-                                        viewHolder.tv_content = (TextView)convertView.findViewById(R.id.News_context);
-                                       // viewHolder.tv_author=(TextView)convertView.findViewById(R.id.news_writer);
-                                        convertView.setTag(viewHolder);
-
-                                    }else {
-                                        viewHolder = (ViewHolder) convertView.getTag();
-                                    }
-
-                                    viewHolder.tv_title.setText(title[position]);
-                                    viewHolder.tv_content.setText(content[position]);
-                                    //viewHolder.tv_author.setText(author[position]);
-                                    return convertView;
-                                }
-
-                                class ViewHolder{
-                                    TextView tv_title;
-                                    TextView tv_content;
-                                    TextView tv_author;
-                                }
-                            }
-                            listView.setAdapter(new MyAdapter(getApplication()));
+                            listView.setAdapter(new MyAdapter(getApplication(), title, content,author));
                         }
                     }
                 });

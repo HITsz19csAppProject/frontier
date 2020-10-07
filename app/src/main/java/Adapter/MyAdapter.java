@@ -17,15 +17,18 @@ public class MyAdapter extends BaseAdapter {
     private Context context;
     private String[] title;
     private String[] content;
+    private String[] author;
     private class ViewHolder {
         TextView tv_title;
         TextView tv_content;
+        TextView tv_author;
     }
 
-    public MyAdapter(Context context, String[] title, String[] content) {
+    public MyAdapter(Context context, String[] title, String[] content,String[] author) {
         this.context = context;
         this.title = title;
         this.content = content;
+        this.author = author;
     }
 
     @Override
@@ -52,6 +55,7 @@ public class MyAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             viewHolder.tv_title = (TextView) convertView.findViewById(R.id.News_headline);
             viewHolder.tv_content = (TextView) convertView.findViewById(R.id.News_context);
+            viewHolder.tv_author=(TextView)convertView.findViewById(R.id.News_writer);
             convertView.setTag(viewHolder);
 
         } else {
@@ -60,6 +64,7 @@ public class MyAdapter extends BaseAdapter {
 
         viewHolder.tv_title.setText(title[position]);
         viewHolder.tv_content.setText(content[position]);
+        viewHolder.tv_author.setText(author[position]);
         return convertView;
     }
 }
