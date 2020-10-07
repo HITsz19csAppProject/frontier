@@ -62,6 +62,10 @@
         android:layout_gravity="bottom|right"
         android:text="+" />
 
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/refresh">
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -71,7 +75,7 @@
         android:paddingBottom="60dp"
         >
     </ListView>
-
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>
 
     <LinearLayout

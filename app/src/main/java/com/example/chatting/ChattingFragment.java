@@ -1,15 +1,20 @@
 package com.example.chatting;
 
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,16 +23,26 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import Adapter.NewsAdapter;
+
+import AdaptObject.post;
+import Adapter.PostAdapter;
 import Adapter.RangeAdapter;
 import AdaptObject.LabelModel;
-import AdaptObject.news;
+
 import AdaptObject.range;
+import Bean.CommunityItem;
+import Bean.User;
+import Tools.PostTools;
 import Tools.ServerTools;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -35,13 +50,16 @@ public class ChattingFragment extends Fragment {
 
     private ChattingViewModel chattingViewModel;
     private List<range> rangeList = new ArrayList<>();
-    private List<news> newsList = new ArrayList<>();
+    private List<post> newsList = new ArrayList<>();
     private Button add;
     private EditText mTvSearch;
-    private NewsAdapter adapter1;
+    private PostAdapter adapter1;
     private Button sum;
     public DrawerLayout drawerLayout;
     private Button sure;
+    private SwipeRefreshLayout refresh;
+    private ListView listView;
+    private SwipeRefreshLayout.OnRefreshListener listener;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +80,7 @@ public class ChattingFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), AnnounceActivity.class);
+                new PostTools().MessageShow(newsList);
                 startActivityForResult(intent, 1);
             }
         });
@@ -117,14 +136,31 @@ public class ChattingFragment extends Fragment {
         RangeAdapter adapter = new RangeAdapter(rangeList);
         recyclerView.setAdapter(adapter);
 
-//        initNews();
-        adapter1 = new NewsAdapter(getActivity(), R.layout.news, newsList);
+
+        refresh=root.findViewById(R.id.refresh);
+        initSwipeRefresh();
+        AutoRefresh();
+        listener.onRefresh();
+        listView=root.findViewById(R.id.list_view);
+        initNews();
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        get();
+                        refresh.setRefreshing(false);
+                    }
+                }, 20);
+            }
+        });
+        adapter1 = new PostAdapter(getActivity(), R.layout.post, newsList);
         ListView listView = (ListView) root.findViewById(R.id.list_view);
         listView.setAdapter(adapter1);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                news news = newsList.get(position);
+                post news = newsList.get(position);
                 Intent intent = new Intent(getActivity(), NewsActivity.class);
                 String news_headline = news.getHeadline();
                 String news_writer = news.getWriter();
@@ -144,11 +180,9 @@ public class ChattingFragment extends Fragment {
         switch (requestCode) {
             case 1:
                 if (resultCode == RESULT_OK) {
-                    String myheadline = data.getStringExtra("headline_return");
-                    String mycontext = data.getStringExtra("context_return");
-                    news M = new news(myheadline, "me", mycontext);
-                    newsList.add(M);
-                    refresh(adapter1);
+                    initSwipeRefresh();
+                    AutoRefresh();
+                    listener.onRefresh();
                 }
                 break;
             default:
@@ -156,26 +190,123 @@ public class ChattingFragment extends Fragment {
         }
     }
 
-
-
-    private void initNews() {
-        for(int i=0;i<2;i++)
-        {
-            news N1=new news("Apple","John","I love apples");
-            news N2=new news("Grape","JoJo","I love grapes");
-            news N3=new news("Tomato","Lisa","I love tomatoes");
-            news N4=new news("Cherry","Lina","I love cherry");
-            news N5=new news("Strawberry","Jack","I love strawberries");
-            news N6=new news("Pear","Angel","I love pear");
-
-            newsList.add(N1);
-            newsList.add(N2);
-            newsList.add(N3);
-            newsList.add(N4);
-            newsList.add(N5);
-            newsList.add(N6);
-        }
+    public void initNews() {
+        new PostTools().MessageShow(newsList);
     }
+
+    public void AutoRefresh()
+    {
+        refresh.post(new Runnable() {
+            @Override
+            public void run () {
+                refresh.setRefreshing(true);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        get();
+                        refresh.setRefreshing(false);
+                    }
+                },500);
+            }
+
+        });
+    }
+
+
+    public void get(){
+        Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                BmobQuery<CommunityItem> query = new BmobQuery<CommunityItem>();
+                query.addWhereEqualTo("author", BmobUser.getCurrentUser(User.class));
+                query.order("-updatedAt");
+                query.include("author");
+                query.findObjects(new FindListener<CommunityItem>() {
+                    @Override
+                    public void done(List<CommunityItem> list, BmobException e) {
+                        List<CommunityItem> lists = new ArrayList<>();
+                        if (list != null) {
+                            System.out.println("查询成功" + list.get(0).getTitle() + list.get(0).getContent());
+                            final String[] title = new String[list.size()];
+                            final String[] content = new String[list.size()];
+
+                            for (int i = 0; i < list.size(); i++) {
+                                title[i] = list.get(i).getTitle();
+                                content[i] = list.get(i).getContent();
+                            }
+                            class MyAdapter extends BaseAdapter {
+                                private Context context;
+
+                                public MyAdapter(Context context) {
+                                    this.context = context;
+                                }
+
+                                @Override
+                                public int getCount() {
+                                    return title.length;
+                                }
+
+                                @Override
+                                public Object getItem(int position) {
+                                    return title[position];
+                                }
+
+                                @Override
+                                public long getItemId(int position) {
+                                    return position;
+                                }
+
+                                @Override
+                                public View getView(int position, View convertView, ViewGroup parent) {
+                                    ViewHolder viewHolder;
+                                    if (convertView == null) {
+                                        LayoutInflater inflater = LayoutInflater.from(context);
+                                        convertView = inflater.inflate(R.layout.activity_post, null);//实例化一个布局文件
+                                        viewHolder = new ViewHolder();
+                                        viewHolder.tv_title = (TextView) convertView.findViewById(R.id.News_headline);
+                                        viewHolder.tv_content = (TextView) convertView.findViewById(R.id.News_context);
+                                        convertView.setTag(viewHolder);
+
+                                    } else {
+                                        viewHolder = (ViewHolder) convertView.getTag();
+                                    }
+
+                                    viewHolder.tv_title.setText(title[position]);
+                                    viewHolder.tv_content.setText(content[position]);
+                                    return convertView;
+                                }
+
+                                class ViewHolder {
+                                    TextView tv_title;
+                                    TextView tv_content;
+                                }
+                            }
+                            listView.setAdapter(new MyAdapter(getActivity()));
+                        }
+                    }
+                });
+            }
+        }); //声明一个子线程
+        thread.start();
+    }
+
+
+    private void initSwipeRefresh() {
+        listener = new SwipeRefreshLayout.OnRefreshListener() {
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        get();
+                        refresh.setRefreshing(false);
+                        //添加数据设置适配器
+                    }
+                }, 20);
+            }
+        };
+        refresh.setOnRefreshListener(listener);
+    }
+
 
     private void initRange() {
         for(int i=0;i<1;i++)
@@ -200,7 +331,9 @@ public class ChattingFragment extends Fragment {
         }
     }
 
-    public void refresh(NewsAdapter adapter)
+
+
+    public void refresh(PostAdapter adapter)
     {
         adapter.notifyDataSetChanged();
     }

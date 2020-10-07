@@ -17,13 +17,10 @@
         android:background="@drawable/bg_btn1"
         android:backgroundTint="@color/colorLightGrey"/>
 
-    <Button
-        android:id="@+id/renew"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_btn1"
-        android:backgroundTint="@color/colorLightGrey"
-        android:text="刷新" />
+        android:layout_height="match_parent"
+        android:id="@+id/flush">
 
     <ListView
         android:layout_width="match_parent"
@@ -34,5 +31,6 @@
         android:dividerHeight="20dp"
         >
     </ListView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

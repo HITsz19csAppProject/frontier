@@ -17,7 +17,6 @@
             android:paddingLeft="10dp"
             android:id="@+id/news_headline"
             android:textSize="20dp"
-            android:layout_weight="2"
             android:gravity="center_horizontal"
             />
 
@@ -27,7 +26,6 @@
             android:id="@+id/news_writer"
             android:textSize="20dp"
             android:layout_marginLeft="30dp"
-            android:layout_weight="1"
             android:gravity="center_horizontal"
             />
 

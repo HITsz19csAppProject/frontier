@@ -3,48 +3,32 @@ package com.example.chatting;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.ContentValues;
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import AdaptObject.ReceivedNews;
-import Adapter.MyAdapter;
 import Adapter.NewsAdapter;
 import AdaptObject.news;
-import Adapter.ReceiveAdapter;
-import Bean.MessageItem;
-import Bean.User;
 import Tools.ServerTools;
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
-import static com.example.chatting.MyApplication.CurrentUser;
 
 public class RecieveActivity extends AppCompatActivity {
-    private List<ReceivedNews> newsList = new ArrayList<>();
+    private NewsAdapter adapter1;
+    private List<news> newsList = new ArrayList<>();
     private ImageView mIvBack;
-    private ListView listView;
-    private Button renew;
-    private MessageDataBaseUtils utils ; //数据库操作
-    private ReceiveAdapter adapter;
-    private List<ReceivedNews> lists;
-    public String[] isRead ;
+    private SwipeRefreshLayout refresh;
+    private SwipeRefreshLayout.OnRefreshListener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,94 +45,95 @@ public class RecieveActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
-        renew = (Button) findViewById(R.id._renew);
-        listView = (ListView) findViewById(R.id.list_view);
-        //new ServerTools().MessageShow(newsList);
-
-        renew.setOnClickListener(new View.OnClickListener() {
+       // initNews();
+        adapter1 = new NewsAdapter(RecieveActivity.this, R.layout.news, newsList);
+        ListView listView = (ListView) findViewById(R.id.list_view);
+        listView.setAdapter(adapter1);
+        new ServerTools().MessageShow(newsList);
+        refresh = findViewById(R.id.refresh);
+        initSwipeRefresh();
+        refresh.post(new Runnable() {
             @Override
-            public void onClick(View view) {
-                getMessage();
+            public void run () {
+                refresh.setRefreshing(true);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter1.notifyDataSetChanged();
+                        refresh.setRefreshing(false);
+                    }
+                },500);
+            }
+
+        });
+        listener.onRefresh();
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        adapter1.notifyDataSetChanged();
+                        refresh.setRefreshing(false);
+                    }
+                }, 20);
             }
         });
-
-        utils = new MessageDataBaseUtils(this);
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ReceivedNews news = lists.get(i);
-                String title = news.getHeadline();
-                String writer = news.getWriter();
-                String content = news.getContext();
-                if(!utils.searchMessageIsRead(title)){
-                    utils.setMessageIsRead(title);
-                    isRead[i] = "1";
-                    news.setIsRead("已读");
-                    lists.set(i,news);
-                    adapter.notifyDataSetChanged();
-                }
-                Intent intent =new Intent(RecieveActivity.this,NewsActivity.class);
-                intent.putExtra("extra_headline",title);
-                intent.putExtra("extra_writer",writer);
-                intent.putExtra("extra_context",content);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                news news = newsList.get(position);
+                Intent intent = new Intent(RecieveActivity.this, NewsActivity.class);
+                String news_headline = news.getHeadline();
+                String news_writer = news.getWriter();
+                String news_context = news.getContext();
+                intent.putExtra("extra_headline", news_headline);
+                intent.putExtra("extra_writer", news_writer);
+                intent.putExtra("extra_context", news_context);
+                new ServerTools().MessageShow(newsList);
                 startActivity(intent);
             }
-        });
 
+        });
     }
 
-
-    public void getMessage () {
-        Thread thread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                BmobQuery<MessageItem> query = new BmobQuery<MessageItem>();
-                query.addWhereNotEqualTo("author", BmobUser.getCurrentUser(User.class));
-                query.order("-updatedAt");
-                //包含作者信息
-                query.include("author");
-                query.findObjects(new FindListener<MessageItem>() {
-                    @Override
-                    public void done(List<MessageItem> list, BmobException e) {
-                        lists = new ArrayList<>();
-                        if (list != null) {
-                            System.out.println("查询成功" + list.get(0).getTitle() + list.get(0).getContent());
-                            final String[] title = new String[list.size()];
-                            final String[] content = new String[list.size()];
-                            final String[] author = new String[list.size()];
-                            isRead = new String[list.size()];
-
-                            for (int i = 0; i < list.size(); i++) {
-                                title[i] = list.get(i).getTitle();
-                                content[i] = list.get(i).getContent();
-                                author[i]=list.get(i).getAuthor().getName();
-                                if(!utils.searchMessage(title[i])){
-                                    utils.addMessage(title[i],"0");
-                                }
-                                else{
-                                    if(utils.searchMessageIsRead(title[i])){
-                                        isRead[i] = "1";
-                                    }
-                                    else{
-                                        isRead[i] = "0";
-                                    }
-                                }
-                                ReceivedNews news = new ReceivedNews(title[i],author[i],content[i],isRead[i]);
-                                lists.add(news);
-                            }
-                            adapter = new ReceiveAdapter(getApplication(), title, content,author,isRead);
-                            listView.setAdapter(adapter);
-                        }
+    private void initSwipeRefresh() {
+        listener = new SwipeRefreshLayout.OnRefreshListener() {
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        adapter1.notifyDataSetChanged();
+                        refresh.setRefreshing(false);
+                        //添加数据设置适配器
                     }
-                });
+                }, 20);
             }
-        }); //声明一个子线程
-        thread.start();
+        };
+        refresh.setOnRefreshListener(listener);
     }
 }
 
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+//        super.onActivityResult(requestCode, resultCode, data);
+//        switch (requestCode) {
+//            case 1:
+//                if (resultCode == RESULT_OK) {
+//                    String myheadline = data.getStringExtra("headline_return");
+//                    String mycontext = data.getStringExtra("context_return");
+//                    news M = new news(myheadline, "me", mycontext);
+//                    newsList.add(M);
+//                    refresh(adapter1);
+//                }
+//                break;
+//            default:
+//                break;
+//        }
+//    }
+//
+//    public void refresh(NewsAdapter adapter)
+//    {
+//        adapter.notifyDataSetChanged();
+//    }
 
 
