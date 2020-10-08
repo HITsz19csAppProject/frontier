@@ -30,6 +30,7 @@ import Adapter.NewsAdapter;
 import Bean.CommunityItem;
 import Bean.MessageItem;
 import Bean.User;
+import Tools.GraphTools;
 import Tools.ServerTools;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -94,7 +95,8 @@ public class AnnounceActivity extends AppCompatActivity {
                     CommunityItem newMessage = new CommunityItem();
                     newMessage.setTitle(myheadline);
                     newMessage.setContent(mycontext);
-                    new ServerTools().SaveCommunityMessage(AnnounceActivity.this, newMessage);
+//                    new ServerTools().SaveCommunityMessage(AnnounceActivity.this, newMessage);
+                    new GraphTools<CommunityItem>(newMessage).InitLuban(AnnounceActivity.this, newMessage);
                     intent1.putExtra("headline_return",myheadline);
                     intent1.putExtra("context_return",mycontext);
                     setResult(RESULT_OK,intent1);

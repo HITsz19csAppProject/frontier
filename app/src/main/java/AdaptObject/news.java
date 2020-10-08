@@ -22,6 +22,4 @@ public class news {
     public String getWriter() {
         return writer;
     }
-
-
 }

@@ -23,7 +23,7 @@ public class GraphTools<T> {
             this.ImageUrls = ((CommunityItem) item).getImages();
     }
 
-    public void InitLuban(Context context) {
+    public void InitLuban(Context context, T item) {
         Luban.with(context)
                 .load(ImageUrls)
                 .ignoreBy(100)
@@ -35,7 +35,11 @@ public class GraphTools<T> {
 
                     @Override
                     public void onSuccess(File file) {
-
+                        if (item instanceof MessageItem) {
+                            new ServerTools().SaveMessage(context, (MessageItem) item);
+                        }
+                        else
+                            new ServerTools().SaveCommunityMessage(context, (CommunityItem) item);
                     }
 
                     @Override
