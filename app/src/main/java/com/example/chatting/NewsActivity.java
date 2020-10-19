@@ -47,10 +47,10 @@ public class NewsActivity extends AppCompatActivity {
         MyApplication.getInstance().addActivity(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
-        News_headline=findViewById(R.id.News_headline);
+        News_headline = findViewById(R.id.News_headline);
         News_writer=findViewById(R.id.News_writer);
-        News_context=findViewById(R.id.News_context);
-        Intent intent=getIntent();
+        News_context = findViewById(R.id.News_context);
+        Intent intent = getIntent();
         News_headline.setText(intent.getStringExtra("extra_headline"));
         News_writer.setText(intent.getStringExtra("extra_writer"));
         News_context.setText(intent.getStringExtra("extra_context"));

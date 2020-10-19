@@ -1,15 +1,25 @@
 package AdaptObject;
 
-public class news {
+public class ReceivedNews {
+
     private String headline;
     private String writer;
     private String context;
+    private String isRead;
 
-
-    public news(String headline,String writer,String context){
+    public ReceivedNews(String headline, String writer, String context, String isRead){
         this.headline=headline;
         this.writer=writer;
         this.context=context;
+        this.isRead = isRead;
+    }
+
+    public void setIsRead(String str){
+        this.isRead = str;
+    }
+
+    public ReceivedNews() {
+
     }
 
     public String getHeadline(){
@@ -23,4 +33,6 @@ public class news {
     public String getWriter() {
         return writer;
     }
+
+    public String getIsRead(){return isRead;}
 }

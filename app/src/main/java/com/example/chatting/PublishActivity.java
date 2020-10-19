@@ -43,6 +43,8 @@ public class PublishActivity extends AppCompatActivity {
     private Button add;
     private Button renew;
     private ListView listView;
+    private MyAdapter adapter;
+    private List<MessageItem> lists;
 
 
     @Override
@@ -96,27 +98,27 @@ public class PublishActivity extends AppCompatActivity {
             @Override
             public void run() {
                 BmobQuery<MessageItem> query = new BmobQuery<MessageItem>();
-                query.addWhereEqualTo("author", BmobUser.getCurrentUser(User.class));
+                query.addWhereNotEqualTo("author", BmobUser.getCurrentUser(User.class));
                 query.order("-updatedAt");
                 //包含作者信息
                 query.include("author");
-                query.findObjects(new FindListener<MessageItem>(){
+                query.findObjects(new FindListener<MessageItem>() {
                     @Override
                     public void done(List<MessageItem> list, BmobException e) {
-                        List<MessageItem> lists = new ArrayList<>();
+                        lists = new ArrayList<>();
                         if (list != null) {
-                            System.out.println("查询成功"+list.get(0).getTitle()+list.get(0).getContent());
-                            final String[] title  =  new String[list.size()];
-                            final String[] content  =  new String[list.size()];
+                            System.out.println("查询成功" + list.get(0).getTitle() + list.get(0).getContent());
+                            final String[] title = new String[list.size()];
+                            final String[] content = new String[list.size()];
                             final String[] author = new String[list.size()];
 
-                            for(int i = 0;i<list.size();i++){
+                            for (int i = 0; i < list.size(); i++) {
                                 title[i] = list.get(i).getTitle();
                                 content[i] = list.get(i).getContent();
-                                author[i] = list.get(i).getAuthor().getName();
+                                author[i]=list.get(i).getAuthor().getName();
                             }
-
-                            listView.setAdapter(new MyAdapter(getApplication(), title, content,author));
+                            adapter = new MyAdapter(getApplication(), title, content,author);
+                            listView.setAdapter(adapter);
                         }
                     }
                 });
