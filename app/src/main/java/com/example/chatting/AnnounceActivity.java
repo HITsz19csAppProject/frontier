@@ -2,10 +2,14 @@ package com.example.chatting;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +47,7 @@ import cn.bmob.v3.listener.FindListener;
 public class AnnounceActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 0x00000011;
     private static final int PERMISSION_WRITE_EXTERNAL_REQUEST_CODE = 0x00000012;
+    private static final int PERMISSION_READ_EXTERNAL_REQUEST_CODE = 0x00000013;
 
     private Button publish, addLabel;
     private Button mAdd_photo;
@@ -51,7 +56,10 @@ public class AnnounceActivity extends AppCompatActivity {
     private ImageView mIvBack;
     private ImageAdapter mAdapter;
     private ListView listView;
-    private List<news> newsList = new ArrayList<>();
+
+    private ArrayList<String> myImages;
+    private String myHeadline;
+    private String myContext;
 
 
     @Override
@@ -60,6 +68,7 @@ public class AnnounceActivity extends AppCompatActivity {
         MyApplication.getInstance().addActivity(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
+        InitImage();
         ActionBar actionBar=getSupportActionBar();
         if(actionBar!=null){
             actionBar.hide();
@@ -86,20 +95,22 @@ public class AnnounceActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 System.out.println("已经点击");
-                Intent intent1=new Intent();
-                String myheadline=my_headline.getText().toString();
-                String mycontext=my_context.getText().toString();
-                if(!myheadline.isEmpty()&&!mycontext.isEmpty())
+                Intent intent1 = new Intent();
+                myHeadline = my_headline.getText().toString();
+                myContext = my_context.getText().toString();
+                if(!myHeadline.isEmpty()&&!myContext.isEmpty())
                 {
                     System.out.println("获取成功");
                     CommunityItem newMessage = new CommunityItem();
-                    newMessage.setTitle(myheadline);
-                    newMessage.setContent(mycontext);
-//                    new ServerTools().SaveCommunityMessage(AnnounceActivity.this, newMessage);
-                    new GraphTools<CommunityItem>(newMessage).InitLuban(AnnounceActivity.this, newMessage);
-                    intent1.putExtra("headline_return",myheadline);
-                    intent1.putExtra("context_return",mycontext);
-                    setResult(RESULT_OK,intent1);
+                    newMessage.setTitle(myHeadline);
+                    newMessage.setContent(myContext);
+                    newMessage.setImages(myImages);
+
+                    new ServerTools().BeforeSaveCommunityMessage(AnnounceActivity.this, newMessage);
+
+                    intent1.putExtra("headline_return", myHeadline);
+                    intent1.putExtra("context_return", myContext);
+                    setResult(RESULT_OK, intent1);
                     finish();
                 }
                 else{
@@ -163,5 +174,60 @@ public class AnnounceActivity extends AppCompatActivity {
             }
         }); //声明一个子线程
         thread.start();
+    }
+
+    private void InitImage() {
+        int hasWriteExternalPermission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (hasWriteExternalPermission == PackageManager.PERMISSION_GRANTED) {
+            //预加载手机图片。加载图片前，请确保app有读取储存卡权限
+            ImageSelector.preload(this);
+        } else {
+            //没有权限，申请权限。
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_WRITE_EXTERNAL_REQUEST_CODE);
+        }
+
+        int hasReadExternalPermission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (hasWriteExternalPermission == PackageManager.PERMISSION_GRANTED) {
+            //预加载手机图片。加载图片前，请确保app有读取储存卡权限
+            ImageSelector.preload(this);
+        } else {
+            //没有权限，申请权限。
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_READ_EXTERNAL_REQUEST_CODE);
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && data != null) {
+            ArrayList<String> images = data.getStringArrayListExtra(ImageSelector.SELECT_RESULT);
+            boolean isCameraImage = data.getBooleanExtra(ImageSelector.IS_CAMERA_IMAGE, false);
+//            Log.d("ImageSelector", "是否是拍照图片：" + isCameraImage);
+            myImages = images;
+            mAdapter.refresh(images);
+        }
+    }
+
+    /**
+     * 处理权限申请的回调。
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSION_WRITE_EXTERNAL_REQUEST_CODE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //预加载手机图片
+                ImageSelector.preload(this);
+            } else {
+                //拒绝权限。
+            }
+        }
     }
 }

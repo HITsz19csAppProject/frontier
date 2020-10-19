@@ -20,6 +20,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Calendar;
 
+import Bean.User;
+import cn.bmob.v3.BmobUser;
+
 public class ScheduleActivity extends AppCompatActivity implements View.OnClickListener{
 
     private CalendarView calendarView;
@@ -31,6 +34,7 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnClickL
     private SQLiteDatabase myDatabase;
     private TextView mySchedule[] = new TextView[5];
     private ImageView mIvBack;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +60,10 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnClickL
         int year = time.get(Calendar.YEAR);
         int month = time.get(Calendar.MONTH)+1;//注意要+1，0表示1月份
         int day = time.get(Calendar.DAY_OF_MONTH);
+
         dateToday = year+"-"+month+"-"+day;
+        dateToday += "-" + BmobUser.getCurrentUser(User.class).getName();   //加入了个人身份识别
+
         //还要直接查询当天的日程，这个要放在initView的后面，不然会出问题
         queryByDate(dateToday);
     }
@@ -81,6 +88,7 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnClickL
         mySchedule[2] = findViewById(R.id.schedule3);
         mySchedule[3] = findViewById(R.id.schedule4);
         mySchedule[4] = findViewById(R.id.schedule5);
+
         for(TextView v:mySchedule){
             v.setOnClickListener(this);
         }
@@ -91,7 +99,7 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnClickL
         public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
             dateToday = year+"-"+(month+1)+"-"+dayOfMonth;
             Toast.makeText(context, "你选择了:"+dateToday, Toast.LENGTH_SHORT).show();
-
+            dateToday += "-" + BmobUser.getCurrentUser(User.class).getName();   //加入了个人身份识别
             //得把用别的日期查出来的日程删除并将其隐藏
             for(TextView v:mySchedule){
                 v.setText("");
@@ -107,15 +115,22 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnClickL
         Cursor cursor = myDatabase.query("schedules",null,"time=?",new String[]{date},null,null,null);
         if(cursor.moveToFirst()){
             int scheduleCount = 0;
-            do{
+//            do{
+//                String aScheduleDetail = cursor.getString(cursor.getColumnIndex("scheduleDetail"));
+//                mySchedule[scheduleCount].setText("日程"+(scheduleCount+1)+"："+aScheduleDetail);
+//                mySchedule[scheduleCount].setVisibility(View.VISIBLE);
+//                scheduleCount++;
+//                //一定要有这句 不然TextView不够多要数组溢出了
+//                if(scheduleCount >= 5)
+//                    break;
+//            }while (cursor.moveToNext());
+            while (scheduleCount < 5) {
                 String aScheduleDetail = cursor.getString(cursor.getColumnIndex("scheduleDetail"));
                 mySchedule[scheduleCount].setText("日程"+(scheduleCount+1)+"："+aScheduleDetail);
                 mySchedule[scheduleCount].setVisibility(View.VISIBLE);
                 scheduleCount++;
-                //一定要有这句 不然TextView不够多要数组溢出了
-                if(scheduleCount >= 5)
-                    break;
-            }while (cursor.moveToNext());
+                if (!cursor.moveToNext()) break;
+            }
         }
         cursor.close();
     }
@@ -145,8 +160,14 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnClickL
     private void checkAddSchedule() {
         ContentValues values = new ContentValues();
         //第一个参数是表中的列名
-        values.put("scheduleDetail",scheduleInput.getText().toString());
-        values.put("time",dateToday);
+        if (scheduleInput.getText().toString().length() < 1) {
+            Toast.makeText(ScheduleActivity.this, "日程不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        values.put("scheduleDetail", scheduleInput.getText().toString());
+        values.put("time", dateToday);
+
         myDatabase.insert("schedules",null,values);
         scheduleInput.setVisibility(View.GONE);
         checkAdd.setVisibility(View.GONE);

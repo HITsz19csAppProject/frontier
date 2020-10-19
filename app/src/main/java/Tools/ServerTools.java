@@ -2,6 +2,7 @@ package Tools;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -18,22 +19,24 @@ import Bean.User;
 import Login.LoginAsync;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FetchUserInfoListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
-import cn.bmob.v3.listener.UploadBatchListener;
 
 import static com.example.chatting.MyApplication.CurrentUser;
 import static com.example.chatting.MyApplication.Threads;
+import static com.example.chatting.MyApplication.mFTP;
 
 public class ServerTools {
     /**
      * 暂名为服务器工具类。目前主要负责完成登录部分的所有功能（登录、注册、同步信息）
      * @param context 引用该类的上下文
      */
+    private Context mcontext;
+    private MessageItem messageItem;
+    private CommunityItem communityItem;
 
     public void UserLogin(Context context) {
         CurrentUser.login(new SaveListener<User>() {
@@ -63,7 +66,7 @@ public class ServerTools {
         });
     }
 
-    public void UserSignUp(Context context, boolean ans) throws IOException {
+    public void UserSignUp(Context context, boolean ans){
         if (!ans) {
             Toast.makeText(context, "用户名或密码错误，也有可能是网络情况？请重试", Toast.LENGTH_SHORT).show();
             return ;
@@ -124,72 +127,48 @@ public class ServerTools {
         });
     }
 
-    public void SaveMessage(Context context, MessageItem newMessage) {
+    public void BeforeSaveMessage(Context context, MessageItem newMessage) {
+        mcontext = context;
+        messageItem = newMessage;
         ArrayList<String> images = newMessage.getImages();
-        if (images==null) {
-            if (BmobUser.isLogin()) {
-                newMessage.setAuthor(BmobUser.getCurrentUser(User.class));
-                newMessage.setImages(new ArrayList<>());
-                newMessage.save(new SaveListener<String>() {
-                    @Override
-                    public void done(String s, BmobException e) {
-                        if (e == null)
-                            Toast.makeText(context, "发布成功", Toast.LENGTH_SHORT).show();
-                        else {
-                            Log.e("BMOB", e.toString());
-                            Toast.makeText(context, "发布失败", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-            else {
-                Toast.makeText(context, "尚未登录", Toast.LENGTH_SHORT).show();
-            }
-            return;
+        if (images == null) {
+            SaveMessage(context, newMessage);
         }
-
-        String[] paths = new String[images.size()];
-        int i=0;
-        for (String url : images) {
-            paths[i++] = url;
-            System.out.println(url);
-        }
-        //todo:图片上传错误，原因未知
-        BmobFile.uploadBatch(paths, new UploadBatchListener() {
-            @Override
-            public void onSuccess(List<BmobFile> list, List<String> list1) {
-                newMessage.setAuthor(BmobUser.getCurrentUser(User.class));
-                newMessage.save(new SaveListener<String>() {
-                    @Override
-                    public void done(String s, BmobException e) {
-                        if (e == null)
-                            Toast.makeText(context, "发布成功", Toast.LENGTH_SHORT).show();
-                        else {
-                            Log.e("BMOB", e.toString());
-                            Toast.makeText(context, "发布失败", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onProgress(int i, int i1, int i2, int i3) {
-                Toast.makeText(context, "图片上传中", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                Toast.makeText(context, "图片上传失败", Toast.LENGTH_SHORT).show();
-                Log.e("错误码", String.valueOf(i));
-                Log.e("error!", s);
-            }
-        });
+        else new GraghicAsync(images).executeOnExecutor(Threads);
     }
 
-    public void SaveCommunityMessage(Context context, CommunityItem newMessage) {
-        System.out.println("开始上传");
+    private void SaveMessage(Context context, MessageItem newMessage) {
         if (BmobUser.isLogin()) {
-            System.out.println("正在上传");
+            newMessage.setAuthor(BmobUser.getCurrentUser(User.class));
+            newMessage.save(new SaveListener<String>() {
+                @Override
+                public void done(String s, BmobException e) {
+                    if (e == null)
+                        Toast.makeText(context, "发布成功", Toast.LENGTH_SHORT).show();
+                    else {
+                        Log.e("BMOB", e.toString());
+                        Toast.makeText(context, "发布失败", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+        else {
+            Toast.makeText(context, "尚未登录", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void BeforeSaveCommunityMessage(Context context, CommunityItem newMessage) {
+        mcontext = context;
+        communityItem = newMessage;
+        ArrayList<String> images = newMessage.getImages();
+        if (images == null) {
+            SaveCommunityMessage(context, newMessage);
+        }
+        else new CommunityGraghicAsync(images).executeOnExecutor(Threads);
+    }
+
+    private void SaveCommunityMessage(Context context, CommunityItem newMessage) {
+        if (BmobUser.isLogin()) {
             newMessage.setAuthor(BmobUser.getCurrentUser(User.class));
             newMessage.save(new SaveListener<String>() {
                 @Override
@@ -229,6 +208,64 @@ public class ServerTools {
                     }
                 }
             });
+        }
+    }
+
+    private class GraghicAsync extends AsyncTask<Void, Boolean, Boolean> {
+
+        private String[] Urls;
+        GraghicAsync(ArrayList<String> images) {
+            int i = 0;
+            Urls = new String[images.size()];
+            for (String image : images) Urls[i++] = image;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            if (!mFTP.connectFtp()) return false;
+            boolean ans = true;
+            for (String url : Urls) {
+                String ImageName = "messageItem-" + mFTP.setDate() + "-" + BmobUser.getCurrentUser(User.class).getUsername() + ".jpg";
+                ans = mFTP.uploadFile("/MessageItems", ImageName, url) & ans;
+            }
+            mFTP.disconnectFtp();
+            return ans;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean ans) {
+            if (ans) {
+                SaveMessage(mcontext, messageItem);
+            }
+        }
+    }
+
+    private class CommunityGraghicAsync extends AsyncTask<Void, Boolean, Boolean> {
+
+        private String[] Urls;
+        CommunityGraghicAsync(ArrayList<String> images) {
+            int i = 0;
+            Urls = new String[images.size()];
+            for (String image : images) Urls[i++] = image;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            if (!mFTP.connectFtp()) return false;
+            boolean ans = true;
+            for (String url : Urls) {
+                String ImageName = "communityItem-" + mFTP.setDate() + "-" + BmobUser.getCurrentUser(User.class).getUsername() + ".jpg";
+                ans = mFTP.uploadFile("/CommunityItems", ImageName, url) & ans;
+            }
+            mFTP.disconnectFtp();
+            return ans;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean ans) {
+            if (ans) {
+                SaveCommunityMessage(mcontext, communityItem);
+            }
         }
     }
 }

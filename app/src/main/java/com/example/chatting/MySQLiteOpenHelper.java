@@ -7,7 +7,7 @@ import android.view.View;
 
 public class MySQLiteOpenHelper extends SQLiteOpenHelper{
     private static final String db_name = "MySchedule";//自定义的数据库名；
-    private static final int version = 1;//版本号
+    private static final int version = 2;//版本号
 
     public MySQLiteOpenHelper(Context context) {
         super(context, db_name, null, version);
@@ -17,10 +17,10 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
     // 如果存在则不会执行该方法，如果不存在则会执行该方法。
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String  sql ="create table schedules(" +
+        String sql ="create table schedules(" +
                 "id Integer primary key autoincrement," +     //id自增,只支持integer不支持int
                 "scheduleDetail varchar(50)," +
-                "time varchar(30)" +
+                "time varchar(50)" +
                 ")";
         db.execSQL(sql);
     }
@@ -31,5 +31,4 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
         db.execSQL("drop table if exists schedules");
         onCreate(db);
     }
-
 }

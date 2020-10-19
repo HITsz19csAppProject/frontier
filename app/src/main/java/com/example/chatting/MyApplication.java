@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import Bean.MessageItem;
 import Bean.User;
+import Tools.FTPUtils;
 import cn.bmob.v3.Bmob;
 
 public class MyApplication extends Application {
@@ -21,6 +22,7 @@ public class MyApplication extends Application {
     public static User CurrentUser;
     public static SharedPreferences UserInfo;
     public static ThreadPoolExecutor Threads;
+    public static FTPUtils mFTP;
 
 //    public MyApplication() {
 //
@@ -33,6 +35,8 @@ public class MyApplication extends Application {
         Bmob.initialize(this, "0c073307ca22bf3e1268f1f70bef2941");
         CurrentUser = new User();
         UserInfo = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        mFTP = new FTPUtils();
+        mFTP.initFtpClient("47.103.215.161", 21, "ftpuser", "ftpuser");
     }
 
     //单例模式中获取唯一的MyApplication实例
