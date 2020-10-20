@@ -26,13 +26,15 @@
         android:text="刷新" />
 
     <ListView
+        android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/list_view"
-        android:paddingTop="5dp"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="20dp"
-        >
-    </ListView>
+        android:divider="@android:color/black"
+        android:dividerHeight="1dp"
+        android:paddingTop="5dp" />
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+<!--    </androidx.recyclerview.widget.RecyclerView>-->
 
 </LinearLayout>

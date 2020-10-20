@@ -36,10 +36,10 @@ public class GraphTools<T> {
                     @Override
                     public void onSuccess(File file) {
                         if (item instanceof MessageItem) {
-                            new ServerTools().SaveMessage(context, (MessageItem) item);
+                            new ServerTools().BeforeSaveMessage(context, (MessageItem) item);
                         }
                         else
-                            new ServerTools().SaveCommunityMessage(context, (CommunityItem) item);
+                            new ServerTools().BeforeSaveCommunityMessage(context, (CommunityItem) item);
                     }
 
                     @Override
