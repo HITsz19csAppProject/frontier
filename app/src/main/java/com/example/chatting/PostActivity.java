@@ -29,6 +29,7 @@ public class PostActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 0x00000011;
     private static final int PERMISSION_WRITE_EXTERNAL_REQUEST_CODE = 0x00000012;
+    private static final int PERMISSION_READ_EXTERNAL_REQUEST_CODE = 0x00000013;
 
     private ImageView imageView;
     private Button mBtnAddLabel;
@@ -91,7 +92,7 @@ public class PostActivity extends AppCompatActivity {
                     newMessage.setTitle(myHeadline);
                     newMessage.setImages(myImages);
 
-                    new ServerTools().SaveMessage(PostActivity.this, newMessage);
+                    new ServerTools().BeforeSaveMessage(PostActivity.this, newMessage);
 
                     intent.putExtra("headline_return", myHeadline);
                     intent.putExtra("context_return", myContext);
@@ -127,7 +128,7 @@ public class PostActivity extends AppCompatActivity {
         });
     }
 
-    void InitImage() {
+    private void InitImage() {
         int hasWriteExternalPermission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (hasWriteExternalPermission == PackageManager.PERMISSION_GRANTED) {
@@ -137,6 +138,17 @@ public class PostActivity extends AppCompatActivity {
             //没有权限，申请权限。
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_WRITE_EXTERNAL_REQUEST_CODE);
+        }
+
+        int hasReadExternalPermission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (hasWriteExternalPermission == PackageManager.PERMISSION_GRANTED) {
+            //预加载手机图片。加载图片前，请确保app有读取储存卡权限
+            ImageSelector.preload(this);
+        } else {
+            //没有权限，申请权限。
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_READ_EXTERNAL_REQUEST_CODE);
         }
     }
     @Override
