@@ -4,18 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RecieveActivity"
+    tools:context=".PublishActivity"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_title_bar_back" />
+
+
+    <include layout="@layout/layout_title_bar_back"></include>
 
     <Button
+        android:id="@+id/my_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/my_add"
-        android:text="+"
         android:background="@drawable/bg_btn1"
-        android:backgroundTint="@color/colorLightGrey"/>
+        android:backgroundTint="@color/colorCyan"
+        android:text="+" />
+
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
@@ -27,9 +30,11 @@
         android:layout_height="match_parent"
         android:id="@+id/list_view"
         android:paddingTop="5dp"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="20dp"
+        android:divider="@null"
+        android:dividerHeight="10dp"
         >
+
+
     </ListView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

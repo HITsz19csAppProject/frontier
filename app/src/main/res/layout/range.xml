@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/range_name"
         android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_btn1"
         android:textSize="20dp"
         />
 </LinearLayout>

@@ -1,6 +1,5 @@
 package com.example.chatting;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,17 +27,16 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import AdaptObject.LabelModel;
 import AdaptObject.post;
+import AdaptObject.range;
+import AdaptObject.range_pic;
 import Adapter.PostAdapter;
 import Adapter.RangeAdapter;
-import AdaptObject.LabelModel;
-
-import AdaptObject.range;
+import Adapter.Range_PicAdapter;
 import Bean.CommunityItem;
 import Bean.User;
 import Tools.PostTools;
-import Tools.ServerTools;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -50,15 +48,16 @@ public class ChattingFragment extends Fragment {
 
     private ChattingViewModel chattingViewModel;
     private List<range> rangeList = new ArrayList<>();
+    private List<range_pic> range_pics=new ArrayList<>();
     private List<post> newsList = new ArrayList<>();
     private Button add;
     private EditText mTvSearch;
     private PostAdapter adapter1;
     private Button sum;
     public DrawerLayout drawerLayout;
-    private Button sure;
     private SwipeRefreshLayout refresh;
     private ListView listView;
+    private ListView range_piclist;
     private SwipeRefreshLayout.OnRefreshListener listener;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -66,15 +65,9 @@ public class ChattingFragment extends Fragment {
         chattingViewModel =
                 ViewModelProviders.of(this).get(ChattingViewModel.class);
         View root = inflater.inflate(R.layout.chatting_fragment, container, false);
+
         add = root.findViewById(R.id.add);
         sum=root.findViewById(R.id.sum);
-        sure=root.findViewById(R.id.sure);
-        sure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawerLayout.closeDrawer(Gravity.LEFT);
-            }
-        });
         drawerLayout=(DrawerLayout) root.findViewById(R.id.drawer_layout_home);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +77,10 @@ public class ChattingFragment extends Fragment {
                 startActivityForResult(intent, 1);
             }
         });
+        initRange_pic();
+        Range_PicAdapter adapter2=new Range_PicAdapter(getActivity(),R.layout.range_pic,range_pics);
+        range_piclist=root.findViewById(R.id.rang_piclist);
+        range_piclist.setAdapter(adapter2);
         sum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,7 +89,6 @@ public class ChattingFragment extends Fragment {
         });
         mTvSearch = root.findViewById(R.id.tv_search);
 
-        final LabelLayoutView labelLayoutView =root. findViewById(R.id.range_layout);
         final List<LabelModel> labelModelArrayList = new ArrayList<>();
         LabelModel tag1 = new LabelModel();
         tag1.setTextValue("时间");
@@ -126,7 +122,6 @@ public class ChattingFragment extends Fragment {
         tag8.setTextValue("生活");
         labelModelArrayList.add(tag8);
 
-        labelLayoutView.setStringList(labelModelArrayList);
 
         initRange();
         RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recycle_view);
@@ -172,6 +167,23 @@ public class ChattingFragment extends Fragment {
             }
         });
         return root;
+    }
+
+    private void initRange_pic() {
+        range_pic time=new range_pic(R.drawable.timg0);
+        range_pics.add(time);
+        range_pic study=new range_pic(R.drawable.timg1);
+        range_pics.add(study);
+        range_pic sports=new range_pic(R.drawable.timg2);
+        range_pics.add(sports);
+        range_pic games=new range_pic(R.drawable.timg3);
+        range_pics.add(games);
+        range_pic songs=new range_pic(R.drawable.timg4);
+        range_pics.add(songs);
+        range_pic poems=new range_pic(R.drawable.timg5);
+        range_pics.add(poems);
+        range_pic life=new range_pic(R.drawable.timg6);
+        range_pics.add(life);
     }
 
     @Override
@@ -262,10 +274,10 @@ public class ChattingFragment extends Fragment {
                                     ViewHolder viewHolder;
                                     if (convertView == null) {
                                         LayoutInflater inflater = LayoutInflater.from(context);
-                                        convertView = inflater.inflate(R.layout.activity_post, null);//实例化一个布局文件
+                                        convertView = inflater.inflate(R.layout.post, null);//实例化一个布局文件
                                         viewHolder = new ViewHolder();
-                                        viewHolder.tv_title = (TextView) convertView.findViewById(R.id.News_headline);
-                                        viewHolder.tv_content = (TextView) convertView.findViewById(R.id.News_context);
+                                        viewHolder.tv_title = (TextView) convertView.findViewById(R.id.news_headline);
+                                        viewHolder.tv_content = (TextView) convertView.findViewById(R.id.news_context);
                                         convertView.setTag(viewHolder);
 
                                     } else {

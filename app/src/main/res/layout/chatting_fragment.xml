@@ -37,7 +37,9 @@
             android:layout_width="50dp"
             android:layout_height="35dp"
             android:gravity="center_horizontal"
-            android:text="=="
+            android:background="@drawable/bg_btn1"
+            android:text=":"
+
             />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -48,18 +50,14 @@
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="-------------------------------------------------------------------------------------------------"
-        android:lines="1"
-        />
 
     <Button
         android:id="@+id/add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
+        android:background="@drawable/bg_btn1"
+        android:backgroundTint="@color/colorCyan"
         android:text="+" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -70,7 +68,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:divider="#0000"
+        android:divider="@null"
+        android:dividerHeight="10dp"
         android:id="@+id/list_view"
         android:paddingBottom="60dp"
         >
@@ -84,30 +83,13 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:orientation="vertical"
-        android:background="@color/colorLemon">
+        >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:text="分类"
-            android:textSize="30sp"
-            android:layout_gravity="center"/>
-
-        <com.example.chatting.LabelLayoutView
-            android:id="@+id/range_layout"
+        <ListView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:id="@+id/rang_piclist"
+            android:layout_height="match_parent"/>
 
-        <Button
-            android:id="@+id/sure"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="确 认"
-            android:textSize="25dp"
-            android:background="@drawable/bg_btn1"
-            android:layout_marginTop="50dp"/>
 
     </LinearLayout>
 

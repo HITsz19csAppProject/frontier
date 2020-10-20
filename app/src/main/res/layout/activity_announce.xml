@@ -5,23 +5,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:backgroundTint="@color/colorWhite"
     >
 
     <include layout="@layout/layout_title_bar_back" />
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="70dp"
         android:hint="请输入标题"
+        android:imeOptions="actionUnspecified"
         android:id="@+id/my_headline"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <EditText
+        android:paddingTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:hint="输入通知正文"
         android:gravity="top"
         android:id="@+id/my_context"
+        android:imeOptions="actionUnspecified"
         android:background="@null"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <Button
         android:id="@+id/add_photo"

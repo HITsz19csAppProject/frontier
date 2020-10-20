@@ -24,7 +24,6 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
     private EditText editText;
     String context;
     Button sure;
-    private ImageView mIvBack;
     Button ok;
     private List<Labelrange> LabelrangeList=new ArrayList<>();
     final List<LabelModel> labelModelArrayList = new ArrayList<>();
@@ -44,13 +43,6 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
         if(actionBar!=null){
             actionBar.hide();
         }
-        mIvBack = (ImageView)findViewById(R.id.im_back);
-        mIvBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
         ok=findViewById(R.id.ok);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override

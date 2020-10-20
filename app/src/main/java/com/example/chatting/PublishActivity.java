@@ -5,18 +5,25 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -45,13 +52,20 @@ public class PublishActivity extends AppCompatActivity {
     private SwipeRefreshLayout flush;
     private ListView listView;
     private SwipeRefreshLayout.OnRefreshListener listener;
+    private int minInstance;
+    private float mFirstY;
+    private float mCurrentY;
+    private int status;
+    private boolean mShow = true;
+    private ObjectAnimator animator;
 
-
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish);
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar;
+        actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
         }
@@ -65,7 +79,6 @@ public class PublishActivity extends AppCompatActivity {
                 startActivityForResult(intent, 1);
             }
         });
-        listView = (ListView) findViewById(R.id.list_view);
         flush = findViewById(R.id.flush);
         initSwipeRefresh();
         AutoRefresh();
@@ -85,8 +98,43 @@ public class PublishActivity extends AppCompatActivity {
         });
 
         adapter1 = new NewsAdapter(PublishActivity.this, R.layout.news, newsList);
-        ListView listView = (ListView) findViewById(R.id.list_view);
+        listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(adapter1);
+        //1.给listview增加HeaderView
+        //2.获取系统认为的最低滑动距离
+        minInstance = ViewConfiguration.get(this).getScaledTouchSlop();
+        //3.判断滑动事件
+        listView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mFirstY = event.getY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        mCurrentY = event.getY();
+                        if (mCurrentY - mFirstY > minInstance) {
+                            status = 0;  // 向下
+                        } else {
+                            status = 1;  // 向上
+                        }
+                        if (status == 1) {
+                            if (mShow) {
+                                barAnim(1);  // 隐藏
+                                mShow = false;
+                            }
+                        } else {
+                            if (!mShow) {
+                                barAnim(0); // 显示
+                                mShow = true;
+                            }
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
+        
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -134,7 +182,25 @@ public class PublishActivity extends AppCompatActivity {
     public void initNews() {
         new ServerTools().MessageShow(newsList);
     }
-
+    
+    private void barAnim(int i) {
+        if (animator != null && animator.isRunning())
+            animator.cancel();
+        if (i == 0) {
+            animator = ObjectAnimator.ofFloat(
+                    add,
+                    "translationY",
+                    add.getTranslationY(),
+                    0);
+        }else{
+            animator = ObjectAnimator.ofFloat(
+                    add,
+                    "translationY",
+                    add.getTranslationY(),
+                    -add.getHeight());
+        }
+        animator.start();
+    }
     private void initSwipeRefresh() {
          listener = new SwipeRefreshLayout.OnRefreshListener() {
             public void onRefresh() {
@@ -199,10 +265,10 @@ public class PublishActivity extends AppCompatActivity {
                                         ViewHolder viewHolder;
                                         if (convertView == null) {
                                             LayoutInflater inflater = LayoutInflater.from(context);
-                                            convertView = inflater.inflate(R.layout.activity_news, null);//实例化一个布局文件
+                                            convertView = inflater.inflate(R.layout.news, null);//实例化一个布局文件
                                             viewHolder = new ViewHolder();
-                                            viewHolder.tv_title = (TextView) convertView.findViewById(R.id.News_headline);
-                                            viewHolder.tv_content = (TextView) convertView.findViewById(R.id.News_context);
+                                            viewHolder.tv_title = (TextView) convertView.findViewById(R.id.news_headline);
+                                            viewHolder.tv_content = (TextView) convertView.findViewById(R.id.news_context);
                                             convertView.setTag(viewHolder);
 
                                         } else {

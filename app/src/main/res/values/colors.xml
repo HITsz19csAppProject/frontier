@@ -7,5 +7,6 @@
     <color name="colorBlue">#00BFFF</color>
     <color name="colorPink">#FFB6C1</color>
     <color name="colorLemon">#FFFACD</color>
+    <color name="colorCyan">#E0FFFF</color>
     <color name="colorLightGrey">#C0C0C0</color>
 </resources>

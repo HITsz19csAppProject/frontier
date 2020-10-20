@@ -18,8 +18,8 @@
         android:layout_height="match_parent"
         android:id="@+id/list_view"
         android:paddingTop="5dp"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="20dp"
+        android:divider="@null"
+        android:dividerHeight="10dp"
         >
     </ListView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

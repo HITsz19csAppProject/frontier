@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_title_bar_back" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,13 +16,14 @@
             android:drawableLeft="@drawable/search_icon"
             android:layout_height="wrap_content"
             android:id="@+id/editText"
-            android:layout_weight="6"
+            android:layout_weight="5"
             />
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/sure"
             android:text="搜索"
+            android:backgroundTint="@color/colorCyan"
             android:layout_weight="1"
             />
     </LinearLayout>
