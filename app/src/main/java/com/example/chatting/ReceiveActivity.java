@@ -1,42 +1,29 @@
 package com.example.chatting;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import AdaptObject.ReceivedNews;
-import Adapter.MyAdapter;
-import Adapter.NewsAdapter;
-import AdaptObject.news;
 import Adapter.ReceiveAdapter;
 import Bean.MessageItem;
 import Bean.User;
-import Tools.ServerTools;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import static com.example.chatting.MyApplication.CurrentUser;
 
-public class RecieveActivity extends AppCompatActivity {
+public class ReceiveActivity extends AppCompatActivity {
     private List<ReceivedNews> newsList = new ArrayList<>();
     private ImageView mIvBack;
     private ListView listView;
@@ -89,7 +76,7 @@ public class RecieveActivity extends AppCompatActivity {
                     lists.set(i,news);
                     adapter.notifyDataSetChanged();
                 }
-                Intent intent =new Intent(RecieveActivity.this,NewsActivity.class);
+                Intent intent =new Intent(ReceiveActivity.this,NewsActivity.class);
                 intent.putExtra("extra_headline",title);
                 intent.putExtra("extra_writer",writer);
                 intent.putExtra("extra_context",content);

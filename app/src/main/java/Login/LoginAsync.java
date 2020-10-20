@@ -39,10 +39,6 @@ public class LoginAsync extends AsyncTask<Void, Void, Boolean> {
      */
     @Override
     protected void onPostExecute(Boolean result) {
-        try {
-            new ServerTools().UserSignUp(context, result);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        new ServerTools().UserSignUp(context, result);
     }
 }

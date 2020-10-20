@@ -29,7 +29,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".Self_correction"></activity>
         <activity android:name=".PublishActivity"></activity>
-        <activity android:name=".RecieveActivity" />
+        <activity android:name=".ReceiveActivity" />
         <activity android:name=".UserInfoActivity" />
         <activity android:name=".EditScheduleActivity" />
         <activity android:name=".ScheduleActivity" />

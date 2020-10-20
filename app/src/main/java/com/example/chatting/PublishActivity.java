@@ -98,7 +98,7 @@ public class PublishActivity extends AppCompatActivity {
             @Override
             public void run() {
                 BmobQuery<MessageItem> query = new BmobQuery<MessageItem>();
-                query.addWhereNotEqualTo("author", BmobUser.getCurrentUser(User.class));
+                query.addWhereEqualTo("author", BmobUser.getCurrentUser(User.class));
                 query.order("-updatedAt");
                 //包含作者信息
                 query.include("author");
