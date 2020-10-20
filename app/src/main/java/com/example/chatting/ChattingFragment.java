@@ -31,6 +31,7 @@ import AdaptObject.LabelModel;
 import AdaptObject.post;
 import AdaptObject.range;
 import AdaptObject.range_pic;
+import Adapter.MyAdapter;
 import Adapter.PostAdapter;
 import Adapter.RangeAdapter;
 import Adapter.Range_PicAdapter;
@@ -67,13 +68,13 @@ public class ChattingFragment extends Fragment {
         View root = inflater.inflate(R.layout.chatting_fragment, container, false);
 
         add = root.findViewById(R.id.add);
-        sum=root.findViewById(R.id.sum);
-        drawerLayout=(DrawerLayout) root.findViewById(R.id.drawer_layout_home);
+        sum = root.findViewById(R.id.sum);
+        drawerLayout = (DrawerLayout) root.findViewById(R.id.drawer_layout_home);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), AnnounceActivity.class);
-                new PostTools().MessageShow(newsList);
+                new PostTools().CommunityMessageShow(newsList);
                 startActivityForResult(intent, 1);
             }
         });
@@ -132,11 +133,11 @@ public class ChattingFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
 
-        refresh=root.findViewById(R.id.refresh);
+        refresh = root.findViewById(R.id.refresh);
         initSwipeRefresh();
         AutoRefresh();
         listener.onRefresh();
-        listView=root.findViewById(R.id.list_view);
+        listView = root.findViewById(R.id.list_view);
         initNews();
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -150,21 +151,20 @@ public class ChattingFragment extends Fragment {
             }
         });
         adapter1 = new PostAdapter(getActivity(), R.layout.post, newsList);
+
         ListView listView = (ListView) root.findViewById(R.id.list_view);
         listView.setAdapter(adapter1);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                post news = newsList.get(position);
-                Intent intent = new Intent(getActivity(), NewsActivity.class);
-                String news_headline = news.getHeadline();
-                String news_writer = news.getWriter();
-                String news_context = news.getContext();
-                intent.putExtra("extra_headline", news_headline);
-                intent.putExtra("extra_writer", news_writer);
-                intent.putExtra("extra_context", news_context);
-                startActivity(intent);
-            }
+
+        listView.setOnItemClickListener((adapterView, view, position, id) -> {
+            post news = newsList.get(position);
+            Intent intent = new Intent(getActivity(), NewsActivity.class);
+            String news_headline = news.getHeadline();
+            String news_writer = news.getWriter();
+            String news_context = news.getContext();
+            intent.putExtra("extra_headline", news_headline);
+            intent.putExtra("extra_writer", news_writer);
+            intent.putExtra("extra_context", news_context);
+            startActivity(intent);
         });
         return root;
     }
@@ -203,11 +203,10 @@ public class ChattingFragment extends Fragment {
     }
 
     public void initNews() {
-        new PostTools().MessageShow(newsList);
+        new PostTools().CommunityMessageShow(newsList);
     }
 
-    public void AutoRefresh()
-    {
+    public void AutoRefresh() {
         refresh.post(new Runnable() {
             @Override
             public void run () {
@@ -224,16 +223,12 @@ public class ChattingFragment extends Fragment {
         });
     }
 
-
     public void get(){
         Thread thread = new Thread(new Runnable() {
-
             @Override
             public void run() {
                 BmobQuery<CommunityItem> query = new BmobQuery<CommunityItem>();
-                query.addWhereEqualTo("author", BmobUser.getCurrentUser(User.class));
                 query.order("-updatedAt");
-                query.include("author");
                 query.findObjects(new FindListener<CommunityItem>() {
                     @Override
                     public void done(List<CommunityItem> list, BmobException e) {
@@ -242,59 +237,14 @@ public class ChattingFragment extends Fragment {
                             System.out.println("查询成功" + list.get(0).getTitle() + list.get(0).getContent());
                             final String[] title = new String[list.size()];
                             final String[] content = new String[list.size()];
+                            final String[] author = new String[list.size()];
 
                             for (int i = 0; i < list.size(); i++) {
                                 title[i] = list.get(i).getTitle();
                                 content[i] = list.get(i).getContent();
+                                author[i]=list.get(i).getAuthor().getName();
                             }
-                            class MyAdapter extends BaseAdapter {
-                                private Context context;
-
-                                public MyAdapter(Context context) {
-                                    this.context = context;
-                                }
-
-                                @Override
-                                public int getCount() {
-                                    return title.length;
-                                }
-
-                                @Override
-                                public Object getItem(int position) {
-                                    return title[position];
-                                }
-
-                                @Override
-                                public long getItemId(int position) {
-                                    return position;
-                                }
-
-                                @Override
-                                public View getView(int position, View convertView, ViewGroup parent) {
-                                    ViewHolder viewHolder;
-                                    if (convertView == null) {
-                                        LayoutInflater inflater = LayoutInflater.from(context);
-                                        convertView = inflater.inflate(R.layout.post, null);//实例化一个布局文件
-                                        viewHolder = new ViewHolder();
-                                        viewHolder.tv_title = (TextView) convertView.findViewById(R.id.news_headline);
-                                        viewHolder.tv_content = (TextView) convertView.findViewById(R.id.news_context);
-                                        convertView.setTag(viewHolder);
-
-                                    } else {
-                                        viewHolder = (ViewHolder) convertView.getTag();
-                                    }
-
-                                    viewHolder.tv_title.setText(title[position]);
-                                    viewHolder.tv_content.setText(content[position]);
-                                    return convertView;
-                                }
-
-                                class ViewHolder {
-                                    TextView tv_title;
-                                    TextView tv_content;
-                                }
-                            }
-                            listView.setAdapter(new MyAdapter(getActivity()));
+                            listView.setAdapter(new MyAdapter(getActivity(), title, content, author));
                         }
                     }
                 });
@@ -302,7 +252,6 @@ public class ChattingFragment extends Fragment {
         }); //声明一个子线程
         thread.start();
     }
-
 
     private void initSwipeRefresh() {
         listener = new SwipeRefreshLayout.OnRefreshListener() {
@@ -318,7 +267,6 @@ public class ChattingFragment extends Fragment {
         };
         refresh.setOnRefreshListener(listener);
     }
-
 
     private void initRange() {
         for(int i=0;i<1;i++)
@@ -343,11 +291,8 @@ public class ChattingFragment extends Fragment {
         }
     }
 
-
-
     public void refresh(PostAdapter adapter)
     {
         adapter.notifyDataSetChanged();
     }
-
 }

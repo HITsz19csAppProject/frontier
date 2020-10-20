@@ -140,6 +140,8 @@ public class AnnounceActivity extends AppCompatActivity {
             }
         });
 
+
+
     }
 
     public void get(){
@@ -167,7 +169,7 @@ public class AnnounceActivity extends AppCompatActivity {
                                 content[i] = list.get(i).getContent();
                                 author[i]=list.get(i).getAuthor().getName();
                             }
-                            listView.setAdapter(new MyAdapter(getApplication(), title, content,author));
+                            listView.setAdapter(new MyAdapter(getApplication(), title, content, author));
                         }
                     }
                 });

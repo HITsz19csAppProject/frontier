@@ -115,15 +115,6 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnClickL
         Cursor cursor = myDatabase.query("schedules",null,"time=?",new String[]{date},null,null,null);
         if(cursor.moveToFirst()){
             int scheduleCount = 0;
-//            do{
-//                String aScheduleDetail = cursor.getString(cursor.getColumnIndex("scheduleDetail"));
-//                mySchedule[scheduleCount].setText("日程"+(scheduleCount+1)+"："+aScheduleDetail);
-//                mySchedule[scheduleCount].setVisibility(View.VISIBLE);
-//                scheduleCount++;
-//                //一定要有这句 不然TextView不够多要数组溢出了
-//                if(scheduleCount >= 5)
-//                    break;
-//            }while (cursor.moveToNext());
             while (scheduleCount < 5) {
                 String aScheduleDetail = cursor.getString(cursor.getColumnIndex("scheduleDetail"));
                 mySchedule[scheduleCount].setText("日程"+(scheduleCount+1)+"："+aScheduleDetail);
@@ -167,6 +158,7 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnClickL
 
         values.put("scheduleDetail", scheduleInput.getText().toString());
         values.put("time", dateToday);
+        System.out.println(dateToday);
 
         myDatabase.insert("schedules",null,values);
         scheduleInput.setVisibility(View.GONE);

@@ -189,5 +189,25 @@ public class PostTools {
             });
         }
     }
+    public void CommunityMessageShow(List<post> newsList){
+        if (BmobUser.isLogin()) {
+            BmobQuery<CommunityItem> q = new BmobQuery<>();
+            q.addWhereEqualTo("author", BmobUser.getCurrentUser(User.class));
+            q.order("-updatedAt");
+            q.include("author");
+            q.findObjects(new FindListener<CommunityItem>() {
+                @Override
+                public void done(List<CommunityItem> list, BmobException e) {
+                    if (e == null) {
+                        for (int i = 0; i<list.size(); i++) {
+                            CommunityItem newMessage = list.get(i);
+                            newsList.add(new post(newMessage.getTitle(), CurrentUser.getUsername(), newMessage.getContent()));
+                        }
+//                        q.order("-updatedAt");
+                    }
+                }
+            });
+        }
+    }
 }
 

@@ -1,31 +1,24 @@
 package com.example.chatting;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.os.Handler;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import AdaptObject.ReceivedNews;
-import Adapter.MyAdapter;
-import Adapter.NewsAdapter;
 import AdaptObject.news;
+import Adapter.NewsAdapter;
 import Adapter.ReceiveAdapter;
 import Bean.MessageItem;
 import Bean.User;
@@ -34,16 +27,21 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import static com.example.chatting.MyApplication.CurrentUser;
 
-public class RecieveActivity extends AppCompatActivity {
-    private List<ReceivedNews> newsList = new ArrayList<>();
+/**
+ * 我已收到界面
+ */
+public class ReceiveActivity extends AppCompatActivity {
+//    private NewsAdapter adapter1;
+    private List<news> newsList = new ArrayList<>();
     private ImageView mIvBack;
     private ListView listView;
-    private Button renew;
     private MessageDataBaseUtils utils ; //数据库操作
     private ReceiveAdapter adapter;
     private List<ReceivedNews> lists;
+    private SwipeRefreshLayout refresh;
+    private SwipeRefreshLayout.OnRefreshListener listener;
+
     public String[] isRead ;
 
     @Override
@@ -55,6 +53,11 @@ public class RecieveActivity extends AppCompatActivity {
             actionBar.hide();
         }
         mIvBack = (ImageView) findViewById(R.id.im_back);
+        refresh = findViewById(R.id.refresh);
+        listView = (ListView) findViewById(R.id.list_view);
+        utils = new MessageDataBaseUtils(this);
+        adapter = new ReceiveAdapter();
+
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,18 +65,7 @@ public class RecieveActivity extends AppCompatActivity {
             }
         });
 
-        renew = (Button) findViewById(R.id._renew);
-        listView = (ListView) findViewById(R.id.list_view);
-        //new ServerTools().MessageShow(newsList);
-
-        renew.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getMessage();
-            }
-        });
-
-        utils = new MessageDataBaseUtils(this);
+        getMessage();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -89,7 +81,7 @@ public class RecieveActivity extends AppCompatActivity {
                     lists.set(i,news);
                     adapter.notifyDataSetChanged();
                 }
-                Intent intent =new Intent(RecieveActivity.this,NewsActivity.class);
+                Intent intent =new Intent(ReceiveActivity.this,NewsActivity.class);
                 intent.putExtra("extra_headline",title);
                 intent.putExtra("extra_writer",writer);
                 intent.putExtra("extra_context",content);
@@ -97,12 +89,38 @@ public class RecieveActivity extends AppCompatActivity {
             }
         });
 
-    }
+        initSwipeRefresh();
+        refresh.post(new Runnable() {
+            @Override
+            public void run () {
+                refresh.setRefreshing(true);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                        refresh.setRefreshing(false);
+                    }
+                },500);
+            }
 
+        });
+
+        listener.onRefresh();
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                        refresh.setRefreshing(false);
+                    }
+                }, 20);
+            }
+        });
+    }
 
     public void getMessage () {
         Thread thread = new Thread(new Runnable() {
-
             @Override
             public void run() {
                 BmobQuery<MessageItem> query = new BmobQuery<MessageItem>();
@@ -139,7 +157,7 @@ public class RecieveActivity extends AppCompatActivity {
                                 ReceivedNews news = new ReceivedNews(title[i],author[i],content[i],isRead[i]);
                                 lists.add(news);
                             }
-                            adapter = new ReceiveAdapter(getApplication(), title, content,author,isRead);
+                            adapter = new ReceiveAdapter(getApplication(), title, content, author, isRead);
                             listView.setAdapter(adapter);
                         }
                     }
@@ -147,6 +165,21 @@ public class RecieveActivity extends AppCompatActivity {
             }
         }); //声明一个子线程
         thread.start();
+    }
+
+    private void initSwipeRefresh() {
+        listener = new SwipeRefreshLayout.OnRefreshListener() {
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                        refresh.setRefreshing(false);
+                        //添加数据设置适配器
+                    }
+                }, 20);
+            }
+        };
+        refresh.setOnRefreshListener(listener);
     }
 }
 

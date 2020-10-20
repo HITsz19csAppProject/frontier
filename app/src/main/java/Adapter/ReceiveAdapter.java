@@ -33,6 +33,10 @@ public class ReceiveAdapter extends BaseAdapter {
         this.isRead = isRead;
     }
 
+    public ReceiveAdapter(){
+
+    }
+
     @Override
     public int getCount() {
         return title.length;
@@ -64,13 +68,16 @@ public class ReceiveAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        if(isRead[position].equals("1")){
-            viewHolder.tv_isRead.setText("已读");
-            viewHolder.tv_isRead.setTextColor(Color.parseColor("#888888"));
-        }else if (isRead[position].equals("0") ){
+
+        if (isRead[position]==null || isRead[position].equals("0") ){
             viewHolder.tv_isRead.setText("未读");
             viewHolder.tv_isRead.setTextColor(Color.parseColor("#00aa00"));
         }
+        else if(isRead[position].equals("1")){
+            viewHolder.tv_isRead.setText("已读");
+            viewHolder.tv_isRead.setTextColor(Color.parseColor("#888888"));
+        }
+
         viewHolder.tv_title.setText(title[position]);
         viewHolder.tv_content.setText(content[position]);
         viewHolder.tv_author.setText(author[position]);
