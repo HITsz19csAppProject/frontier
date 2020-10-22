@@ -1,9 +1,14 @@
 package com.example.chatting;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +19,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -24,6 +31,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,18 +47,24 @@ import Adapter.Range_PicAdapter;
 import Bean.CommunityItem;
 import Bean.User;
 import Tools.PostTools;
+import Tools.ServerTools;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
 
 import static android.app.Activity.RESULT_OK;
 
 public class ChattingFragment extends Fragment {
 
+    private static final int READ_AND_WRITE = 1;
+
     private ChattingViewModel chattingViewModel;
     private List<range> rangeList = new ArrayList<>();
-    private List<range_pic> range_pics=new ArrayList<>();
+    private List<range_pic> range_pics = new ArrayList<>();
     private List<post> newsList = new ArrayList<>();
     private Button add;
     private EditText mTvSearch;
@@ -79,8 +94,8 @@ public class ChattingFragment extends Fragment {
             }
         });
         initRange_pic();
-        Range_PicAdapter adapter2=new Range_PicAdapter(getActivity(),R.layout.range_pic,range_pics);
-        range_piclist=root.findViewById(R.id.rang_piclist);
+        Range_PicAdapter adapter2 = new Range_PicAdapter(getActivity(), R.layout.range_pic, range_pics);
+        range_piclist = root.findViewById(R.id.rang_piclist);
         range_piclist.setAdapter(adapter2);
         sum.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,31 +110,31 @@ public class ChattingFragment extends Fragment {
         tag1.setTextValue("时间");
         labelModelArrayList.add(tag1);
 
-        LabelModel tag2= new LabelModel();
+        LabelModel tag2 = new LabelModel();
         tag2.setTextValue("学习");
         labelModelArrayList.add(tag2);
 
-        LabelModel tag3= new LabelModel();
+        LabelModel tag3 = new LabelModel();
         tag3.setTextValue("闲聊");
         labelModelArrayList.add(tag3);
 
-        LabelModel tag4= new LabelModel();
+        LabelModel tag4 = new LabelModel();
         tag4.setTextValue("运动");
         labelModelArrayList.add(tag4);
 
-        LabelModel tag5= new LabelModel();
+        LabelModel tag5 = new LabelModel();
         tag5.setTextValue("游戏");
         labelModelArrayList.add(tag5);
 
-        LabelModel tag6= new LabelModel();
+        LabelModel tag6 = new LabelModel();
         tag6.setTextValue("唱歌");
         labelModelArrayList.add(tag6);
 
-        LabelModel tag7= new LabelModel();
+        LabelModel tag7 = new LabelModel();
         tag7.setTextValue("诗歌");
         labelModelArrayList.add(tag7);
 
-        LabelModel tag8= new LabelModel();
+        LabelModel tag8 = new LabelModel();
         tag8.setTextValue("生活");
         labelModelArrayList.add(tag8);
 
@@ -170,25 +185,30 @@ public class ChattingFragment extends Fragment {
     }
 
     private void initRange_pic() {
-        range_pic time=new range_pic(R.drawable.timg0);
+        range_pic time = new range_pic(R.drawable.timg0);
         range_pics.add(time);
-        range_pic study=new range_pic(R.drawable.timg1);
+        range_pic study = new range_pic(R.drawable.timg1);
         range_pics.add(study);
-        range_pic sports=new range_pic(R.drawable.timg2);
+        range_pic sports = new range_pic(R.drawable.timg2);
         range_pics.add(sports);
-        range_pic games=new range_pic(R.drawable.timg3);
+        range_pic games = new range_pic(R.drawable.timg3);
         range_pics.add(games);
-        range_pic songs=new range_pic(R.drawable.timg4);
+        range_pic songs = new range_pic(R.drawable.timg4);
         range_pics.add(songs);
-        range_pic poems=new range_pic(R.drawable.timg5);
+        range_pic poems = new range_pic(R.drawable.timg5);
         range_pics.add(poems);
-        range_pic life=new range_pic(R.drawable.timg6);
+        range_pic life = new range_pic(R.drawable.timg6);
         range_pics.add(life);
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+            // Do something after user returned from app settings screen, like showing a Toast.
+            Toast.makeText(getActivity(), "成功", Toast.LENGTH_SHORT)
+                    .show();
+        }
         switch (requestCode) {
             case 1:
                 if (resultCode == RESULT_OK) {
@@ -209,7 +229,7 @@ public class ChattingFragment extends Fragment {
     public void AutoRefresh() {
         refresh.post(new Runnable() {
             @Override
-            public void run () {
+            public void run() {
                 refresh.setRefreshing(true);
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -217,13 +237,13 @@ public class ChattingFragment extends Fragment {
                         get();
                         refresh.setRefreshing(false);
                     }
-                },500);
+                }, 500);
             }
 
         });
     }
 
-    public void get(){
+    public void get() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -232,7 +252,6 @@ public class ChattingFragment extends Fragment {
                 query.findObjects(new FindListener<CommunityItem>() {
                     @Override
                     public void done(List<CommunityItem> list, BmobException e) {
-                        List<CommunityItem> lists = new ArrayList<>();
                         if (list != null) {
                             System.out.println("查询成功" + list.get(0).getTitle() + list.get(0).getContent());
                             final String[] title = new String[list.size()];
@@ -242,9 +261,10 @@ public class ChattingFragment extends Fragment {
                             for (int i = 0; i < list.size(); i++) {
                                 title[i] = list.get(i).getTitle();
                                 content[i] = list.get(i).getContent();
-                                author[i]=list.get(i).getAuthor().getName();
+                                author[i] = list.get(i).getAuthor().getName();
                             }
                             listView.setAdapter(new MyAdapter(getActivity(), title, content, author));
+                            new ServerTools().BeforeDownLoadCommunityMessage(getActivity(), list);
                         }
                     }
                 });
@@ -269,16 +289,15 @@ public class ChattingFragment extends Fragment {
     }
 
     private void initRange() {
-        for(int i=0;i<1;i++)
-        {
+        for (int i = 0; i < 1; i++) {
             range time = new range("时间");
-            range study=new range("学习");
-            range talk=new range("闲聊");
-            range sports=new range("运动");
-            range games=new range("游戏");
-            range songs=new range("唱歌");
-            range poem=new range("诗歌");
-            range life=new range("生活");
+            range study = new range("学习");
+            range talk = new range("闲聊");
+            range sports = new range("运动");
+            range games = new range("游戏");
+            range songs = new range("唱歌");
+            range poem = new range("诗歌");
+            range life = new range("生活");
 
             rangeList.add(time);
             rangeList.add(study);
@@ -291,8 +310,8 @@ public class ChattingFragment extends Fragment {
         }
     }
 
-    public void refresh(PostAdapter adapter)
-    {
+    public void refresh(PostAdapter adapter) {
         adapter.notifyDataSetChanged();
     }
+
 }

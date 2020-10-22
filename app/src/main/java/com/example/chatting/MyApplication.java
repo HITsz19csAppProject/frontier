@@ -24,10 +24,6 @@ public class MyApplication extends Application {
     public static ThreadPoolExecutor Threads;
     public static FTPUtils mFTP;
 
-//    public MyApplication() {
-//
-//    }
-
     @Override
     public void onCreate() {
         super.onCreate();

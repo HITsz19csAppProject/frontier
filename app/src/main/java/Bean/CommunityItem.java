@@ -11,15 +11,17 @@ import cn.bmob.v3.datatype.BmobFile;
 public class CommunityItem extends BmobObject {
     /**
      * 私有成员。
-     * mtitle:通知标题
-     * mcontent:通知内容
-     * mauthor:通知发布者
-     * image:通知发布中可能附带的图片
+     * title:通知标题
+     * content:通知内容
+     * author:通知发布者
+     * image:通知发布中可能附带的图片本地路径
+     * imageNames:图片名称
      */
     private String title;
     private String content;
     private User author;
     private ArrayList<String> images;
+    private ArrayList<String> imageNames;
     private String[] Labels;
 
     /**
@@ -91,6 +93,24 @@ public class CommunityItem extends BmobObject {
      */
     public CommunityItem setImages(ArrayList<String> images){
         this.images = images;
+        return this;
+    }
+
+    /**
+     * 获取通知附带的图片信息
+     * @return  图片名称信息
+     */
+    public ArrayList<String> getImageNames(){
+        return imageNames;
+    }
+
+    /**
+     * 设置通知附带的图片信息
+     * @param imageNames 一个 BmobFile实例，在此处为对象
+     * @return  该对象，也就是this
+     */
+    public CommunityItem setImageNames(ArrayList<String> imageNames){
+        this.imageNames = imageNames;
         return this;
     }
 

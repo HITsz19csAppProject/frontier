@@ -22,6 +22,7 @@ public class MessageItem extends BmobObject {
     private String content;
     private User author;
     private ArrayList<String> images;
+    private ArrayList<String> imageNames;
     private String[] Labels;
 
     /**
@@ -93,6 +94,24 @@ public class MessageItem extends BmobObject {
      */
     public MessageItem setImages(ArrayList<String> images){
         this.images = images;
+        return this;
+    }
+
+    /**
+     * 获取通知附带的图片信息
+     * @return  图片名称信息
+     */
+    public ArrayList<String> getImageNames(){
+        return imageNames;
+    }
+
+    /**
+     * 设置通知附带的图片信息
+     * @param imageNames 一个 BmobFile实例，在此处为对象
+     * @return  该对象，也就是this
+     */
+    public MessageItem setImageNames(ArrayList<String> imageNames){
+        this.imageNames = imageNames;
         return this;
     }
 

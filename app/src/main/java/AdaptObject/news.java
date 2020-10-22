@@ -1,15 +1,19 @@
 package AdaptObject;
 
+import java.util.ArrayList;
+
 public class news {
     private String headline;
     private String writer;
     private String context;
+    private ArrayList<String> imageNames;
 
 
-    public news(String headline,String writer,String context){
+    public news(String headline, String writer, String context, ArrayList<String> imageNames){
         this.headline=headline;
         this.writer=writer;
         this.context=context;
+        this.imageNames = imageNames;
     }
 
     public String getHeadline(){
@@ -23,4 +27,6 @@ public class news {
     public String getWriter() {
         return writer;
     }
+
+    public ArrayList<String> getImageNames() { return imageNames; }
 }

@@ -70,12 +70,6 @@ dependencies {
     api 'com.android.support.constraint:constraint-layout:2.0.2'
     implementation 'jp.wasabeef:glide-transformations:2.0.1'
     implementation 'com.github.donkingliang:ConsecutiveScroller:2.6.2'
-    /**
-     * cardview和recyclerview
-     */
-    implementation 'com.android.support:cardview-v7:28.0.0'
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
-
 
     /**
      登录功能相关
@@ -105,5 +99,11 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'top.zibin:Luban:1.1.8'
     implementation group: 'commons-net', name: 'commons-net', version: '3.6'
+    implementation 'cn.bingoogolapple:bga-photopicker:2.0.2@aar'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'cn.bingoogolapple:bga-baseadapter:2.0.0@aar'
+    implementation 'pub.devrel:easypermissions:1.0.1'
 
 }

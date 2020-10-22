@@ -75,6 +75,10 @@ public class PublishActivity extends AppCompatActivity {
         }
         mIvBack = (ImageView) findViewById(R.id.im_back);
         add = findViewById(R.id.my_add);
+        flush = findViewById(R.id.flush);
+        listView = (ListView) findViewById(R.id.list_view);
+        adapter1 = new NewsAdapter(PublishActivity.this, R.layout.news, newsList);
+
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,7 +87,7 @@ public class PublishActivity extends AppCompatActivity {
                 startActivityForResult(intent, 1);
             }
         });
-        flush = findViewById(R.id.flush);
+
         initSwipeRefresh();
         AutoRefresh();
         listener.onRefresh();
@@ -95,15 +99,12 @@ public class PublishActivity extends AppCompatActivity {
                         get();
                         flush.setRefreshing(false);
                         //添加数据设置适配器
-
                     }
                 }, 20);
             }
         });
 
-        adapter1 = new NewsAdapter(PublishActivity.this, R.layout.news, newsList);
-        listView = (ListView) findViewById(R.id.list_view);
-        listView.setAdapter(adapter1);
+//        listView.setAdapter(adapter1);
         //1.给listview增加HeaderView
         //2.获取系统认为的最低滑动距离
         minInstance = ViewConfiguration.get(this).getScaledTouchSlop();
@@ -147,9 +148,11 @@ public class PublishActivity extends AppCompatActivity {
                 String news_headline = news.getHeadline();
                 String news_receiver = news.getWriter();
                 String news_context = news.getContext();
+
                 intent.putExtra("extra_headline", news_headline);
                 intent.putExtra("extra_writer", news_receiver);
                 intent.putExtra("extra_context", news_context);
+
                 startActivity(intent);
             }
         });
@@ -164,8 +167,7 @@ public class PublishActivity extends AppCompatActivity {
 
     }
 
-    public void AutoRefresh()
-    {
+    private void AutoRefresh() {
         flush.post(new Runnable() {
             @Override
             public void run () {
@@ -183,7 +185,7 @@ public class PublishActivity extends AppCompatActivity {
         listener.onRefresh();
     }
 
-    public void initNews() {
+    private void initNews() {
         new ServerTools().MessageShow(newsList);
     }
     
@@ -205,6 +207,7 @@ public class PublishActivity extends AppCompatActivity {
         }
         animator.start();
     }
+
     private void initSwipeRefresh() {
          listener = new SwipeRefreshLayout.OnRefreshListener() {
             public void onRefresh() {
@@ -220,38 +223,37 @@ public class PublishActivity extends AppCompatActivity {
         flush.setOnRefreshListener(listener);
     }
 
-        public void get(){
-            Thread thread = new Thread(new Runnable() {
+    private void get(){
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                BmobQuery<MessageItem> query = new BmobQuery<MessageItem>();
+                query.addWhereEqualTo("author", BmobUser.getCurrentUser(User.class));
+                query.order("-updatedAt");
+                query.include("author");
+                query.findObjects(new FindListener<MessageItem>() {
+                    @Override
+                    public void done(List<MessageItem> list, BmobException e) {
+                        if (list != null) {
+                            System.out.println("查询成功" + list.get(0).getTitle() + list.get(0).getContent());
+                            final String[] title = new String[list.size()];
+                            final String[] content = new String[list.size()];
+                            final String[] author = new String[list.size()];
 
-                @Override
-                public void run() {
-                    BmobQuery<MessageItem> query = new BmobQuery<MessageItem>();
-                    query.addWhereEqualTo("author", BmobUser.getCurrentUser(User.class));
-                    query.order("-updatedAt");
-                    query.include("author");
-                    query.findObjects(new FindListener<MessageItem>() {
-                        @Override
-                        public void done(List<MessageItem> list, BmobException e) {
-                            List<MessageItem> lists = new ArrayList<>();
-                            if (list != null) {
-                                System.out.println("查询成功" + list.get(0).getTitle() + list.get(0).getContent());
-                                final String[] title = new String[list.size()];
-                                final String[] content = new String[list.size()];
-                                final String[] author = new String[list.size()];
-
-                                for (int i = 0; i < list.size(); i++) {
-                                    title[i] = list.get(i).getTitle();
-                                    content[i] = list.get(i).getContent();
-                                    author[i] = list.get(i).getAuthor().getName();
-                                }
-                                listView.setAdapter(new MyAdapter(getApplication(), title, content, author));
+                            for (int i = 0; i < list.size(); i++) {
+                                title[i] = list.get(i).getTitle();
+                                content[i] = list.get(i).getContent();
+                                author[i] = list.get(i).getAuthor().getName();
                             }
+                            listView.setAdapter(new MyAdapter(getApplication(), title, content, author));
+                            new ServerTools().BeforeDownLoadMessage(PublishActivity.this, list);
                         }
-                    });
-                }
-            }); //声明一个子线程
-            thread.start();
-        }
+                    }
+                });
+            }
+        }); //声明一个子线程
+        thread.start();
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
@@ -267,6 +269,6 @@ public class PublishActivity extends AppCompatActivity {
                 break;
         }
     }
-    }
+}
 
 

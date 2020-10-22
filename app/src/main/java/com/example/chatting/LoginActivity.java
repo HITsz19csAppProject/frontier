@@ -34,7 +34,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         addControl();//加载控件
         mCbShow.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // TODO Auto-generated method stub
             if(isChecked){
                 //如果选中，显示密码
                 register_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());

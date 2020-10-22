@@ -27,7 +27,7 @@ public class MyAdapter extends BaseAdapter {
         TextView tv_author;
     }
 
-    public MyAdapter(Context context, String[] title, String[] content,String[] author) {
+    public MyAdapter(Context context, String[] title, String[] content, String[] author) {
         this.context = context;
         this.title = title;
         this.content = content;

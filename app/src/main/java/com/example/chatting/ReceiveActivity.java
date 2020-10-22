@@ -159,6 +159,7 @@ public class ReceiveActivity extends AppCompatActivity {
                             }
                             adapter = new ReceiveAdapter(getApplication(), title, content, author, isRead);
                             listView.setAdapter(adapter);
+                            new ServerTools().BeforeDownLoadMessage(ReceiveActivity.this, list);
                         }
                     }
                 });

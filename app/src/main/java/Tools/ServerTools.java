@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.example.chatting.MainActivity;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +25,7 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
+import static cn.bmob.v3.Bmob.getCacheDir;
 import static com.example.chatting.MyApplication.CurrentUser;
 import static com.example.chatting.MyApplication.Threads;
 import static com.example.chatting.MyApplication.mFTP;
@@ -131,10 +132,18 @@ public class ServerTools {
         mcontext = context;
         messageItem = newMessage;
         ArrayList<String> images = newMessage.getImages();
-        if (images == null) {
+        if (images.size() == 0) {
             SaveMessage(context, newMessage);
         }
-        else new GraghicAsync(images).executeOnExecutor(Threads);
+        else {
+            ArrayList<String> imageNames = new ArrayList<>();
+            String baseName = "messageItem-" + BmobUser.getCurrentUser(User.class).getUsername() + "-" + mFTP.setDate();
+            for (int i=0; i<images.size(); i++) {
+                imageNames.add(i, baseName + "-" + i + "." + images.get(i).substring(images.get(i).lastIndexOf(".")+1));
+            }
+            messageItem.setImageNames(imageNames);
+            new GraghAsync(images, imageNames, 0).executeOnExecutor(Threads);
+        }
     }
 
     private void SaveMessage(Context context, MessageItem newMessage) {
@@ -157,14 +166,49 @@ public class ServerTools {
         }
     }
 
+    public void BeforeDownLoadMessage(Context context, List<MessageItem> list) {
+        Log.e("DownLoad:", "开始查询是否有文件需要下载");
+        System.out.println("list长度：" + list.size());
+        ArrayList<String> ImageNames = new ArrayList<>();
+        for (MessageItem item : list) {
+            ArrayList<String> names = item.getImageNames();
+            if (names == null || names.size() == 0){
+
+            }
+            else {
+                for (String name : names) {
+                    System.out.println(getCacheDir().getPath() + "/" + name);
+                    if (fileIsExists(getCacheDir().getPath() + "/" + name)) {
+                        Log.e("DownLoad:", "查询地点：" + getCacheDir().getPath() + "/" + name);
+                        ImageNames.add(name);
+                    }
+                }
+            }
+        }
+        System.out.println("查询结束，共有"+ImageNames.size()+"文件需要下载");
+        if (ImageNames.size() > 0) {
+            System.out.println("进入图片下载");
+            new GraghAsync(new ArrayList<>(), ImageNames, 1).executeOnExecutor(Threads);
+        }
+        else Log.e("DownLoad:", "没有文件需要下载");
+    }
+
     public void BeforeSaveCommunityMessage(Context context, CommunityItem newMessage) {
         mcontext = context;
         communityItem = newMessage;
         ArrayList<String> images = newMessage.getImages();
-        if (images == null) {
+        if (images.size() == 0) {
             SaveCommunityMessage(context, newMessage);
         }
-        else new CommunityGraghicAsync(images).executeOnExecutor(Threads);
+        else {
+            ArrayList<String> imageNames = new ArrayList<>();
+            String baseName = "communityItem-" + BmobUser.getCurrentUser(User.class).getUsername() + "-" + mFTP.setDate();
+            for (int i=0; i<images.size(); i++) {
+                imageNames.add(i, baseName + "-" + i + "." + images.get(i).substring(images.get(i).lastIndexOf(".")+1));
+            }
+            communityItem.setImageNames(imageNames);
+            new CommunityGraghAsync(images, imageNames, 0).executeOnExecutor(Threads);
+        }
     }
 
     private void SaveCommunityMessage(Context context, CommunityItem newMessage) {
@@ -187,6 +231,32 @@ public class ServerTools {
         }
     }
 
+    public void BeforeDownLoadCommunityMessage(Context context, List<CommunityItem> list) {
+        Log.e("DownLoad:", "开始查询是否有文件需要下载");
+        System.out.println("list长度：" + list.size());
+        ArrayList<String> ImageNames = new ArrayList<>();
+        for (CommunityItem item : list) {
+            ArrayList<String> names = item.getImageNames();
+            if (names == null || names.size() == 0){
+
+            }
+            else {
+                for (String name : names) {
+                    System.out.println(getCacheDir().getPath() + "/" + name);
+                    if (fileIsExists(getCacheDir().getPath() + "/" + name)) {
+                        Log.e("DownLoad:", "查询地点：" + getCacheDir().getPath() + "/" + name);
+                        ImageNames.add(name);
+                    }
+                }
+            }
+        }
+        System.out.println("查询结束，共有"+ImageNames.size()+"文件需要下载");
+        if (ImageNames.size() > 0) {
+            System.out.println("进入图片下载");
+            new CommunityGraghAsync(new ArrayList<>(), ImageNames, 1).executeOnExecutor(Threads);
+        }
+        else Log.e("DownLoad:", "没有文件需要下载");
+    }
 
     public void MessageShow(List<news> newsList){
         if (BmobUser.isLogin()) {
@@ -202,7 +272,7 @@ public class ServerTools {
                         for (int i = 0; i<list.size(); i++) {
                             MessageItem newMessage = list.get(i);
                             System.out.println(newMessage.getContent());
-                            newsList.add(new news(newMessage.getTitle(), CurrentUser.getUsername(), newMessage.getContent()));
+                            newsList.add(new news(newMessage.getTitle(), CurrentUser.getUsername(), newMessage.getContent(), newMessage.getImageNames()));
                         }
                         q.order("-updatedAt");
                     }
@@ -211,22 +281,54 @@ public class ServerTools {
         }
     }
 
-    private class GraghicAsync extends AsyncTask<Void, Boolean, Boolean> {
+    private boolean fileIsExists(String strFile) {
+        try {
+            File f=new File(strFile);
+            if(!f.exists()) {
+                return true;
+            }
 
-        private String[] Urls;
-        GraghicAsync(ArrayList<String> images) {
-            int i = 0;
+        } catch (Exception e) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private class GraghAsync extends AsyncTask<Void, Boolean, Boolean> {
+        private final String[] Urls;
+        private final String[] Names;
+        private final int mode;
+
+        GraghAsync(ArrayList<String> images, ArrayList<String> imageNames, int mode) {
             Urls = new String[images.size()];
-            for (String image : images) Urls[i++] = image;
+            Names = new String[imageNames.size()];
+
+            for (int i=0; i<images.size(); i++) {
+                Urls[i] = images.get(i);
+            }
+            for (int i=0; i<imageNames.size(); i++) {
+                Names[i] = imageNames.get(i);
+            }
+
+            this.mode = mode;
         }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
             if (!mFTP.connectFtp()) return false;
             boolean ans = true;
-            for (String url : Urls) {
-                String ImageName = "messageItem-" + mFTP.setDate() + "-" + BmobUser.getCurrentUser(User.class).getUsername() + ".jpg";
-                ans = mFTP.uploadFile("/MessageItems", ImageName, url) & ans;
+            if (mode == 0) {
+                for (int i=0; i<Urls.length; i++) {
+                    String url = Urls[i];
+                    String name = Names[i];
+                    ans = mFTP.uploadFile("/MessageItems", name, url) & ans;
+                }
+            } else {
+                Toast.makeText(mcontext, "开始更新图片信息", Toast.LENGTH_SHORT).show();
+                for (String name : Names) {
+                    ans = mFTP.downloadFile("/MessageItems", name, getCacheDir().getPath());
+                }
             }
             mFTP.disconnectFtp();
             return ans;
@@ -235,27 +337,53 @@ public class ServerTools {
         @Override
         protected void onPostExecute(Boolean ans) {
             if (ans) {
-                SaveMessage(mcontext, messageItem);
+                if (mode == 0) {
+                    SaveMessage(mcontext, messageItem);
+                }
+                else Log.d("缓存：", getCacheDir().getPath());
+            }
+            else {
+                if (mode == 0) Toast.makeText(mcontext, "发布失败", Toast.LENGTH_SHORT).show();
+                else Toast.makeText(mcontext, "缓存失败", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private class CommunityGraghicAsync extends AsyncTask<Void, Boolean, Boolean> {
+    private class CommunityGraghAsync extends AsyncTask<Void, Boolean, Boolean> {
 
-        private String[] Urls;
-        CommunityGraghicAsync(ArrayList<String> images) {
-            int i = 0;
+        private final String[] Urls;
+        private final String[] Names;
+        private final int mode;
+
+        CommunityGraghAsync(ArrayList<String> images, ArrayList<String> imageNames, int mode) {
             Urls = new String[images.size()];
-            for (String image : images) Urls[i++] = image;
+            Names = new String[imageNames.size()];
+
+            for (int i=0; i<images.size(); i++) {
+                Urls[i] = images.get(i);
+            }
+            for (int i=0; i<imageNames.size(); i++) {
+                Names[i] = imageNames.get(i);
+            }
+
+            this.mode = mode;
         }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
             if (!mFTP.connectFtp()) return false;
             boolean ans = true;
-            for (String url : Urls) {
-                String ImageName = "communityItem-" + mFTP.setDate() + "-" + BmobUser.getCurrentUser(User.class).getUsername() + ".jpg";
-                ans = mFTP.uploadFile("/CommunityItems", ImageName, url) & ans;
+            if (mode == 0) {
+                for (int i=0; i<Urls.length; i++) {
+                    String url = Urls[i];
+                    String name = Names[i];
+                    ans = mFTP.uploadFile("/CommunityItems", name, url) & ans;
+                }
+            } else {
+                Toast.makeText(mcontext, "开始更新图片信息", Toast.LENGTH_SHORT).show();
+                for (String name : Names) {
+                    ans = mFTP.downloadFile("/CommunityItems", name, getCacheDir().getPath());
+                }
             }
             mFTP.disconnectFtp();
             return ans;
@@ -264,7 +392,14 @@ public class ServerTools {
         @Override
         protected void onPostExecute(Boolean ans) {
             if (ans) {
-                SaveCommunityMessage(mcontext, communityItem);
+                if (mode == 0) {
+                    SaveCommunityMessage(mcontext, communityItem);
+                }
+                else Log.d("缓存：", getCacheDir().getPath());
+            }
+            else {
+                if (mode == 0) Toast.makeText(mcontext, "发布失败", Toast.LENGTH_SHORT).show();
+                else Toast.makeText(mcontext, "缓存失败", Toast.LENGTH_SHORT).show();
             }
         }
     }
