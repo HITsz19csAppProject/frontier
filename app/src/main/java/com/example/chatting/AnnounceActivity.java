@@ -3,38 +3,24 @@ package com.example.chatting;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.content.ClipData;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.donkingliang.imageselector.utils.ImageSelector;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import AdaptObject.news;
-import Adapter.ImageAdapter;
-import Adapter.MyAdapter;
-import Adapter.NewsAdapter;
+import Adapter.CommunityItemAdapter;
+import Adapter.MessageItemAdapter;
 import Bean.CommunityItem;
 import Bean.MessageItem;
 import Bean.User;
@@ -77,6 +63,7 @@ public class AnnounceActivity extends AppCompatActivity implements EasyPermissio
         MyApplication.getInstance().addActivity(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announce);
+
         ActionBar actionBar=getSupportActionBar();
         if(actionBar!=null){
             actionBar.hide();
@@ -115,7 +102,7 @@ public class AnnounceActivity extends AppCompatActivity implements EasyPermissio
                     newMessage.setContent(myContext);
                     newMessage.setImages(myImages);
 
-                    new ServerTools().BeforeSaveCommunityMessage(AnnounceActivity.this, newMessage);
+                    new GraphTools<CommunityItem>(newMessage).compressBatch(AnnounceActivity.this, newMessage);
 
                     intent1.putExtra("headline_return", myHeadline);
                     intent1.putExtra("context_return", myContext);
@@ -214,39 +201,5 @@ public class AnnounceActivity extends AppCompatActivity implements EasyPermissio
         } else if (requestCode == RC_PHOTO_PREVIEW) {
             mPhotosSnpl.setData(BGAPhotoPickerPreviewActivity.getSelectedPhotos(data));
         }
-    }
-
-    public void get(){
-        Thread thread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                BmobQuery<CommunityItem> query = new BmobQuery<CommunityItem>();
-                query.addWhereEqualTo("author", BmobUser.getCurrentUser(User.class));
-                query.order("-updatedAt");
-                //包含作者信息
-                query.include("author");
-                query.findObjects(new FindListener<CommunityItem>() {
-                    @Override
-                    public void done(List<CommunityItem> list, BmobException e) {
-                        List<CommunityItem> lists = new ArrayList<>();
-                        if (list != null) {
-                            System.out.println("查询成功" + list.get(0).getTitle() + list.get(0).getContent());
-                            final String[] title = new String[list.size()];
-                            final String[] content = new String[list.size()];
-                            final String[] author = new String[list.size()];
-
-                            for (int i = 0; i < list.size(); i++) {
-                                title[i] = list.get(i).getTitle();
-                                content[i] = list.get(i).getContent();
-                                author[i]=list.get(i).getAuthor().getName();
-                            }
-                            listView.setAdapter(new MyAdapter(getApplication(), title, content, author));
-                        }
-                    }
-                });
-            }
-        }); //声明一个子线程
-        thread.start();
     }
 }

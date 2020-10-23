@@ -17,14 +17,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.donkingliang.imageselector.utils.ImageSelector;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import Adapter.ImageAdapter;
 import Bean.MessageItem;
+import Tools.GraphTools;
 import Tools.ServerTools;
 import cn.bingoogolapple.photopicker.activity.BGAPPToolbarActivity;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity;
@@ -100,7 +98,7 @@ public class PostActivity extends AppCompatActivity implements EasyPermissions.P
                     newMessage.setTitle(myHeadline);
                     newMessage.setImages(myImages);
 
-                    new ServerTools().BeforeSaveMessage(PostActivity.this, newMessage);
+                    new GraphTools<>(newMessage).compressBatch(PostActivity.this, newMessage);
 
                     intent.putExtra("headline_return", myHeadline);
                     intent.putExtra("context_return", myContext);

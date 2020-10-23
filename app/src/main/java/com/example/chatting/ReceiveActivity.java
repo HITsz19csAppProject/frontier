@@ -56,7 +56,8 @@ public class ReceiveActivity extends AppCompatActivity {
         refresh = findViewById(R.id.refresh);
         listView = (ListView) findViewById(R.id.list_view);
         utils = new MessageDataBaseUtils(this);
-        adapter = new ReceiveAdapter();
+        adapter = new ReceiveAdapter(ReceiveActivity.this, new ArrayList<>(), new String[1]);
+        listView.setAdapter(adapter);
 
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,15 +150,14 @@ public class ReceiveActivity extends AppCompatActivity {
                                 else{
                                     if(utils.searchMessageIsRead(title[i])){
                                         isRead[i] = "1";
-                                    }
-                                    else{
+                                    } else{
                                         isRead[i] = "0";
                                     }
                                 }
                                 ReceivedNews news = new ReceivedNews(title[i],author[i],content[i],isRead[i]);
                                 lists.add(news);
                             }
-                            adapter = new ReceiveAdapter(getApplication(), title, content, author, isRead);
+                            adapter = new ReceiveAdapter(getApplication(), list, isRead);
                             listView.setAdapter(adapter);
                             new ServerTools().BeforeDownLoadMessage(ReceiveActivity.this, list);
                         }

@@ -1,29 +1,19 @@
 package com.example.chatting;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -31,8 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,21 +28,18 @@ import AdaptObject.LabelModel;
 import AdaptObject.post;
 import AdaptObject.range;
 import AdaptObject.range_pic;
-import Adapter.MyAdapter;
+import Adapter.CommunityItemAdapter;
+import Adapter.MessageItemAdapter;
 import Adapter.PostAdapter;
 import Adapter.RangeAdapter;
 import Adapter.Range_PicAdapter;
 import Bean.CommunityItem;
-import Bean.User;
 import Tools.PostTools;
 import Tools.ServerTools;
 import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
-import pub.devrel.easypermissions.EasyPermissions;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -254,16 +239,7 @@ public class ChattingFragment extends Fragment {
                     public void done(List<CommunityItem> list, BmobException e) {
                         if (list != null) {
                             System.out.println("查询成功" + list.get(0).getTitle() + list.get(0).getContent());
-                            final String[] title = new String[list.size()];
-                            final String[] content = new String[list.size()];
-                            final String[] author = new String[list.size()];
-
-                            for (int i = 0; i < list.size(); i++) {
-                                title[i] = list.get(i).getTitle();
-                                content[i] = list.get(i).getContent();
-                                author[i] = list.get(i).getAuthor().getName();
-                            }
-                            listView.setAdapter(new MyAdapter(getActivity(), title, content, author));
+                            listView.setAdapter(new CommunityItemAdapter(getActivity(), list));
                             new ServerTools().BeforeDownLoadCommunityMessage(getActivity(), list);
                         }
                     }

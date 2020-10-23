@@ -22,6 +22,7 @@ public class CommunityItem extends BmobObject {
     private User author;
     private ArrayList<String> images;
     private ArrayList<String> imageNames;
+    private ArrayList<String> images_Compressed;
     private String[] Labels;
 
     /**
@@ -94,6 +95,24 @@ public class CommunityItem extends BmobObject {
     public CommunityItem setImages(ArrayList<String> images){
         this.images = images;
         return this;
+    }
+
+    /**
+     * 设置通知附带的图片信息
+     * @param images_Compressed 压缩照片在本地的本地Url
+     * @return  该对象，也就是this
+     */
+    public CommunityItem setCompressedImages(ArrayList<String> images_Compressed){
+        this.images_Compressed = images_Compressed;
+        return this;
+    }
+
+    /**
+     * 获取通知附带的图片信息
+     * @return  一个BmobFile实例，在此处为图片
+     */
+    public ArrayList<String> getCompressedImages(){
+        return images_Compressed;
     }
 
     /**

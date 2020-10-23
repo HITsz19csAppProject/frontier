@@ -22,6 +22,7 @@ public class MessageItem extends BmobObject {
     private String content;
     private User author;
     private ArrayList<String> images;
+    private ArrayList<String> images_Compressed;
     private ArrayList<String> imageNames;
     private String[] Labels;
 
@@ -85,6 +86,24 @@ public class MessageItem extends BmobObject {
      */
     public ArrayList<String> getImages(){
         return images;
+    }
+
+    /**
+     * 设置通知附带的图片信息
+     * @param images_Compressed 压缩照片在本地的本地Url
+     * @return  该对象，也就是this
+     */
+    public MessageItem setCompressedImages(ArrayList<String> images_Compressed){
+        this.images_Compressed = images_Compressed;
+        return this;
+    }
+
+    /**
+     * 获取通知附带的图片信息
+     * @return  一个BmobFile实例，在此处为图片
+     */
+    public ArrayList<String> getCompressedImages(){
+        return images_Compressed;
     }
 
     /**

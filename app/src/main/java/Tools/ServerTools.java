@@ -131,8 +131,8 @@ public class ServerTools {
     public void BeforeSaveMessage(Context context, MessageItem newMessage) {
         mcontext = context;
         messageItem = newMessage;
-        ArrayList<String> images = newMessage.getImages();
-        if (images.size() == 0) {
+        ArrayList<String> images = newMessage.getCompressedImages();
+        if (images == null || images.size() == 0) {
             SaveMessage(context, newMessage);
         }
         else {
@@ -196,8 +196,8 @@ public class ServerTools {
     public void BeforeSaveCommunityMessage(Context context, CommunityItem newMessage) {
         mcontext = context;
         communityItem = newMessage;
-        ArrayList<String> images = newMessage.getImages();
-        if (images.size() == 0) {
+        ArrayList<String> images = newMessage.getCompressedImages();
+        if (images == null || images.size() == 0) {
             SaveCommunityMessage(context, newMessage);
         }
         else {
@@ -239,8 +239,7 @@ public class ServerTools {
             ArrayList<String> names = item.getImageNames();
             if (names == null || names.size() == 0){
 
-            }
-            else {
+            } else {
                 for (String name : names) {
                     System.out.println(getCacheDir().getPath() + "/" + name);
                     if (fileIsExists(getCacheDir().getPath() + "/" + name)) {
@@ -316,7 +315,6 @@ public class ServerTools {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            if (!mFTP.connectFtp()) return false;
             boolean ans = true;
             if (mode == 0) {
                 for (int i=0; i<Urls.length; i++) {
@@ -325,12 +323,10 @@ public class ServerTools {
                     ans = mFTP.uploadFile("/MessageItems", name, url) & ans;
                 }
             } else {
-                Toast.makeText(mcontext, "开始更新图片信息", Toast.LENGTH_SHORT).show();
                 for (String name : Names) {
                     ans = mFTP.downloadFile("/MessageItems", name, getCacheDir().getPath());
                 }
             }
-            mFTP.disconnectFtp();
             return ans;
         }
 
@@ -341,10 +337,6 @@ public class ServerTools {
                     SaveMessage(mcontext, messageItem);
                 }
                 else Log.d("缓存：", getCacheDir().getPath());
-            }
-            else {
-                if (mode == 0) Toast.makeText(mcontext, "发布失败", Toast.LENGTH_SHORT).show();
-                else Toast.makeText(mcontext, "缓存失败", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -371,7 +363,6 @@ public class ServerTools {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            if (!mFTP.connectFtp()) return false;
             boolean ans = true;
             if (mode == 0) {
                 for (int i=0; i<Urls.length; i++) {
@@ -380,12 +371,10 @@ public class ServerTools {
                     ans = mFTP.uploadFile("/CommunityItems", name, url) & ans;
                 }
             } else {
-                Toast.makeText(mcontext, "开始更新图片信息", Toast.LENGTH_SHORT).show();
                 for (String name : Names) {
                     ans = mFTP.downloadFile("/CommunityItems", name, getCacheDir().getPath());
                 }
             }
-            mFTP.disconnectFtp();
             return ans;
         }
 
@@ -396,10 +385,6 @@ public class ServerTools {
                     SaveCommunityMessage(mcontext, communityItem);
                 }
                 else Log.d("缓存：", getCacheDir().getPath());
-            }
-            else {
-                if (mode == 0) Toast.makeText(mcontext, "发布失败", Toast.LENGTH_SHORT).show();
-                else Toast.makeText(mcontext, "缓存失败", Toast.LENGTH_SHORT).show();
             }
         }
     }

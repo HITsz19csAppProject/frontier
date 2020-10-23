@@ -7,34 +7,26 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import Adapter.MyAdapter;
+import Adapter.CommunityItemAdapter;
+import Adapter.MessageItemAdapter;
 import Adapter.NewsAdapter;
 import AdaptObject.news;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import Bean.CommunityItem;
 import Bean.MessageItem;
 import Bean.User;
 import Tools.ServerTools;
@@ -42,7 +34,6 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import static com.example.chatting.MyApplication.CurrentUser;
 
 /**
  * 我已发出界面
@@ -62,6 +53,7 @@ public class PublishActivity extends AppCompatActivity {
     private int status;
     private boolean mShow = true;
     private ObjectAnimator animator;
+    private MessageItemAdapter mAdapter;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -78,6 +70,8 @@ public class PublishActivity extends AppCompatActivity {
         flush = findViewById(R.id.flush);
         listView = (ListView) findViewById(R.id.list_view);
         adapter1 = new NewsAdapter(PublishActivity.this, R.layout.news, newsList);
+        mAdapter = new MessageItemAdapter(PublishActivity.this, new ArrayList<MessageItem>());
+        listView.setAdapter(mAdapter);
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,16 +230,7 @@ public class PublishActivity extends AppCompatActivity {
                     public void done(List<MessageItem> list, BmobException e) {
                         if (list != null) {
                             System.out.println("查询成功" + list.get(0).getTitle() + list.get(0).getContent());
-                            final String[] title = new String[list.size()];
-                            final String[] content = new String[list.size()];
-                            final String[] author = new String[list.size()];
-
-                            for (int i = 0; i < list.size(); i++) {
-                                title[i] = list.get(i).getTitle();
-                                content[i] = list.get(i).getContent();
-                                author[i] = list.get(i).getAuthor().getName();
-                            }
-                            listView.setAdapter(new MyAdapter(getApplication(), title, content, author));
+                            mAdapter.setData(list);
                             new ServerTools().BeforeDownLoadMessage(PublishActivity.this, list);
                         }
                     }
