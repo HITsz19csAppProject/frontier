@@ -3,7 +3,10 @@ package com.example.chatting;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,13 +14,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import AdaptObject.LabelModel;
 import AdaptObject.Labelrange;
 import Adapter.LabelrangeAdapter;
+import Bean.User;
 import Tools.AddLabels;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 public class LabelActivity extends AppCompatActivity implements LabelLayoutView.OnInputValueListener {
     private String TAG = MainActivity.class.getSimpleName();
@@ -32,7 +40,22 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
     final List<LabelModel> benyanList=new ArrayList<>();
     final List<LabelModel> banjiList=new ArrayList<>();
     final List<LabelModel> labelSearchArrayList = new ArrayList<>();
-    LabelOnClicked labelOnClicked = new LabelOnClicked();//加入标签的对象
+    AddLabels addLabels = new AddLabels();//加入标签的对象
+    List<User> Ousers = new ArrayList<>();
+
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 111) {
+                Ousers =(List<User>) msg.getData().getSerializable("data");
+                for(User u:Ousers)
+                {
+                    System.out.println(u.getPhoneNum()+"a");
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,40 +109,40 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
         labelModelArrayList.add(tag9);
 
         LabelModel zhuanye1 = new LabelModel();
-        zhuanye1.setTextValue("#计算机类");
+        zhuanye1.setTextValue("#计算机");
         zhuanyeList.add(zhuanye1);
         LabelModel zhuanye2 = new LabelModel();
-        zhuanye2.setTextValue("#电子信息类");
+        zhuanye2.setTextValue("#电子信息");
         zhuanyeList.add(zhuanye2);
         LabelModel zhuanye3 = new LabelModel();
-        zhuanye3.setTextValue("#机械类");
+        zhuanye3.setTextValue("#机械");
         zhuanyeList.add(zhuanye3);
         LabelModel zhuanye4 = new LabelModel();
         zhuanye4.setTextValue("#自动化");
         zhuanyeList.add(zhuanye4);
         LabelModel zhuanye5= new LabelModel();
-        zhuanye5.setTextValue("#电气类");
+        zhuanye5.setTextValue("#电气");
         zhuanyeList.add(zhuanye5);
         LabelModel zhuanye6 = new LabelModel();
-        zhuanye6.setTextValue("#土木类");
+        zhuanye6.setTextValue("#土木");
         zhuanyeList.add(zhuanye6);
         LabelModel zhuanye7 = new LabelModel();
-        zhuanye7.setTextValue("#环境科学与工程类");
+        zhuanye7.setTextValue("#环境科学与工程");
         zhuanyeList.add(zhuanye7);
         LabelModel zhuanye8 = new LabelModel();
-        zhuanye8.setTextValue("#材料类");
+        zhuanye8.setTextValue("#材料");
         zhuanyeList.add(zhuanye8);
         LabelModel zhuanye9 = new LabelModel();
-        zhuanye9.setTextValue("#经济类");
+        zhuanye9.setTextValue("#经济");
         zhuanyeList.add(zhuanye9);
         LabelModel zhuanye10 = new LabelModel();
-        zhuanye10.setTextValue("#会计类");
+        zhuanye10.setTextValue("#会计");
         zhuanyeList.add(zhuanye10);
         LabelModel zhuanye11 = new LabelModel();
-        zhuanye11.setTextValue("#建筑类");
+        zhuanye11.setTextValue("#建筑");
         zhuanyeList.add(zhuanye11);
         LabelModel zhuanye12 = new LabelModel();
-        zhuanye12.setTextValue("#数学类");
+        zhuanye12.setTextValue("#数学");
         zhuanyeList.add(zhuanye12);
 
 
@@ -144,34 +167,34 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
         benyanList.add(benyan2);
 
         LabelModel banji1 = new LabelModel();
-        banji1.setTextValue("#一班");
+        banji1.setTextValue("#1班");
         banjiList.add(banji1);
         LabelModel banji2 = new LabelModel();
-        banji2.setTextValue("#二班");
+        banji2.setTextValue("#2班");
         banjiList.add(banji2);
         LabelModel banji3 = new LabelModel();
-        banji3.setTextValue("#三班");
+        banji3.setTextValue("#3班");
         banjiList.add(banji3);
         LabelModel banji4 = new LabelModel();
-        banji4.setTextValue("#四班");
+        banji4.setTextValue("#4班");
         banjiList.add(banji4);
         LabelModel banji5 = new LabelModel();
-        banji5.setTextValue("#五班");
+        banji5.setTextValue("#5班");
         banjiList.add(banji5);
         LabelModel banji6 = new LabelModel();
-        banji6.setTextValue("#六班");
+        banji6.setTextValue("#6班");
         banjiList.add(banji6);
         LabelModel banji7 = new LabelModel();
-        banji7.setTextValue("#七班");
+        banji7.setTextValue("#7班");
         banjiList.add(banji7);
         LabelModel banji8 = new LabelModel();
-        banji8.setTextValue("#八班");
+        banji8.setTextValue("#8班");
         banjiList.add(banji8);
         LabelModel banji9 = new LabelModel();
-        banji9.setTextValue("#九班");
+        banji9.setTextValue("#9班");
         banjiList.add(banji9);
         LabelModel banji10 = new LabelModel();
-        banji10.setTextValue("#十班");
+        banji10.setTextValue("#10班");
         banjiList.add(banji10);
 
 
@@ -191,11 +214,20 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
                 LabelrangeList.add(xinjian);
                 //labelLayoutView.setStringList(labelSearchArrayList);
                 //labelLayoutView.setOnInputValueListener(LabelActivity.this);
-
                 traverseLabels();
+                labelBmobquery();
+
+               // Ousers = getAddLabels();
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("list_1",(Serializable)Ousers);
+                intent.putExtras(bundle);
+                setResult(0,intent);
+                LabelActivity.this.finish();
             }
         });
     }
+
 
     private void initLabelrange() {
         Labelrange xueyuan=new Labelrange("学院",labelModelArrayList);
@@ -208,28 +240,75 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
         LabelrangeList.add(benyan);
         Labelrange banji=new Labelrange("班级",banjiList);
         LabelrangeList.add(banji);
-
-
-
     }
 
     //对所有的标签进行检索如果已经被点击，则将其加入ArrayList
     public void traverseLabels(){
         for(LabelModel lamo:labelModelArrayList){
-            if(lamo.isClick())labelOnClicked._academy.add(lamo.getTextValue());
+            if(lamo.isClick())addLabels.academy.add(lamo.getTextValue().substring(1));
         }
 
         for(LabelModel lamo:zhuanyeList){
-            if(lamo.isClick())labelOnClicked._speciality.add(lamo.getTextValue());
+            if(lamo.isClick())addLabels.speciality.add(lamo.getTextValue().substring(1));
         }
 
         for(LabelModel lamo:nianjiList){
-            if(lamo.isClick())labelOnClicked._grade.add(lamo.getTextValue());
+            if(lamo.isClick())addLabels.grade.add("20"+lamo.getTextValue().substring(1,3));
         }
 
         for(LabelModel lamo:banjiList){
-            if(lamo.isClick())labelOnClicked._class.add(lamo.getTextValue());
+            if(lamo.isClick())addLabels.Class.add(lamo.getTextValue().substring(1));
         }
+        if(addLabels.speciality.isEmpty())addLabels.speciality = (ArrayList)labelModelArrayList;
+        if(addLabels.academy.isEmpty())addLabels.academy = (ArrayList)labelModelArrayList;
+        if(addLabels.grade.isEmpty())addLabels.grade = (ArrayList)labelModelArrayList;
+        if(addLabels.Class.isEmpty())addLabels.Class = (ArrayList)labelModelArrayList;
+    }
+
+    private void labelBmobquery(){
+        BmobQuery<User> userGrade = new BmobQuery<User>();
+        userGrade.addWhereContainedIn("Grade",addLabels.grade);
+
+        BmobQuery<User> userClass = new BmobQuery<User>();
+        userGrade.addWhereContainedIn("ClassID",addLabels.Class);
+
+        BmobQuery<User> useracademy = new BmobQuery<User>();
+        useracademy.addWhereContainedIn("",addLabels.academy);
+
+        BmobQuery<User> userSpeciality = new BmobQuery<User>();
+        userGrade.addWhereContainedIn("Major",addLabels.speciality);
+
+        List<BmobQuery<User>> andQuerys = new ArrayList<BmobQuery<User>>();
+        andQuerys.add(userGrade);
+        andQuerys.add(userClass);
+        //andQuerys.add(useracademy);
+        andQuerys.add(userSpeciality);
+
+
+        BmobQuery<User> query = new BmobQuery<User>();
+        query.and(andQuerys);
+        query.findObjects(new FindListener<User>() {
+            @Override
+            public void done(List<User> list, BmobException e) {
+                if(e==null){
+                    /**
+                     在此处对已选中的人进行下一步操作
+                     */
+                    for(User u:list)
+                    {
+                        System.out.println(u.getPhoneNum());
+                    }
+                    Bundle bundle = new Bundle();
+                    Message message = new Message();
+                    bundle.putSerializable("data",(Serializable)list);
+                    message.what = 111;
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                }else{
+                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());//发生错误，返回错误代码
+                }
+            }
+        });
     }
 
     @Override

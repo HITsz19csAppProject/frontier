@@ -101,7 +101,6 @@ public class AnnounceActivity extends AppCompatActivity implements EasyPermissio
                     newMessage.setTitle(myHeadline);
                     newMessage.setContent(myContext);
                     newMessage.setImages(myImages);
-
                     new GraphTools<CommunityItem>(newMessage).compressBatch(AnnounceActivity.this, newMessage);
 
                     intent1.putExtra("headline_return", myHeadline);

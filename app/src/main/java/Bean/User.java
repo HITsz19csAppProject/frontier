@@ -1,11 +1,12 @@
 package Bean;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import Login.IdAnalysisActivity;
 import cn.bmob.v3.BmobUser;
 
-public class User extends BmobUser {
+public class User extends BmobUser implements Serializable {
     /**
      * 用户基本信息类(Bmob后端云中的_User表)
      */
@@ -73,7 +74,7 @@ public class User extends BmobUser {
 
     public User setClassID(){
         int code = StuID.charAt(2) - 'a';
-        this.ClassID = Integer.toString(code) + "班";
+        this.ClassID = code + "班";
         return this;
     }
     public String getClassID(){

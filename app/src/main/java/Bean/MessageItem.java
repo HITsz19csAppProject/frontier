@@ -25,6 +25,8 @@ public class MessageItem extends BmobObject {
     private ArrayList<String> images_Compressed;
     private ArrayList<String> imageNames;
     private String[] Labels;
+    private List<User> objectiveUsers;
+
 
     /**
      * 获取通知标题
@@ -149,4 +151,21 @@ public class MessageItem extends BmobObject {
         this.Labels = labels;
         return this;
     }
+
+    /**
+     * 设置接收信息对像
+     * @param ObjectiveUser
+     * @return 该对象，也就是this
+     */
+     public MessageItem setObjectiveUsers(List<User> ObjectiveUser)
+     {
+         this.objectiveUsers = ObjectiveUser;
+         return this;
+     }
+
+    /**
+     * 获取接受对像表
+     * @return
+     */
+     public List<User> getObjectiveUsers(){return objectiveUsers;}
 }

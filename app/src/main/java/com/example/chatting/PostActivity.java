@@ -1,10 +1,13 @@
 package com.example.chatting;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Bean.MessageItem;
+import Bean.User;
 import Tools.GraphTools;
 import Tools.ServerTools;
 import cn.bingoogolapple.photopicker.activity.BGAPPToolbarActivity;
@@ -35,6 +39,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  * 信息通知界面的消息发布（上传）
  */
 public class PostActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks, BGASortableNinePhotoLayout.Delegate {
+    private static final int LABEL_ACTIVITY_REQUEST_CODE = 0;
     private static final int PRC_PHOTO_PICKER = 1;
 
     private static final int RC_CHOOSE_PHOTO = 1;
@@ -51,7 +56,7 @@ public class PostActivity extends AppCompatActivity implements EasyPermissions.P
     private String myHeadline;
     private String myContext;
     private ArrayList<String> myImages;
-
+    private List<User> uList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +93,6 @@ public class PostActivity extends AppCompatActivity implements EasyPermissions.P
         mPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
                 myHeadline = my_headline.getText().toString();
                 myContext = my_context.getText().toString();
                 myImages = mPhotosSnpl.getData();
@@ -97,15 +101,15 @@ public class PostActivity extends AppCompatActivity implements EasyPermissions.P
                     newMessage.setContent(myContext);
                     newMessage.setTitle(myHeadline);
                     newMessage.setImages(myImages);
-
+                    newMessage.setObjectiveUsers(uList);
                     new GraphTools<>(newMessage).compressBatch(PostActivity.this, newMessage);
 
-                    intent.putExtra("headline_return", myHeadline);
-                    intent.putExtra("context_return", myContext);
-                    //todo: images_return
-
-                    setResult(RESULT_OK, intent);
-                    finish();
+//                    intent.putExtra("headline_return", myHeadline);
+//                    intent.putExtra("context_return", myContext);
+//                    //todo: images_return
+//
+//                    setResult(RESULT_OK, intent);
+//                    finish();
                 }
                 else {
                     my_headline.setText("error");
@@ -197,6 +201,27 @@ public class PostActivity extends AppCompatActivity implements EasyPermissions.P
             mPhotosSnpl.addMoreData(BGAPhotoPickerActivity.getSelectedPhotos(data));
         } else if (requestCode == RC_PHOTO_PREVIEW) {
             mPhotosSnpl.setData(BGAPhotoPickerPreviewActivity.getSelectedPhotos(data));
+        }else if(requestCode == LABEL_ACTIVITY_REQUEST_CODE && resultCode == 0){
+            Bundle bundle = new Bundle();
+            bundle.putSerializable ("Ulist",data.getSerializableExtra("list_1"));
+            Message message = new Message();
+            message.setData(bundle);
+            message.what = 0;
+            handler.sendMessage(message);
         }
     }
+
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0) {
+                uList =(List<User>) msg.getData().getSerializable("Ulist");
+                for(User u:uList)
+                {
+                    System.out.println(u.getPhoneNum()+"b");
+                }
+            }
+        }
+    };
 }
