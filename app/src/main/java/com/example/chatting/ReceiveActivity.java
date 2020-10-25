@@ -79,7 +79,7 @@ public class ReceiveActivity extends AppCompatActivity {
                     utils.setMessageIsRead(title);
                     isRead[i] = "1";
                     news.setIsRead("已读");
-                    lists.set(i,news);
+                    lists.set(i, news);
                     adapter.notifyDataSetChanged();
                 }
                 Intent intent =new Intent(ReceiveActivity.this,NewsActivity.class);
