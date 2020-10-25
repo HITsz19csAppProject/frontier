@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import AdaptObject.Labelrange;
 import Adapter.CommunityItemAdapter;
 import Adapter.MessageItemAdapter;
 import Bean.CommunityItem;
@@ -50,7 +51,12 @@ public class AnnounceActivity extends AppCompatActivity implements EasyPermissio
     private EditText my_context;
     private ImageView mIvBack;
     private ListView listView;
+    private List<Labelrange> LabelrangeList=new ArrayList<>();
     private BGASortableNinePhotoLayout mPhotosSnpl;
+    public ArrayList<String> grade;        //年级
+    public ArrayList<String> Class;      //班级
+    public ArrayList<String> academy;    //学院
+    public ArrayList<String> speciality;  //专业
 
     private ArrayList<String> myImages;
     private String myHeadline;
@@ -122,6 +128,7 @@ public class AnnounceActivity extends AppCompatActivity implements EasyPermissio
                 startActivity(intent);
             }
         });
+
 
         mPhotosSnpl.setDelegate(this);
         mPhotosSnpl.setOnClickListener(new View.OnClickListener() {

@@ -30,6 +30,7 @@ public class ReceiveAdapter extends BaseAdapter {
         TextView tv_content;
         TextView tv_author;
         TextView tv_isRead;
+        NineGridView img_NineGrid;
     }
 
     public ReceiveAdapter(Context context, List<MessageItem> list,String[] isRead) {
@@ -64,6 +65,7 @@ public class ReceiveAdapter extends BaseAdapter {
             viewHolder.tv_content = (TextView) convertView.findViewById(R.id.news_context);
             viewHolder.tv_author=(TextView)convertView.findViewById(R.id.news_writer);
             viewHolder.tv_isRead = (TextView)convertView.findViewById(R.id.tv_isread);
+            viewHolder.img_NineGrid = convertView.findViewById(R.id.nineGrid);
             convertView.setTag(viewHolder);
 
         } else {
@@ -83,6 +85,18 @@ public class ReceiveAdapter extends BaseAdapter {
         viewHolder.tv_title.setText(item.getTitle());
         viewHolder.tv_content.setText(item.getContent());
         viewHolder.tv_author.setText(item.getAuthor().getName());
+
+        ArrayList<ImageInfo> imageInfo = new ArrayList<>();
+        ArrayList<String> ImageNames = item.getImageNames();
+        if (ImageNames != null && ImageNames.size() > 0) {
+            for (String ImageName : ImageNames) {
+                ImageInfo info = new ImageInfo();
+                info.setThumbnailUrl(Bmob.getCacheDir().getPath() + "/" + ImageName);
+                info.setBigImageUrl(Bmob.getCacheDir().getPath() + "/" + ImageName);
+                imageInfo.add(info);
+            }
+        }
+        viewHolder.img_NineGrid.setAdapter(new NineGridViewClickAdapter(context, imageInfo));
 
         return convertView;
     }

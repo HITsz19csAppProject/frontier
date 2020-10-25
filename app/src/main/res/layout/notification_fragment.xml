@@ -25,6 +25,7 @@
         android:layout_gravity="center"
         android:id="@+id/btn_schedule"
         android:layout_marginTop="30dp"
+        android:backgroundTint="#e9f1f6"
         android:background="@drawable/bg_btn1"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
@@ -37,8 +38,8 @@
         android:layout_height="70dp"
         android:text="我已发出"
         android:id="@+id/my_publish"
-        android:backgroundTint="@color/colorPink"
         android:background="@drawable/bg_btn1"
+        android:backgroundTint="#edd1d8"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
         android:textSize="25dp"
@@ -50,7 +51,7 @@
         android:text="我已收到"
         android:id="@+id/my_receive"
         android:background="@drawable/bg_btn1"
-        android:backgroundTint="@color/colorBlue"
+        android:backgroundTint="#bacac6"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
         android:textSize="25dp"
@@ -65,6 +66,7 @@
         android:background="@drawable/bg_btn1"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
+        android:backgroundTint="#a1afc9"
         android:text="探索"
         android:textSize="25sp"
         android:gravity="center" />
@@ -76,9 +78,10 @@
         android:layout_gravity="right"
         android:layout_marginTop="50dp"
         android:text="+"
+        android:textColor="#fff"
         android:textSize="30sp"
         android:layout_marginRight="20dp"
-        android:backgroundTint="@color/colorCyan"
+        android:backgroundTint="#0099CC"
         android:background="@drawable/bg_circle"/>
 
 </LinearLayout>

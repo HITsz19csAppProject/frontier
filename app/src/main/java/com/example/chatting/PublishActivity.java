@@ -119,7 +119,7 @@ public class PublishActivity extends AppCompatActivity {
                         }
                         if (status == 1) {
                             if (mShow) {
-                                barAnim(1);  // 隐藏
+                                //barAnim(1);  // 隐藏
                                 mShow = false;
                             }
                         } else {

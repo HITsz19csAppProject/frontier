@@ -125,7 +125,9 @@
         android:layout_height="70dp"
         android:id="@+id/cancel"
         android:text="退出登录"
-        android:background="#FF3300"
+        android:background="@drawable/bg_btn1"
+        android:layout_marginBottom="5dp"
+        android:textColor="#cb3a56"
         android:textSize="25dp"
         />
 </LinearLayout>

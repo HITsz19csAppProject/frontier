@@ -17,11 +17,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bingoogolapple.baseadapter.BGAOnRVItemClickListener;
-import cn.bingoogolapple.photopicker.activity.BGAPhotoPreviewActivity;
-import cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout;
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
+//import cn.bingoogolapple.baseadapter.BGAOnRVItemClickListener;
+//import cn.bingoogolapple.photopicker.activity.BGAPhotoPreviewActivity;
+//import cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout;
+//import pub.devrel.easypermissions.AfterPermissionGranted;
+//import pub.devrel.easypermissions.EasyPermissions;
 
 public class NewsActivity extends AppCompatActivity {
     private TextView News_headline;

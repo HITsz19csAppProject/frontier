@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,8 +33,8 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
     private EditText editText;
     String context;
     Button sure;
-    Button ok;
     private List<Labelrange> LabelrangeList=new ArrayList<>();
+    public List<LabelModel> clickedList = new ArrayList<>();
     final List<LabelModel> labelModelArrayList = new ArrayList<>();
     final List<LabelModel> zhuanyeList=new ArrayList<>();
     final List<LabelModel> nianjiList=new ArrayList<>();
@@ -66,13 +67,6 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
         if(actionBar!=null){
             actionBar.hide();
         }
-        ok=findViewById(R.id.ok);
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
         editText=findViewById(R.id.editText);
         sure=findViewById(R.id.sure);
         initLabelrange();
@@ -198,12 +192,10 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
         banjiList.add(banji10);
 
 
-
-
-
         sure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                traverseLabels();
                 context=editText.getText().toString();
                 LabelModel model = new LabelModel();
                 model.setTextValue("#"+context);
@@ -214,7 +206,7 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
                 LabelrangeList.add(xinjian);
                 //labelLayoutView.setStringList(labelSearchArrayList);
                 //labelLayoutView.setOnInputValueListener(LabelActivity.this);
-                traverseLabels();
+                //traverseLabels();
                 labelBmobquery();
 
                // Ousers = getAddLabels();
@@ -223,9 +215,15 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
                 bundle.putSerializable("list_1",(Serializable)Ousers);
                 intent.putExtras(bundle);
                 setResult(0,intent);
+                Intent intent1 = new Intent();
+                Bundle bundle1 = new Bundle();
+                bundle1.putSerializable("clicked",(Serializable)clickedList);
+                intent1.putExtras(bundle1);
+                setResult(2,intent1);
                 LabelActivity.this.finish();
             }
         });
+
     }
 
 
@@ -245,19 +243,36 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
     //对所有的标签进行检索如果已经被点击，则将其加入ArrayList
     public void traverseLabels(){
         for(LabelModel lamo:labelModelArrayList){
-            if(lamo.isClick())addLabels.academy.add(lamo.getTextValue().substring(1));
+            if(lamo.isClick()){
+                addLabels.academy.add(lamo.getTextValue().substring(1));
+                clickedList.add(lamo);
+            }
         }
 
         for(LabelModel lamo:zhuanyeList){
-            if(lamo.isClick())addLabels.speciality.add(lamo.getTextValue().substring(1));
+            if(lamo.isClick()){
+                addLabels.speciality.add(lamo.getTextValue().substring(1));
+                clickedList.add(lamo);
+            }
         }
 
         for(LabelModel lamo:nianjiList){
-            if(lamo.isClick())addLabels.grade.add("20"+lamo.getTextValue().substring(1,3));
+            if(lamo.isClick()){
+                addLabels.grade.add("20"+lamo.getTextValue().substring(1,3));
+                clickedList.add(lamo);
+            }
         }
 
         for(LabelModel lamo:banjiList){
-            if(lamo.isClick())addLabels.Class.add(lamo.getTextValue().substring(1));
+            if(lamo.isClick()){
+                addLabels.Class.add(lamo.getTextValue().substring(1));
+                clickedList.add(lamo);
+            }
+        }
+        for(LabelModel lamo:benyanList){
+            if(lamo.isClick()){
+                clickedList.add(lamo);
+            }
         }
         if(addLabels.speciality.isEmpty())addLabels.speciality = (ArrayList)labelModelArrayList;
         if(addLabels.academy.isEmpty())addLabels.academy = (ArrayList)labelModelArrayList;

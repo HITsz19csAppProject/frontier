@@ -103,7 +103,6 @@ public class ReceiveActivity extends AppCompatActivity {
                     }
                 },500);
             }
-
         });
 
         listener.onRefresh();

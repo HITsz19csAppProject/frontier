@@ -49,7 +49,8 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnClickL
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                Intent intent = new Intent(ScheduleActivity.this,MainActivity.class);
+                startActivity(intent);
             }
         });
 

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +27,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import AdaptObject.LabelModel;
 import Bean.MessageItem;
 import Bean.User;
 import Tools.GraphTools;
@@ -52,10 +56,12 @@ public class PostActivity extends AppCompatActivity implements EasyPermissions.P
     private EditText my_context;
     private ImageView mIvBack;
     private BGASortableNinePhotoLayout mPhotosSnpl;
+    private CustomView customView;
 
     private String myHeadline;
     private String myContext;
     private ArrayList<String> myImages;
+    private List<LabelModel> labelModelList;
     private List<User> uList;
 
     @Override
@@ -75,6 +81,7 @@ public class PostActivity extends AppCompatActivity implements EasyPermissions.P
         my_context = findViewById(R.id.my_context);
         mBtnAddLabel = findViewById(R.id.btn_addlabel);
         mPhotosSnpl = findViewById(R.id.snpl_moment_add_photos);
+        customView = findViewById(R.id.custom_view);
 
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +110,7 @@ public class PostActivity extends AppCompatActivity implements EasyPermissions.P
                     newMessage.setImages(myImages);
                     newMessage.setObjectiveUsers(uList);
                     new GraphTools<>(newMessage).compressBatch(PostActivity.this, newMessage);
+                    PostActivity.this.finish();
 
 //                    intent.putExtra("headline_return", myHeadline);
 //                    intent.putExtra("context_return", myContext);
@@ -121,7 +129,7 @@ public class PostActivity extends AppCompatActivity implements EasyPermissions.P
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(PostActivity.this, LabelActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,LABEL_ACTIVITY_REQUEST_CODE);
             }
         });
 
@@ -209,6 +217,10 @@ public class PostActivity extends AppCompatActivity implements EasyPermissions.P
             message.what = 0;
             handler.sendMessage(message);
         }
+        if(requestCode == LABEL_ACTIVITY_REQUEST_CODE && resultCode == 2){
+            labelModelList = (List<LabelModel>) data.getSerializableExtra("clicked");
+            initData();
+        }
     }
 
     Handler handler = new Handler(){
@@ -224,4 +236,26 @@ public class PostActivity extends AppCompatActivity implements EasyPermissions.P
             }
         }
     };
+
+    void initData() {
+        //设置默认显示
+        for (LabelModel lamo : labelModelList) {
+            TextView textView = new TextView(this);
+            textView.setText(lamo.getTextValue());
+            //设置背景
+            textView.setBackground(getDrawable(R.drawable.bg_btn1));
+            //设置内边距
+            textView.setPadding(5,5,5,5);
+            textView.setTextSize(20);
+            //设置颜色
+            textView.setTextColor(Color.GRAY);
+            //添加数据
+            customView.addView(textView);
+        }
+        //点击搜索添加
+
+        //mSearchFlowlayout.invalidate();  刷新UI布局
+        // mSearchFlowlayout.removeAllViews(); 删除所有
+        //mSearchFlowlayout.removeView();   删除单个子控件
+    }
 }

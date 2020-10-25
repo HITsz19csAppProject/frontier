@@ -1,6 +1,8 @@
 package AdaptObject;
 
-public class LabelModel {
+import java.io.Serializable;
+
+public class LabelModel implements Serializable{
     private String textValue;
     private boolean isClick;
 
