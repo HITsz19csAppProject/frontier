@@ -5,6 +5,7 @@ import java.util.List;
 
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.datatype.BmobRelation;
 
 /**
  * 信息发布对象的基础类
@@ -25,7 +26,7 @@ public class MessageItem extends BmobObject {
     private ArrayList<String> images_Compressed;
     private ArrayList<String> imageNames;
     private String[] Labels;
-    private List<User> objectiveUsers;
+    private ArrayList<String> Obuser;
 
 
     /**
@@ -154,12 +155,12 @@ public class MessageItem extends BmobObject {
 
     /**
      * 设置接收信息对像
-     * @param ObjectiveUser
+     * @param objectiveUsers
      * @return 该对象，也就是this
      */
-     public MessageItem setObjectiveUsers(List<User> ObjectiveUser)
+     public MessageItem setObjectiveUsers(ArrayList<String> objectiveUsers)
      {
-         this.objectiveUsers = ObjectiveUser;
+         this.Obuser = objectiveUsers;
          return this;
      }
 
@@ -167,5 +168,5 @@ public class MessageItem extends BmobObject {
      * 获取接受对像表
      * @return
      */
-     public List<User> getObjectiveUsers(){return objectiveUsers;}
+     public ArrayList<String> getObjectiveUsers(){return this.Obuser;}
 }

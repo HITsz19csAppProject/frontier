@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +27,7 @@ import androidx.core.content.ContextCompat;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import AdaptObject.LabelModel;
 import Bean.MessageItem;
@@ -36,6 +38,11 @@ import cn.bingoogolapple.photopicker.activity.BGAPPToolbarActivity;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerPreviewActivity;
 import cn.bingoogolapple.photopicker.widget.BGASortableNinePhotoLayout;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobRelation;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.UpdateListener;
+import okhttp3.ResponseBody;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -61,8 +68,8 @@ public class PostActivity extends AppCompatActivity implements EasyPermissions.P
     private String myHeadline;
     private String myContext;
     private ArrayList<String> myImages;
-    private List<LabelModel> labelModelList;
-    private List<User> uList;
+    private static List<LabelModel> labelModelList;
+    private static ArrayList<String> uList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,11 +111,32 @@ public class PostActivity extends AppCompatActivity implements EasyPermissions.P
                 myContext = my_context.getText().toString();
                 myImages = mPhotosSnpl.getData();
                 if(!myHeadline.isEmpty() && !myContext.isEmpty()) {
-                    MessageItem newMessage =new MessageItem();
+                    MessageItem newMessage = new MessageItem();
                     newMessage.setContent(myContext);
                     newMessage.setTitle(myHeadline);
                     newMessage.setImages(myImages);
+                    for(String s:uList)
+                    {
+                        System.out.println("ObjectId"+s);
+                    }
                     newMessage.setObjectiveUsers(uList);
+//                    BmobRelation relation = new BmobRelation();
+//                    for(User u : uList) {
+//                        relation.add(u);
+//                    }
+//                    relation.add(BmobUser.getCurrentUser(User.class));
+//                    newMessage.setObjectiveUsers(relation);
+//                    newMessage.update(new UpdateListener() {
+//                        @Override
+//                        public void done(BmobException e) {
+//                            if(e==null){
+//                                Log.i("bmob","多对多关联添加成功");
+//                            }else{
+//                                Log.i("bmob","失败："+e.getMessage());
+//                            }
+//                        }
+//
+//                    });
                     new GraphTools<>(newMessage).compressBatch(PostActivity.this, newMessage);
                     PostActivity.this.finish();
 
@@ -209,33 +237,12 @@ public class PostActivity extends AppCompatActivity implements EasyPermissions.P
             mPhotosSnpl.addMoreData(BGAPhotoPickerActivity.getSelectedPhotos(data));
         } else if (requestCode == RC_PHOTO_PREVIEW) {
             mPhotosSnpl.setData(BGAPhotoPickerPreviewActivity.getSelectedPhotos(data));
-        }else if(requestCode == LABEL_ACTIVITY_REQUEST_CODE && resultCode == 0){
-            Bundle bundle = new Bundle();
-            bundle.putSerializable ("Ulist",data.getSerializableExtra("list_1"));
-            Message message = new Message();
-            message.setData(bundle);
-            message.what = 0;
-            handler.sendMessage(message);
-        }
-        if(requestCode == LABEL_ACTIVITY_REQUEST_CODE && resultCode == 2){
+        }else if(resultCode == 1024){
+            uList = data.getStringArrayListExtra("list_1");
             labelModelList = (List<LabelModel>) data.getSerializableExtra("clicked");
             initData();
         }
     }
-
-    Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == 0) {
-                uList =(List<User>) msg.getData().getSerializable("Ulist");
-                for(User u:uList)
-                {
-                    System.out.println(u.getPhoneNum()+"b");
-                }
-            }
-        }
-    };
 
     void initData() {
         //设置默认显示
@@ -257,5 +264,16 @@ public class PostActivity extends AppCompatActivity implements EasyPermissions.P
         //mSearchFlowlayout.invalidate();  刷新UI布局
         // mSearchFlowlayout.removeAllViews(); 删除所有
         //mSearchFlowlayout.removeView();   删除单个子控件
+    }
+
+    public static String getRandomString(int length){
+        String str="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random=new Random();
+        StringBuffer sb=new StringBuffer();
+        for(int i=0;i<length;i++){
+            int number=random.nextInt(62);
+            sb.append(str.charAt(number));
+        }
+        return sb.toString();
     }
 }

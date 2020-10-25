@@ -154,6 +154,7 @@ public class ChattingFragment extends Fragment {
 
         ListView listView = (ListView) root.findViewById(R.id.list_view);
         listView.setAdapter(adapter1);
+        listView.setEnabled(false);
 
         listView.setOnItemClickListener((adapterView, view, position, id) -> {
             post news = newsList.get(position);

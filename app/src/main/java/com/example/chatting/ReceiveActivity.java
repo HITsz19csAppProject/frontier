@@ -7,6 +7,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -25,6 +26,7 @@ import Bean.User;
 import Tools.ServerTools;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
@@ -128,12 +130,29 @@ public class ReceiveActivity extends AppCompatActivity {
                 query.order("-updatedAt");
                 //包含作者信息
                 query.include("author");
+                System.out.println("run()线程执行");
                 query.findObjects(new FindListener<MessageItem>() {
                     @Override
                     public void done(List<MessageItem> list, BmobException e) {
                         lists = new ArrayList<>();
+                        System.out.println("list是否进入");
                         if (list != null) {
-                            System.out.println("查询成功" + list.get(0).getTitle() + list.get(0).getContent());
+                            ArrayList<MessageItem> newList = new ArrayList<>();
+                            for (MessageItem messageItem : list) {
+                                if (messageItem.getObjectiveUsers() == null) continue;
+                                System.out.println("Objectid1 = ");
+                                for (String s : messageItem.getObjectiveUsers()) {
+                                    System.out.println("Objectid2 = " + BmobUser.getCurrentUser(User.class).getObjectId());
+                                    if (BmobUser.getCurrentUser(User.class).getObjectId().equals(s)) {
+                                        newList.add(messageItem);
+                                        break;
+                                    }
+                                }
+                            }
+//                            System.out.println("newList的长度："+ newList.size());
+                            list = newList;
+                            System.out.println("List的长度:" + list.size());
+
                             final String[] title = new String[list.size()];
                             final String[] content = new String[list.size()];
                             final String[] author = new String[list.size()];

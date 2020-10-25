@@ -42,18 +42,22 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
     final List<LabelModel> banjiList=new ArrayList<>();
     final List<LabelModel> labelSearchArrayList = new ArrayList<>();
     AddLabels addLabels = new AddLabels();//加入标签的对象
-    List<User> Ousers = new ArrayList<>();
+    public static ArrayList<String> Ousers = new ArrayList<>();
 
     Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 111) {
-                Ousers =(List<User>) msg.getData().getSerializable("data");
-                for(User u:Ousers)
-                {
-                    System.out.println(u.getPhoneNum()+"a");
-                }
+                Ousers = msg.getData().getStringArrayList("data");
+
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList("list_1",Ousers);
+                bundle.putSerializable("clicked",(Serializable)clickedList);
+                intent.putExtras(bundle);
+                setResult(1024,intent);
+                LabelActivity.this.finish();
             }
         }
     };
@@ -210,17 +214,17 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
                 labelBmobquery();
 
                // Ousers = getAddLabels();
-                Intent intent = new Intent();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("list_1",(Serializable)Ousers);
-                intent.putExtras(bundle);
-                setResult(0,intent);
-                Intent intent1 = new Intent();
-                Bundle bundle1 = new Bundle();
-                bundle1.putSerializable("clicked",(Serializable)clickedList);
-                intent1.putExtras(bundle1);
-                setResult(2,intent1);
-                LabelActivity.this.finish();
+//                Intent intent = new Intent();
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("list_1",(Serializable)Ousers);
+//                intent.putExtras(bundle);
+//                setResult(0,intent);
+//                Intent intent1 = new Intent();
+//                Bundle bundle1 = new Bundle();
+//                bundle1.putSerializable("clicked",(Serializable)clickedList);
+//                intent1.putExtras(bundle1);
+//                setResult(2,intent1);
+//                LabelActivity.this.finish();
             }
         });
 
@@ -309,13 +313,14 @@ public class LabelActivity extends AppCompatActivity implements LabelLayoutView.
                     /**
                      在此处对已选中的人进行下一步操作
                      */
+                    ArrayList<String> userlist = new ArrayList<>();
                     for(User u:list)
                     {
-                        System.out.println(u.getPhoneNum());
+                        userlist.add(u.getObjectId());
                     }
                     Bundle bundle = new Bundle();
                     Message message = new Message();
-                    bundle.putSerializable("data",(Serializable)list);
+                    bundle.putStringArrayList("data",userlist);
                     message.what = 111;
                     message.setData(bundle);
                     handler.sendMessage(message);
