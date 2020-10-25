@@ -20,6 +20,7 @@ public class CenterFragment extends Fragment {
     private CenterViewModel centerViewModel;
     private Button cancel;
     private Button user_info;
+    private Button announced;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 
@@ -30,6 +31,7 @@ public class CenterFragment extends Fragment {
         View root = inflater.inflate(R.layout.center_fragment, container, false);
         cancel = root.findViewById(R.id.cancel);
         user_info=root.findViewById(R.id.user_info);
+        announced=root.findViewById(R.id.announced);
         user_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -43,6 +45,14 @@ public class CenterFragment extends Fragment {
                 CurrentUser.logOut();
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivityForResult(intent, 1);
+            }
+        });
+
+        announced.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getActivity(),Mypublish.class);
+                startActivity(intent);
             }
         });
         return root;

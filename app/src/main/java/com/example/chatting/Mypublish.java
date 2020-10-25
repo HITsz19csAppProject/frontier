@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import Adapter.CommunityItemAdapter;
 import Adapter.MessageItemAdapter;
@@ -31,6 +32,7 @@ import java.util.List;
 import Bean.CommunityItem;
 import Bean.MessageItem;
 import Bean.User;
+import Tools.GraphTools;
 import Tools.ServerTools;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -41,49 +43,38 @@ import cn.bmob.v3.listener.UpdateListener;
 /**
  * 我已发出界面
  */
-public class PublishActivity extends AppCompatActivity {
+public class Mypublish extends AppCompatActivity {
 
     private NewsAdapter adapter1;
     private List<news> newsList = new ArrayList<>();
     private ImageView mIvBack;
-    private Button add;
     private SwipeRefreshLayout flush;
     private ListView listView;
     private SwipeRefreshLayout.OnRefreshListener listener;
-    private int minInstance;
-    private float mFirstY;
-    private float mCurrentY;
-    private int status;
     private boolean mShow = true;
     private ObjectAnimator animator;
-    private MessageItemAdapter mAdapter;
+    private CommunityItemAdapter mAdapter;
+    private Button save;
+    private String myHeadline;
+    private String myContext;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_publish);
+        setContentView(R.layout.announced);
         ActionBar actionBar;
         actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
         }
         mIvBack = (ImageView) findViewById(R.id.im_back);
-        add = findViewById(R.id.my_add);
-        flush = findViewById(R.id.flush);
-        listView = (ListView) findViewById(R.id.list_view);
-        adapter1 = new NewsAdapter(PublishActivity.this, R.layout.news, newsList);
-        mAdapter = new MessageItemAdapter(PublishActivity.this, new ArrayList<MessageItem>());
+        flush = findViewById(R.id.flush111);
+        listView = (ListView) findViewById(R.id.list_view111);
+        adapter1 = new NewsAdapter(Mypublish.this, R.layout.news, newsList);
+        mAdapter = new CommunityItemAdapter(Mypublish.this, new ArrayList<CommunityItem>());
         listView.setAdapter(mAdapter);
-
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(PublishActivity.this, PostActivity.class);
-                new ServerTools().MessageShow(newsList);
-                startActivityForResult(intent, 1);
-            }
-        });
+        save=findViewById(R.id.btn_save_pop);
 
         initSwipeRefresh();
         AutoRefresh();
@@ -101,47 +92,11 @@ public class PublishActivity extends AppCompatActivity {
             }
         });
 
-//        listView.setAdapter(adapter1);
-        //1.给listview增加HeaderView
-        //2.获取系统认为的最低滑动距离
-        minInstance = ViewConfiguration.get(this).getScaledTouchSlop();
-        //3.判断滑动事件
-        listView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        mFirstY = event.getY();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        mCurrentY = event.getY();
-                        if (mCurrentY - mFirstY > minInstance) {
-                            status = 0;  // 向下
-                        } else {
-                            status = 1;  // 向上
-                        }
-                        if (status == 1) {
-                            if (mShow) {
-                                //barAnim(1);  // 隐藏
-                                mShow = false;
-                            }
-                        } else {
-                            if (!mShow) {
-                                barAnim(0); // 显示
-                                mShow = true;
-                            }
-                        }
-                        break;
-                }
-                return false;
-            }
-        });
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 news news = newsList.get(position);
-                Intent intent = new Intent(PublishActivity.this, NewsActivity.class);
+                Intent intent = new Intent(Mypublish.this, NewsActivity.class);
                 String news_headline = news.getHeadline();
                 String news_receiver = news.getWriter();
                 String news_context = news.getContext();
@@ -196,25 +151,6 @@ public class PublishActivity extends AppCompatActivity {
         new ServerTools().MessageShow(newsList);
     }
 
-    private void barAnim(int i) {
-        if (animator != null && animator.isRunning())
-            animator.cancel();
-        if (i == 0) {
-            animator = ObjectAnimator.ofFloat(
-                    add,
-                    "translationY",
-                    add.getTranslationY(),
-                    0);
-        } else {
-            animator = ObjectAnimator.ofFloat(
-                    add,
-                    "translationY",
-                    add.getTranslationY(),
-                    -add.getHeight());
-        }
-        animator.start();
-    }
-
     private void initSwipeRefresh() {
         listener = new SwipeRefreshLayout.OnRefreshListener() {
             public void onRefresh() {
@@ -234,17 +170,17 @@ public class PublishActivity extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                BmobQuery<MessageItem> query = new BmobQuery<MessageItem>();
+                BmobQuery<CommunityItem> query = new BmobQuery<CommunityItem>();
                 query.addWhereEqualTo("author", BmobUser.getCurrentUser(User.class));
                 query.order("-updatedAt");
                 query.include("author");
-                query.findObjects(new FindListener<MessageItem>() {
+                query.findObjects(new FindListener<CommunityItem>() {
                     @Override
-                    public void done(List<MessageItem> list, BmobException e) {
+                    public void done(List<CommunityItem> list, BmobException e) {
                         if (list != null) {
                             System.out.println("查询成功" + list.get(0).getTitle() + list.get(0).getContent());
                             mAdapter.setData(list);
-                            new ServerTools().BeforeDownLoadMessage(PublishActivity.this, list);
+                            new ServerTools().BeforeDownLoadCommunityMessage(Mypublish.this, list);
                         }
                     }
                 });
@@ -274,19 +210,59 @@ public class PublishActivity extends AppCompatActivity {
         int position = info.position;
         switch (item.getItemId()) {
             case 0:
+                Userdiolog diolog=new Userdiolog(this);
+//
+//                BmobQuery<MessageItem> query = new BmobQuery<MessageItem>();
+//
+//                query.addWhereEqualTo("author", BmobUser.getCurrentUser(User.class));
+//                query.addWhereEqualTo("title", newsList.get(position).getHeadline());
+//                query.addWhereEqualTo("content", newsList.get(position).getContext());
+//
+//                diolog.text_title.setText(newsList.get(0).getHeadline());
+//                diolog.text_content.setText(newsList.get(0).getContext());
+                diolog.show();
+
+//                query.findObjects(new FindListener<MessageItem>() {
+//                    @Override
+//                    public void done(List<MessageItem> list, BmobException e) {
+//                        save.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                MessageItem messageItem = new MessageItem();
+//
+//                                messageItem.setObjectId(list.get(0).getObjectId());
+//                                messageItem.setTitle(diolog.text_title.toString());
+//                                messageItem.setContent(diolog.text_content.toString());
+//
+//                                messageItem.update(new UpdateListener() {
+//                                    @Override
+//                                    public void done(BmobException e) {
+//                                        if (e == null) {
+//                                            Toast.makeText(Mypublish.this, "更新数据成功", Toast.LENGTH_SHORT).show();
+//                                        } else {
+//                                            Toast.makeText(Mypublish.this, "更新数据失败返回Exception为:" + e, Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    }
+//                                });
+//
+//                        }
+//                    });
+//                    }
+//                });
                 return true;
+
             case 1:
-                BmobQuery<MessageItem> query = new BmobQuery<MessageItem>();
-                query.addWhereEqualTo("author", BmobUser.getCurrentUser(User.class));
-                query.addWhereEqualTo("title", newsList.get(position).getHeadline());
-                query.addWhereEqualTo("content", newsList.get(position).getContext());
-                query.include("author");
-                query.findObjects(new FindListener<MessageItem>() {
+                BmobQuery<CommunityItem> query1 = new BmobQuery<CommunityItem>();
+                query1.addWhereEqualTo("author", BmobUser.getCurrentUser(User.class));
+                query1.addWhereEqualTo("title", newsList.get(position).getHeadline());
+                query1.addWhereEqualTo("content", newsList.get(position).getContext());
+                query1.include("author");
+                query1.findObjects(new FindListener<CommunityItem>() {
                     @Override
-                    public void done(List<MessageItem> list, BmobException e) {
+                    public void done(List<CommunityItem> list, BmobException e) {
                         if (list != null) {
                             System.out.println("查询成功" + list.get(0).getTitle() + list.get(0).getContent());
-                            MessageItem messageItem = new MessageItem();
+                            CommunityItem messageItem = new CommunityItem();
                             messageItem.setObjectId(list.get(0).getObjectId());
                             messageItem.delete(new UpdateListener() {
                                 @Override
@@ -309,9 +285,9 @@ public class PublishActivity extends AppCompatActivity {
                 });
                 return true;
         }
+
         return true;
     }
 
 }
-
 

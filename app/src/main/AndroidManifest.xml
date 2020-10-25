@@ -45,6 +45,7 @@
         <activity android:name=".SearchActivity" />
         <activity android:name=".AnnounceActivity" />
         <activity android:name=".NewsActivity" />
+        <activity android:name=".Mypublish"/>
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan" />
@@ -55,20 +56,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.donkingliang.imageselector.ImageSelectorActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
-            android:name="com.donkingliang.imageselector.PreviewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
-            android:name="com.donkingliang.imageselector.ClipImageActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-
-
     <provider
         android:name="cn.bmob.v3.util.BmobContentProvider"
         android:authorities="com.example.chatting.BmobContentProvider">
